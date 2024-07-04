@@ -1,0 +1,2 @@
+* QUOICOUSHELL
+42's minishell project. This project aims to recramte a little shell and recode some builtins commands.
