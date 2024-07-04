@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/04 18:53:04 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/04 19:43:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ char			*ft_ftoa(double n, int precision);
 char			*ft_strdup_free(const char *s, int free_s);
 char			*ft_strjoin_free(char const *s1, char const *s2, int free1,
 					int free2);
+int				free_split(char **arr);
+int				ft_strcmp(const char *s1, const char *s2);
 
 /******************************* FT_PRINTF ************************************/
 int				ft_printf(const char *format, ...);
