@@ -6,7 +6,7 @@
 #    By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/04 19:06:21 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/04 19:48:29 by bazaluga         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -68,7 +68,6 @@ libft:		$(LIBFT)
 clean:
 		@echo $(RED)"CLEANING OBJS"
 		rm -rf $(OBJDIR)
-		rm -rf $(OBJBDIR)
 		@make -sC $(LIBFTDIR) clean
 		@echo $(RESET)
 
