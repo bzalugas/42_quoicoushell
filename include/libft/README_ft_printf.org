@@ -1,0 +1,150 @@
+* Prototype
+#+begin_src c
+int ft_printf(const char *format, ...);
+#+end_src
+
+* Implemented conversions
+** %c
+#+begin_quote
+The =int= argument is converted to an =unsigned char= and the resulting character is written.
+#+end_quote
+** %s
+#+begin_quote
+The =const char *= argument is excpected to be a pointer to an array of character type (pointer to a string). Characters from the array are written up to (*but not including*) a terminating null byte ('\0').
+#+end_quote
+** %d
+#+begin_quote
+The =int= argument is converted to a decimal notation.
+#+end_quote
+** %i
+#+begin_quote
+The =int= argument is converted to a decimal notation.
+#+end_quote
+** %u
+#+begin_quote
+The =unsigned int= argument is converted to unsigned decimal.
+#+end_quote
+** %x
+#+begin_quote
+The =unsigned int= argument is converted to unsigned hexadecimal. The letters *abcdef* are used for *x* conversion.
+#+end_quote
+** %X
+#+begin_quote
+The =unsigned int= argument is converted to unsigned hexadecimal. The letters *ABCDEF* are used for *X* conversion.
+#+end_quote
+** %p
+#+begin_quote
+The =void *= pointer argument is printed in hexadecimal.
+#+end_quote
+** %%
+#+begin_quote
+A '%' is written. No argument is converted.
+#+end_quote
+
+* Implemented flags (bonuses)
+For the behavior descriptions, *UB* = Undefined Behavior.
+** -
+#+begin_quote
+The converted value is to be left adjusted on the field boundary. The converted value is padded on the right with blanks. *A - overrides a 0 if both are given*.
+#+end_quote
+Behavior:
+- %c: blanks on the right
+- %s: blanks on the right
+- %-n.ys: total len of n but max y chars from str
+- %d: blanks on the right
+- %i: blanks on the right
+- %u: blanks on the right
+- %x: blanks on the right
+- %X: blanks on the right
+- %-n.y(diuxX): total len of n, nb padded on left with zeros to obtain y chars
+- %p: blanks on the right
+- %%: nothing
+** 0
+#+begin_quote
+The value should be zero padded. The converted value is padded on the left with zeros rather than blanks. *If the 0 and - flags both appear, the 0 is ignored.* If a precision given with d, i, o, u, x or X, 0 flag ignored. For other conversion, undefined behavior.
+#+end_quote
+Behavior:
+- %c: UB
+- %s: UB
+- %d: zeros on the left
+- %i: zeros on the left
+- %u: zeros on the left
+- %x: zeros on the left
+- %X: zeros on the left
+- %0n.y(diuxX): 0 ignored, i.e. total len = n,  padding of y
+- %p: UB
+- %%: nothing
+** . (precision)
+#+begin_quote
+[...] followed by an optional decimal digit string. "*" to specify that precision is given in next argument, "*x$" for x-th argument. If only '.', precision = 0. Precision < 0 = precision ommited. *Minimum number of digits for d, i, o, u, x, X and maximum number of chars for s*.
+#+end_quote
+Behavior:
+- %c: UB
+- %s: max_size
+- %d: zeros on the left
+- %i: zeros on the left
+- %u: zeros on the left
+- %x: zeros on the left
+- %X: zeros on the left
+- %p: UB
+- %%: nothing
+** Field width
+#+begin_quote
+An optional digit string specifying min field width. "*" to specify that precision is given in next argument, "*x$" for x-th argument. If converted value has fewer characters than field width => padded with spaces on the left (right if -).
+#+end_quote
+Behavior:
+- %c: blanks on the left
+- %s: blanks on the left
+- %n.ys: total len of n but max y chars from str
+- %d: blanks on the left
+- %i: blanks on the left
+- %u: blanks on the left
+- %x: blanks on the left
+- %X: blanks on the left
+- %n.y(diuxX): total len = n, padding of y
+- %p: blanks on the left
+- %%: nothing
+** #
+#+begin_quote
+Value converted to an "alternate form". For x and X a nonzero result has 0x or 0X prepended to it.
+#+end_quote
+Behavior:
+- %c: UB
+- %s: UB
+- %d: UB
+- %i: UB
+- %u: UB
+- %x: 0x before
+- %X: 0X before
+- %#.n(xX): zeros inserted after 0x
+- %p: UB
+- %%: UB
+** ' '
+#+begin_quote
+A blank should be left before a positive number (or empty string) produced by a signed conversion.
+#+end_quote
+Behavior:
+- %c: UB
+- %s: UB
+- %d: blank before positive value
+- %i: blank before positive value
+- %u: UB
+- %x: UB
+- %X: UB
+- %p: UB
+- %%: UB
+** +
+#+begin_quote
+A sign should always be placed before a number produced by a signed conversion. *+ overrides space*
+#+end_quote
+Behavior:
+- %c: UB
+- %s: UB
+- %d: plus before positive value
+- %i: plus before positive value
+- %+(-)n(di): n = total width
+- %u: UB
+- %x: UB
+- %X: UB
+- %p: UB
+- %%: UB

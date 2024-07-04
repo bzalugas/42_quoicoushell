@@ -1,0 +1,57 @@
+#+STARTUP: shrink
+* 42's libft project
+First project of 42, this one aims to teach us how to create a personal functions library. I created *my own tester* that can be found [[https://github.com/bzalugas/libft-breaker][here]]. =ft_printf= repo [[https://github.com/bzalugas/42_ft_printf][here]]. =get_next_line= repo [[https://github.com/bzalugas/42_get_next_line][here]].
+* Branches
+Evaluated version is on branch =42_eval=. The =master= branch aims to be my official enhanced libft.
+* Implemented functions
+| Function prototype                                                          | Soft description                                                                            |
+|-----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------|
+| =int      ft_atoi(const char *nptr)=                                        | ascii to =int=                                                                              |
+| =long     ft_atol(const char *nptr)=                                        | ascii to =long=                                                                             |
+| =void     ft_bzero(void *s, size_t n)=                                      | Writes '\0' to =s= on =n= bytes                                                             |
+| =void     *ft_calloc(size_t nmemb, size_t size)=                            | Allocates a pointer & intializes it at 0                                                    |
+| =char     *get_next_line(int fd)=                                           | Returns the next line read in =fd=, NULL if error or EOF reached                            |
+| =int      ft_isalnum(int c)=                                                | Is =c= alphanumeric ?                                                                       |
+| =int      ft_isalpha(int c)=                                                | Is =c= alphabetic ?                                                                         |
+| =int      ft_isascii(int c)=                                                | Is =c= ascii ?                                                                              |
+| =int      ft_isdigit(int c)=                                                | Is =c= digit ?                                                                              |
+| =int      ft_isprint(int c)=                                                | Is =c= printable ?                                                                          |
+| =int      ft_isspace(int c)=                                                | Is =c= whitespace ?                                                                         |
+| =char     *ft_itoa(int n)=                                                  | int to ascii                                                                                |
+| =void     ft_lstadd_back(t_list **lst, t_list *new)=                        | Adds node at back of =lst=                                                                  |
+| =void     ft_lstadd_front(t_list **lst, t_list *new)=                       | Adds node at front of =lst=                                                                 |
+| =void     ft_lstclear(t_list **lst, void (*del)(void *))=                   | Clears =lst= using =del= function on each node                                              |
+| =void     ft_lstdelone(t_list *lst, void (*del)(void *))=                   | Frees content of =lst= & =lst= using =del= function                                         |
+| =void     ft_lstiter(t_list *lst, void (*f)(void *))=                       | Iterates on =lst= & applies =f= function on each node                                       |
+| =t_list   *ft_lstlast(t_list *lst)=                                         | Returns last node of =lst=                                                                  |
+| =t_list   *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))= | Like =ft_lstiter= but creates the resulting list                                            |
+| =t_list   *ft_lstnew(void *content)=                                        | Creates new node containing =content=                                                       |
+| =int      ft_lstsize(t_list *lst)=                                          | Returns the size of =lst=                                                                   |
+| =void     *ft_memchr(const void *s, int c, size_t n)=                       | Returns a ptr to 1^{st} occurence of =c= in =s=, scanning at most =n= bytes                 |
+| =int      ft_memcmp(const void *s1, const void *s2, size_t n)=              | Compares first =n= bytes of of =s1= & =s2=                                                  |
+| =void     *ft_memcpy(void *dst, const void *src, size_t n)=                 | Copies =n= bytes of =src= in =dst=                                                          |
+| =void     *ft_memmove(void *dst, const void *src, size_t n)=                | Copies =n= bytes of =src= in =dst= (Overlap protection)                                     |
+| =void     *ft_memset(void *s, int c, size_t n)=                             | Set =n= bytes in =s= at =c=                                                                 |
+| =int      ft_printf(const char *format, ...)=                               | Prints to stdout the formated string =format=. Returns nb written chars                     |
+| =void     ft_putchar_fd(char c, int fd)=                                    | Writes =c= to file descriptor =fd=                                                          |
+| =void     ft_putendl_fd(char *s, int fd)=                                   | Writes string =s= to file descriptor =fd= appending '\n' at the end                         |
+| =void     ft_putnbr_fd(int n, int fd)=                                      | Writes (in ascii) the number =n= to file descriptor =fd=                                    |
+| =void     ft_putstr_fd(char *s, int fd)=                                    | Writes string =s= to file descriptor =fd=                                                   |
+| =char     **ft_split(char const *s, char c)=                                | Splits to 2d array the string =s= with =c= as separator                                     |
+| =char     *ft_strchr(const char *s, int c)=                                 | Returns a ptr to 1^{st} occurence of =c= in =s=                                             |
+| =char     *ft_strdup(const char *s)=                                        | Returns a copy of =s= (allocated)                                                           |
+| =void     ft_striteri(char *s, void (*f)(unsigned int, char*))=             | Modifies =s= using =f= function                                                             |
+| =char     *ft_strjoin(char const *s1, char const *s2)=                      | Returns the concatenation of =s1= & =s2=                                                    |
+| =size_t   ft_strlcat(char *dst, char const *src, size_t size)=              | Copies =src= at the end of =dst= for a total size of =size=, if retval != size : truncation |
+| =size_t   ft_strlcpy(char *dst, const char *src, size_t size)=              | Copies =src= to =dst=, if retval != size : truncation                                       |
+| =size_t   ft_strlen(const char *s)=                                         | Returns len of =s=                                                                          |
+| =char     *ft_strmapi(char const *s, char (*f)(unsigned int, char))=        | Like =ft_striteri= but creates new string                                                   |
+| =int      ft_strncmp(const char *s1, const char *s2, size_t n)=             | Compares =n= bytes of =s1= & =s2=                                                           |
+| =char     *ft_strndup(const char *s, size_t len)=                           | Returns the copy of 1^{st} =len= bytes of =s=                                               |
+| =char     *ft_strnstr(const char *big, const char *little, size_t len)=     | Returns a ptr to 1^{st} occurrence of =little= in =big= in 1^{st} =len= bytes               |
+| =char     *ft_strrchr(const char *s, int c)=                                | Searches =c= in =s= but begins at end of =s=                                                |
+| =char     *ft_strtrim(char const *s1, char const *set)=                     | Returns new string that is a copy of =s1= with chars of =set= removed                       |
+| =char     *ft_substr(char const *s, unsigned int start, size_t len)=        | Cuts =s= from =start= on =len= bytes & returns the new string                               |
+| =int      ft_tolower(int c)=                                                | Returns lowered letter in =c=                                                               |
+| =int      ft_toupper(int c)=                                                | Returns uppered letter in =c=                                                               |
+| =char     *ft_utohex(unsigned long n, char lower)=                          | unsigned to hexadecimal, with lower letters if =lower= is 1                                 |
