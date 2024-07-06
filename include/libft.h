@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/04 19:43:09 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/06 05:35:00 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ char			*ft_strjoin_free(char const *s1, char const *s2, int free1,
 					int free2);
 int				free_split(char **arr);
 int				ft_strcmp(const char *s1, const char *s2);
+
+void			ft_lstunlink(t_list **lst, t_list *link);
 
 /******************************* FT_PRINTF ************************************/
 int				ft_printf(const char *format, ...);

@@ -3,33 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/04 19:06:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/06 06:49:45 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "../include/libft.h"
+#include "quoicoushell.h"
 
-int	main(void)
+//TODO: LEARN SIGACTION AND REPLACE SIGNAL WITH SIGACTION
+void	set_signals(void)
 {
-	char	*cmd;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
 
+void	init_shell(t_shell *sh, char **envp)
+{
+	set_signals();
+	sh->local_vars = NULL;
+	sh->env_vars = NULL;
+	import_env(sh, envp);
+	sh->cwd = getcwd(NULL, 0);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	t_shell	sh;
+	char	*line;
+
+	(void) ac;
+	(void) av;
+	init_shell(&sh, envp);
 	while (1)
 	{
-		cmd = readline("QUOICOUSHELL >>> ");
-		/* cmd = get_next_line(STDIN_FILENO); */
-		if (!ft_strncmp(cmd, "END", 3))
-		{
-			free(cmd);
-			exit(0);
-		}
-		free(cmd);
+		line = readline(build_prompt(&sh));
+		// line = readline("qcsh > ");
+		if (!line)
+			exit_shell(&sh, EXIT_SUCCESS);
+		if (*line)
+			add_history(line);
+		
+		free(line);
 	}
 	return (0);
 }

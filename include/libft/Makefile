@@ -1,14 +1,14 @@
-#******************************************************************************#
+# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+         #
+#    By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/04 16:22:14 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/04 19:36:54 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/06 04:48:06 by jsommet          ###   ########.fr        #
 #                                                                              #
-#******************************************************************************#
+# **************************************************************************** #
 
 NAME	:=	libft.a
 
@@ -24,7 +24,7 @@ SRC		:=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 			\
 			ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c \
 			ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c \
-			ft_lstmap.c \
+			ft_lstmap.c ft_lstunlink.c\
 			\
 			ft_isspace.c ft_strndup.c ft_atol.c ft_utohex.c ft_max.c \
 			ft_max_arr.c ft_min.c ft_min_arr.c ft_abs.c ft_lstremove.c \
