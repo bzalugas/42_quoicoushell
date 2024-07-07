@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/07 03:16:04 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/08 01:12:06 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,45 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->cwd = getcwd(NULL, 0);
 }
 
+void	print_split(char **sp)
+{
+	int		i;
+
+	i = 0;
+	while (sp[i])
+	{
+		ft_putchar_fd('[', 2);
+		ft_putstr_fd(sp[i], 2);
+		ft_putstr_fd("] size:", 2);
+		ft_putnbr_fd(ft_strlen(sp[i]), 2);
+		ft_putchar_fd('\n', 2);
+		i++;
+	}
+}
+
+// use for parenthesis (bonus so rn useless pretty much)
+// pid_t	as_subshell(t_shell *sh, char *line)
+// {
+// 	pid_t	pid;
+
+// 	pid = fork();
+// 	if (pid < 0)
+// 		return (perror("fork"), 0);
+// 	if (!pid)
+// 	{
+// 		command_line(sh, line);
+// 	}
+// 	return (pid);
+// }
+
 void	command_line(t_shell *sh, char *line)
 {
 	char	**tokens;
-	int		i;
 
 	(void) sh;
 	// line = replace_vars(sh, line);
 	tokens = token_split(line);
-	i = 0;
-	while (tokens[i])
-		ft_putendl_fd(tokens[i++], 1);
+	print_split(tokens);
 	free_split(tokens);
 }
 

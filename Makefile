@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/07 02:55:24 by jsommet          ###   ########.fr        #
+#    Updated: 2024/07/07 23:28:15 by jsommet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ LIBFTDIR    :=	$(INCDIR)/libft
 
 LIBFT	    :=	$(LIBFTDIR)/libft.a
 
-SRC	    :=	main.c ft_readline.c minishell_utils.c sighandlers.c variables.c variables2.c variables_utils.c token_split.c
+SRC	    :=	main.c ft_readline.c minishell_utils.c sighandlers.c variables.c variables2.c variables_utils.c token_split.c token_split_utils.c
 
 OBJ	    :=  $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/07 02:52:05 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/07 22:56:29 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -36,6 +38,7 @@ typedef struct s_var
 //main.c
 void	set_signals(void);
 void	init_shell(t_shell *sh, char **envp);
+void	command_line(t_shell *sh, char *line);
 
 // minishell_utils.c
 void	exit_shell(t_shell *sh, int exit_code);
@@ -47,13 +50,11 @@ t_list	*import_env(t_shell *sh, char **envp);
 char	**export_env(t_shell *sh);
 t_list	*add_variable(t_shell *sh, char *name, char *value, int env);
 int		del_variable(t_shell *sh, char *name);
-
 // variables2.c
 t_list	*set_variable(t_shell *sh, char *name, char *new_value);
 t_list	*get_variable(t_shell *sh, char	*name);
 t_var	*new_variable(char *name, char *value);
 void	free_variable(void *var);
-
 // variables_utils.c
 char	**split_env_entry(char *entry);
 
@@ -62,6 +63,10 @@ void	sigint_handler(int signum);
 
 //token_split.c
 char	**token_split(char *s);
+int		ft_isquot(char c);
+int		ft_isoper(char c);
+int		next_quote(char *p);
+int		close_par(char *p);
 
 // ft_readline.c
 char	*ft_readline(char *prompt);
