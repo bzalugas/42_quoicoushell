@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/06 06:50:17 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/07 02:52:05 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ char	**split_env_entry(char *entry);
 
 // sighandlers.c
 void	sigint_handler(int signum);
+
+//token_split.c
+char	**token_split(char *s);
 
 // ft_readline.c
 char	*ft_readline(char *prompt);
