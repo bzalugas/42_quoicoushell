@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/13 16:35:54 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/13 17:51:14 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,10 @@ $(NAME):	$(OBJ) $(LIBFT)
 
 libft:		$(LIBFT)
 	@make -sC $(LIBFTDIR)
+
+test_exec:
+			gcc src/testing/*.c src/exec* -L$(LIBFTDIR) -lft -o $(OBJDIR)/test_exec
+			@$(OBJDIR)/test_exec
 
 clean:
 	@echo $(RED)"CLEANING OBJS"
