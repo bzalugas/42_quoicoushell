@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/13 16:32:26 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:28:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds)
 int	stop_error(char *msg, int error, t_lstcmds *cmds)
 {
 	char	*buf;
+	int		i;
 
 	buf = ft_strjoin("quoicoushell: ", msg);
 	if (error == 127)
@@ -48,5 +49,13 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds)
 	else
 		ft_putendl_fd(buf, STDERR_FILENO);
 	free(buf);
+	i = -1;
+	while (++i < 2)
+	{
+		if (cmds->fd[i][0] != -1)
+			ft_close(cmds, cmds->fd[i][0]);
+		if (cmds->fd[i][1] != -1)
+			ft_close(cmds, cmds->fd[i][1]);
+	}
 	exit(EXIT_FAILURE);
 }

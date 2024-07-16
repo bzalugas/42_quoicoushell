@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/13 16:38:38 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:08:24 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,8 @@ int		stop_error(char *msg, int error, t_lstcmds *cmds);
 
 //exec_main.c
 int		run_all_cmds(t_lstcmds *cmds);
+
+//builtins.c
+int		run_builtin(t_lstcmds *cmds, t_cmd *cmd);
 
 #endif

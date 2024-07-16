@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/13 16:39:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:38:28 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,15 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd)
 	return (stop_error(cmd->cmd_opts[0], 127, cmds));
 }
 
-static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd)
+static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, int *builtin_status)
 {
 	pid_t	pid;
 	int		pipe_in;
 	int		pipe_out;
 
+	*builtin_status = run_builtin(cmds, cmd);
+	if (*builtin_status)
+		return (-1);
 	pipe_in = cmd->n_cmd % 2;
 	pipe_out = (cmd->n_cmd + 1) % 2;
 	pid = fork();
@@ -84,11 +87,14 @@ int	run_all_cmds(t_lstcmds *cmds)
 		if (!cmd->redir_out && cmd->n_cmd < cmds->n_cmds - 1)
 			if (pipe(cmds->fd[(cmd->n_cmd + 1) % 2]) == -1)
 				exit(errno);
-		last = prepare_run_cmd(cmds, cmd);
+		last = prepare_run_cmd(cmds, cmd, &status);
 		node_cmd = node_cmd->next;
 	}
-	waitpid(last, &status, 0);
+	if (last != -1)
+		waitpid(last, &status, 0);
 	while (errno != ECHILD)
 		wait(NULL);
-	return (WEXITSTATUS(status));
+	if (last != -1)
+		return (WEXITSTATUS(status));
+	return (status);
 }

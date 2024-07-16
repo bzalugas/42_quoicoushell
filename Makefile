@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/13 17:51:14 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/16 19:08:23 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,8 @@ LIBFTDIR    :=	$(INCDIR)/libft
 LIBFT	    :=	$(LIBFTDIR)/libft.a
 
 SRC	    :=	main.c ft_readline.c minishell_utils.c sighandlers.c variables.c \
-			variables2.c variables_utils.c token_split.c token_split_utils.c \
-			exec_end_child.c exec_handle_streams.c exec_main.c
+		variables2.c variables_utils.c token_split.c token_split_utils.c \
+		exec_end_child.c exec_handle_streams.c exec_main.c builtins.c
 
 OBJ	    :=  $(SRC:.c=.o)
 
@@ -34,7 +34,7 @@ OBJ	    :=  $(addprefix $(OBJDIR)/, $(OBJ))
 
 CC	    :=  cc
 
-CFLAGS	    :=  -Wall -Wextra -Werror -I$(INCDIR) -lreadline -g3
+CFLAGS	    :=  -Wall -Wextra -Werror -I$(INCDIR) -g3
 
 ########### COLORS ##########
 
@@ -61,15 +61,15 @@ $(LIBFT):
 
 $(NAME):	$(OBJ) $(LIBFT)
 	@echo $(GREEN)"LINKING mandatory objects to create $(NAME)"
-	$(CC) $(OBJ) $(CFLAGS) -L$(LIBFTDIR) -lft -o $(NAME)
+	$(CC) $(OBJ) -lreadline -L$(LIBFTDIR) -lft -o $(NAME)
 	@printf $(RESET)
 
 libft:		$(LIBFT)
 	@make -sC $(LIBFTDIR)
 
-test_exec:
-			gcc src/testing/*.c src/exec* -L$(LIBFTDIR) -lft -o $(OBJDIR)/test_exec
-			@$(OBJDIR)/test_exec
+test_exec:	$(LIBFT) | $(OBJDIR)
+			cc src/testing/*.c src/exec* src/builtins.c -L$(LIBFTDIR) -lft -o $(OBJDIR)/test_exec
+			./$(OBJDIR)/test_exec
 
 clean:
 	@echo $(RED)"CLEANING OBJS"
@@ -89,4 +89,4 @@ re:		fclean
 
 -include	$(OBJ:.o=.d)
 
-.PHONY:		all clean fclean re bonus libft
+.PHONY:		all clean fclean re bonus libft test_exec

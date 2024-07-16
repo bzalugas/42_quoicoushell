@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:45:52 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/13 17:48:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:48:01 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	test_exec_basic1(CuTest *tc)
 	paths[1] = NULL;
 	cmds = (t_lstcmds){NULL, .fd[0][0] = -1, .fd[0][1] = -1, .fd[1][0] = -1,
 		.fd[1][1] = -1, .n_cmds = 1, .env = NULL, .paths = paths};
-	cmd = (t_cmd){0, ft_split("echo'Hello everyone!'", '\''), NULL, NULL, false, NULL};
+	cmd = (t_cmd){0, ft_split("cat'src/testing/test_files/input1'", '\''), NULL, NULL, false, NULL};
 	ft_lstadd_back(&cmds.cmds, ft_lstnew(&cmd));
 	if (pipe(fd) == -1)
 		exit (errno);
@@ -39,12 +39,14 @@ void	test_exec_basic1(CuTest *tc)
 		close(fd[1]);
 		close(fd[0]);
 		run_all_cmds(&cmds);
+		exit(0);
 	}
 	close(fd[1]);
 	bzero(buf, 4096);
 	read(fd[0], &buf, 4095);
 	close(fd[0]);
-	CuAssertStrEquals(tc, "Hello everyone!\n", buf);
+	wait(NULL);
+	CuAssertStrEquals(tc, "Hello everyone!", buf);
 }
 
 static CuSuite *exec_getSuite()
