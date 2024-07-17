@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 20:40:18 by bazaluga          #+#    #+#             */
-/*   Updated: 2023/12/10 21:43:51 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 09:28:21 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*tmp;
 
-	if (!lst || !del)
+	if (!lst)
 		return ;
 	while (*lst)
 	{
