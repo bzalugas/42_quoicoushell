@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:45:52 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/17 12:33:21 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:37:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	free_cmd2(void *content)
 	t_cmd	*cmd;
 
 	cmd = (t_cmd *)content;
-	free_split(cmd->cmd_opts);
+	free_split(cmd->argv);
 	free(cmd->redir_in);
 	free(cmd->redir_out);
 	free(cmd->lim_heredoc);
@@ -52,7 +52,7 @@ void	onetest_exec_stdout(CuTest *tc, t_lstcmds *cmds, t_shell *sh, char *ex)
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[0]);
 		close(fd[1]);
-		run_all_cmds(cmds);
+		run_all_cmds(cmds, sh);
 		free_cmds2(cmds);
 		ft_lstclear(&sh->env_vars, free_variable);
 		ft_lstclear(&sh->local_vars, free_variable);
@@ -83,7 +83,7 @@ void	test_exec_basic1(CuTest *tc)
 	paths[1] = NULL;
 	cmds = (t_lstcmds){NULL, .fd[0][0] = -1, .fd[0][1] = -1, .fd[1][0] = -1,
 		.fd[1][1] = -1, .n_cmds = 1, .env = NULL, .paths = paths};
-	cmd = (t_cmd){0, ft_split("cat'src/testing/test_files/input1'", '\''), NULL, NULL, false, NULL};
+	cmd = (t_cmd){0, 2, ft_split("cat'src/testing/test_files/input1'", '\''), NULL, NULL, false, NULL};
 	ft_lstadd_back(&cmds.cmds, ft_lstnew(&cmd));
 	onetest_exec_stdout(tc, &cmds, &sh, "Hello everyone!");
 }
