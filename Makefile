@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+         #
+#    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/07 23:28:15 by jsommet          ###   ########.fr        #
+#    Updated: 2024/07/17 17:30:07 by jsommet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ LIBFTDIR    :=	$(INCDIR)/libft
 
 LIBFT	    :=	$(LIBFTDIR)/libft.a
 
-SRC	    :=	main.c ft_readline.c minishell_utils.c sighandlers.c variables.c variables2.c variables_utils.c token_split.c token_split_utils.c
+SRC	    :=	main.c ft_readline.c minishell_utils.c sighandlers.c variables.c variables2.c variables_utils.c token_split.c token_split_utils.c tokenize.c
 
 OBJ	    :=  $(SRC:.c=.o)
 
@@ -32,7 +32,7 @@ OBJ	    :=  $(addprefix $(OBJDIR)/, $(OBJ))
 
 CC	    :=  cc
 
-CFLAGS	    :=  -Wall -Wextra -Werror -I$(INCDIR) -lreadline -g3
+CFLAGS	    :=  -Wall -Wextra -Werror -I$(INCDIR) -g3
 
 ########### COLORS ##########
 
@@ -59,7 +59,7 @@ $(LIBFT):
 
 $(NAME):	$(OBJ) $(LIBFT)
 	@echo $(GREEN)"LINKING mandatory objects to create $(NAME)"
-	$(CC) $(OBJ) $(CFLAGS) -L$(LIBFTDIR) -lft -o $(NAME)
+	$(CC) $(OBJ) $(CFLAGS) -L$(LIBFTDIR) -lft -lreadline -o $(NAME)
 	@printf $(RESET)
 
 libft:		$(LIBFT)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/06 06:20:18 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/17 19:54:32 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,6 @@ char	*build_prompt(t_shell *sh)
 	char	*prompt;
 
 	prompt = current_dir_name(sh, 2);
-	prompt = ft_strjoin_free(prompt, " > ", 1, 0);
+	prompt = ft_strjoin_free(prompt, "$ ", 1, 0);
 	return (prompt);
 }

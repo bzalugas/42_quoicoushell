@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/08 01:12:06 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/17 21:03:08 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,30 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->cwd = getcwd(NULL, 0);
 }
 
-void	print_split(char **sp)
+void	print_split(char **sp, char *none, char *end)
 {
 	int		i;
 
 	i = 0;
+	if (!sp[0])
+		dprintf(2, "\t%s%s", none, end);
 	while (sp[i])
 	{
-		ft_putchar_fd('[', 2);
-		ft_putstr_fd(sp[i], 2);
-		ft_putstr_fd("] size:", 2);
-		ft_putnbr_fd(ft_strlen(sp[i]), 2);
-		ft_putchar_fd('\n', 2);
+		dprintf(2, "\t[%s] size: %zu%s", sp[i], ft_strlen(sp[i]), end);
 		i++;
 	}
+	ft_putchar_fd('\n', 2);
+}
+
+void	print_cmd(t_cmd cmd)
+{
+	if (cmd.heredocs[0])
+	{
+		print_split(cmd.heredocs, "NONE", ", ");
+		dprintf(2, "use heredoc: %s\n", cmd.heredoc ? "yes" : "no");
+	}
+	dprintf(2, "argc:\t%d, \nargv: ", cmd.argc);
+	print_split(cmd.argv, "NO ARGUMENTS", "\n");
 }
 
 // use for parenthesis (bonus so rn useless pretty much)
@@ -61,13 +71,25 @@ void	print_split(char **sp)
 
 void	command_line(t_shell *sh, char *line)
 {
-	char	**tokens;
+	char		**tokens;
+	t_tokens	t;
+	t_cmd		*cmd;
+	t_lstcmds	cmds;
 
 	(void) sh;
-	// line = replace_vars(sh, line);
-	tokens = token_split(line);
-	print_split(tokens);
-	free_split(tokens);
+	cmds = (t_lstcmds){0};
+	t = (t_tokens){0};
+	while (t.start > -1)
+	{
+		printf("\t CMD %d: \n", t.cmd_n);
+		tokens = token_split(line, &t);
+// TODO: PROTECT MALLOC
+		cmd = get_command(tokens, t.cmd_n);
+// TODO: PROTECT MALLOC
+		print_cmd(*cmd);
+		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
+		free_split(tokens);
+	}
 }
 
 int	main(int ac, char **av, char **envp)
