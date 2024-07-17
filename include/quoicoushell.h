@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 14:32:04 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 19:43:06 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,20 @@
 # include <fcntl.h>
 # include <wait.h>
 
+typedef enum e_redir_type
+{
+	RTIN,
+	RTHEREDOC,
+	RTOUT_T,
+	RTOUT_A,
+}	t_redir_type;
+
 typedef struct s_shell
 {
 	t_list	*env_vars;
 	t_list	*local_vars;
 	char	*cwd;
+	int		exit_code;
 }	t_shell;
 
 typedef struct s_var
@@ -38,24 +47,30 @@ typedef struct s_var
 	char	*value;
 }	t_var;
 
+typedef struct s_redir
+{
+	char			*file;
+	t_redir_type	type;
+}	t_redir;
+
 typedef struct s_lstcmds
 {
-	t_list	*cmds; //cmds lst
-	int		fd[2][2]; //pipes
-	int		n_cmds; //total number of commands (not sure i need it)
-	char	**env; //the env in its initial array (done)
-	char	**paths; //a split of the paths (used to do the split only 1 time)
+	t_list	*cmds;
+	int		fd[2][2];
+	int		n_cmds;
+	char	**env;
+	char	**paths;
 }	t_lstcmds;
 
 typedef struct s_cmd
 {
-	int		n_cmd; //number of actual command
+	int		n_cmd;
 	int		argc;
-	char	**argv; //the command and its options
-	char	*redir_in; //filename of <
-	char	*redir_out; //filename of >
-	bool	out_append; //true if redir_out is >>
-	char	*lim_heredoc; //if not NULL it means <<
+	char	**argv;
+	t_redir	*redirs;
+	bool	out_append;
+	bool	heredoc;
+	char	**lim_heredoc;
 }	t_cmd;
 
 //main.c
@@ -108,7 +123,7 @@ int		stop_error(char *msg, int error, t_lstcmds *cmds);
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
 
 //builtins.c
-int		run_builtin(t_lstcmds *cmds, t_cmd *cmd);
+int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, bool forked);
 
 //free_cmds.c
 void	free_cmd(void *content);
