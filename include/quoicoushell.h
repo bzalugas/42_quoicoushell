@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 10:14:11 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:32:04 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,15 @@ typedef struct s_lstcmds
 	t_list	*cmds; //cmds lst
 	int		fd[2][2]; //pipes
 	int		n_cmds; //total number of commands (not sure i need it)
-	char	**env; //the env in its initial array
+	char	**env; //the env in its initial array (done)
 	char	**paths; //a split of the paths (used to do the split only 1 time)
 }	t_lstcmds;
 
 typedef struct s_cmd
 {
 	int		n_cmd; //number of actual command
-	char	**cmd_opts; //the command and its options
+	int		argc;
+	char	**argv; //the command and its options
 	char	*redir_in; //filename of <
 	char	*redir_out; //filename of >
 	bool	out_append; //true if redir_out is >>
@@ -104,7 +105,7 @@ int		stop_perror(char *msg, int error, t_lstcmds *cmds);
 int		stop_error(char *msg, int error, t_lstcmds *cmds);
 
 //exec_main.c
-int		run_all_cmds(t_lstcmds *cmds);
+int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
 
 //builtins.c
 int		run_builtin(t_lstcmds *cmds, t_cmd *cmd);

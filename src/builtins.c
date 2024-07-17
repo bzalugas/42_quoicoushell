@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/16 19:37:19 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:33:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 int	run_builtin(t_lstcmds *cmds, t_cmd *cmd)
 {
 	(void)cmds;
-	if (!ft_strcmp(cmd->cmd_opts[0], "echo"))
+	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (1);
-	if (!ft_strcmp(cmd->cmd_opts[0], "cd"))
+	if (!ft_strcmp(cmd->argv[0], "cd"))
 		return (1);
-	if (!ft_strcmp(cmd->cmd_opts[0], "pwd"))
+	if (!ft_strcmp(cmd->argv[0], "pwd"))
 		return (1);
-	if (!ft_strcmp(cmd->cmd_opts[0], "export"))
+	if (!ft_strcmp(cmd->argv[0], "export"))
 		return (1);
-	if (!ft_strcmp(cmd->cmd_opts[0], "unset"))
+	if (!ft_strcmp(cmd->argv[0], "unset"))
 		return (1);
-	if (!ft_strcmp(cmd->cmd_opts[0], "env"))
+	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (1);
-	if (!ft_strcmp(cmd->cmd_opts[0], "exit"))
+	if (!ft_strcmp(cmd->argv[0], "exit"))
 		return (1);
 	return (0);
 }

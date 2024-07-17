@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/16 19:38:28 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:33:01 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,18 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd)
 		dup2(fd_out, STDOUT_FILENO);
 	ft_close(cmds, fd_in);
 	ft_close(cmds, fd_out);
-	if (ft_strchr(cmd->cmd_opts[0], '/'))
-		if (execve(cmd->cmd_opts[0], cmd->cmd_opts, cmds->env))
-			stop_perror(cmd->cmd_opts[0], 0, cmds);
+	if (ft_strchr(cmd->argv[0], '/'))
+		if (execve(cmd->argv[0], cmd->argv, cmds->env))
+			stop_perror(cmd->argv[0], 0, cmds);
 	i = 0;
 	while (cmds->paths[i])
 	{
-		abs_cmd = ft_strjoin(cmds->paths[i], cmd->cmd_opts[0]);
-		execve(abs_cmd, cmd->cmd_opts, cmds->env);
+		abs_cmd = ft_strjoin(cmds->paths[i], cmd->argv[0]);
+		execve(abs_cmd, cmd->argv, cmds->env);
 		free(abs_cmd);
 		i++;
 	}
-	return (stop_error(cmd->cmd_opts[0], 127, cmds));
+	return (stop_error(cmd->argv[0], 127, cmds));
 }
 
 static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, int *builtin_status)
@@ -71,13 +71,14 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, int *builtin_status)
 	return (pid);
 }
 
-int	run_all_cmds(t_lstcmds *cmds)
+int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 {
 	t_list	*node_cmd;
 	t_cmd	*cmd;
 	pid_t	last;
 	int		status;
 
+(void)sh;
 	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
