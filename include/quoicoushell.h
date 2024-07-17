@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/16 18:08:24 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 10:14:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,9 @@ int		run_all_cmds(t_lstcmds *cmds);
 
 //builtins.c
 int		run_builtin(t_lstcmds *cmds, t_cmd *cmd);
+
+//free_cmds.c
+void	free_cmd(void *content);
+void	free_cmds(t_lstcmds *cmds);
 
 #endif
