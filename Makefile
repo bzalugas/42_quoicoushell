@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/17 12:43:10 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/17 14:33:57 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ $(LIBFT):
 
 $(NAME):	$(OBJ) $(OBJMAIN) $(LIBFT)
 	@echo $(GREEN)"LINKING mandatory objects to create $(NAME)"
-	$(CC) $(OBJ) -lreadline -L$(LIBFTDIR) -lft -o $(NAME)
+	$(CC) $(OBJ) $(OBJMAIN) -lreadline -L$(LIBFTDIR) -lft -o $(NAME)
 	@printf $(RESET)
 
 libft:		$(LIBFT)
