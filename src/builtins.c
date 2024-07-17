@@ -6,15 +6,17 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 14:33:11 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:43:48 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/quoicoushell.h"
 
-int	run_builtin(t_lstcmds *cmds, t_cmd *cmd)
+int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, bool forked)
 {
 	(void)cmds;
+	if (cmd->n_cmd > 0 && !forked)
+		return (0);
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (1);
 	if (!ft_strcmp(cmd->argv[0], "cd"))
