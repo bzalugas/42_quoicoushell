@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 20:34:13 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:47:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 # include "libft.h"
 # include <errno.h>
 # include <fcntl.h>
-# include <wait.h>
+# ifdef __linux__
+#  include <wait.h>
+# endif
 
 typedef enum e_redir_type
 {

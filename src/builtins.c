@@ -6,11 +6,11 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 15:43:48 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:42:41 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/quoicoushell.h"
+#include "quoicoushell.h"
 
 int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, bool forked)
 {
