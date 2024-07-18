@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/17 21:03:08 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/18 15:03:15 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,64 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->env_vars = NULL;
 	import_env(sh, envp);
 	sh->cwd = getcwd(NULL, 0);
+	sh->prompt = build_prompt(sh);
 }
 
-void	print_split(char **sp, char *none, char *end)
+void	print_split(char **sp, char *start, char *none, char *end)
 {
 	int		i;
 
 	i = 0;
 	if (!sp[0])
-		dprintf(2, "\t%s%s", none, end);
+		dprintf(2, "%s%s%s", start, none, end);
 	while (sp[i])
 	{
-		dprintf(2, "\t[%s] size: %zu%s", sp[i], ft_strlen(sp[i]), end);
+		dprintf(2, "%s[%s] size: %zu%s", start, sp[i], ft_strlen(sp[i]), end);
 		i++;
 	}
 	ft_putchar_fd('\n', 2);
+
+}
+char *get_redir_type(t_redir_type type)
+{
+	switch (type)
+	{
+		case RTIN: return "IN";
+		case RTOUT_A: return "OUT_APPEND";
+		case RTOUT_T: return "OUT_TRUNC";
+	}
 }
 
 void	print_cmd(t_cmd cmd)
 {
 	if (cmd.heredocs[0])
 	{
-		print_split(cmd.heredocs, "NONE", ", ");
+		print_split(cmd.heredocs, "heredoc\t", "NONE", "\n");
 		dprintf(2, "use heredoc: %s\n", cmd.heredoc ? "yes" : "no");
 	}
+	while (cmd.redirs && cmd.redirs->file)
+	{
+		dprintf(2, "file: [%s] redir type: %s\n", cmd.redirs->file, get_redir_type(cmd.redirs->type));
+		cmd.redirs++;
+	}
 	dprintf(2, "argc:\t%d, \nargv: ", cmd.argc);
-	print_split(cmd.argv, "NO ARGUMENTS", "\n");
+	print_split(cmd.argv, "\t", "NO ARGUMENTS", "\n");
+}
+
+void	free_cmd(t_cmd *cmd)
+{
+	t_redir *tmp;
+
+	tmp = cmd->redirs;
+	while (cmd->redirs->file)
+	{
+		free(cmd->redirs->file);
+		cmd->redirs++;
+	}
+	free(tmp);
+	free_split(cmd->heredocs);
+	free_split(cmd->argv);
+	free(cmd);
 }
 
 // use for parenthesis (bonus so rn useless pretty much)
@@ -68,6 +100,7 @@ void	print_cmd(t_cmd cmd)
 // 	}
 // 	return (pid);
 // }
+
 
 void	command_line(t_shell *sh, char *line)
 {
@@ -87,7 +120,8 @@ void	command_line(t_shell *sh, char *line)
 		cmd = get_command(tokens, t.cmd_n);
 // TODO: PROTECT MALLOC
 		print_cmd(*cmd);
-		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
+		free_cmd(cmd);
+		// ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
 		free_split(tokens);
 	}
 }
@@ -102,7 +136,7 @@ int	main(int ac, char **av, char **envp)
 	init_shell(&sh, envp);
 	while (1)
 	{
-		line = readline(build_prompt(&sh));
+		line = readline(sh.prompt);
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS);
 		if (*line)
@@ -110,5 +144,5 @@ int	main(int ac, char **av, char **envp)
 		command_line(&sh, line);
 		free(line);
 	}
-	return (0);
+	exit_shell(&sh, EXIT_SUCCESS);
 }

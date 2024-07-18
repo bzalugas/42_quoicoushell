@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 21:01:12 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/18 13:58:25 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 typedef enum e_redir_type
 {
 	RTIN,
-	RTHEREDOC,
 	RTOUT_T,
 	RTOUT_A,
 }	t_redir_type;
@@ -50,6 +49,7 @@ typedef struct s_shell
 	t_list	*env_vars;
 	t_list	*local_vars;
 	char	*cwd;
+	char	*prompt;
 	int		exit_code;
 }	t_shell;
 

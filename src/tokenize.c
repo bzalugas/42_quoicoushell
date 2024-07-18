@@ -6,25 +6,39 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 21:03:19 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/18 15:01:51 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-int	check_syntax(char *line)
-{
-	(void) line;
-	/*
-		- unmatched quotes
-		- not a word before pipes
-		- back to back operators (except <> for some reason, |< |> |<< |>> because these take a name after)
-		- newline after redirection
+/*
+	y- unmatched quotes
+	o- not a word before pipes
+	- back to back operators, |< |> |<< |>> because these take a name after)
+	- newline after redirection
 
-		melenshell: syntax error near unexpected token 'token's
-	*/
-	return (0);
-}
+	melenshell: syntax error near unexpected token 'token's
+*/
+// int	check_line_syntax(char *line)
+// {
+// 	int	i;
+// 	int	q;
+
+// 	i = 0;
+// 	while (line[i])
+// 	{
+// 		q = next_quote(&line[i]);
+// 		if (q == 0)
+// 			ft_putendl_fd("syntax error: unmatched quotes", 2);
+// 		if (q > 0)
+// 			i += q;
+// 		if ((line[i] == '<' && line[i + 1] == '>')
+// 			|| (line[i] == '>' && line[i + 1] == '<'))
+// 			ft_putendl_fd("syntax error: near unexpected token '<' or '>'", 2);
+// 	}
+// 	return (0);
+// }
 
 t_cmd	*init_cmd(char **tokens, int n)
 {
@@ -83,11 +97,12 @@ t_cmd	*get_command(char **tokens, int n)
 			cmd->heredocs[hdc++] = ft_strdup(tokens[++i]);
 			cmd->heredoc = 1;
 		}
-		else if (!ft_strcmp(tokens[i], "<") || !ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>"))
+		else if (!ft_strcmp(tokens[i], "<") || !ft_strcmp(tokens[i], ">")
+			|| !ft_strcmp(tokens[i], ">>"))
 		{
 			if (!ft_strcmp(tokens[i], "<"))
 				cmd->heredoc = 0;
-			cmd->redirs[red++].type = RTIN * !ft_strcmp(tokens[i], "<")
+			cmd->redirs[red].type = RTIN * !ft_strcmp(tokens[i], "<")
 				+ RTOUT_T * !ft_strcmp(tokens[i], ">")
 				+ RTOUT_A * !ft_strcmp(tokens[i], ">>");
 			cmd->redirs[red++].file = ft_strdup(tokens[++i]);
@@ -101,9 +116,22 @@ t_cmd	*get_command(char **tokens, int n)
 }
 // TODO: PROTECT MALLOCS (strdups)
 
-char	**expand_vars(char **token)
+int	count_new_words_in_word(char *word)
 {
-	(void) token;
+	(void) word;
+	return (0);
+}
+
+char	**expand_vars(char **words)
+{
+	int	count;
+	int	i;
+
+	i = 0;
+	count = 0;
+	while (words[i])
+		count += count_new_words_in_word(words[i++]);
+
 	return (NULL);
 }
 
