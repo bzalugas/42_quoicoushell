@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/18 12:47:02 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/19 20:59:05 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 typedef enum e_redir_type
 {
 	RTIN,
-	RTHEREDOC,
 	RTOUT_T,
 	RTOUT_A,
 }	t_redir_type;
@@ -112,7 +111,9 @@ char	*ft_readline(char *prompt);
 
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
-int		get_heredoc(t_lstcmds *cmds, t_cmd *cmd);
+
+//exec_heredoc.c
+int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);
 
 //exec_end_child.c
 int		stop_perror(char *msg, int error, t_lstcmds *cmds);

@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/17 20:57:02 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/19 17:38:04 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,35 +30,6 @@ int	ft_close(t_lstcmds *cmds, int fd)
 	if (cmds->fd[1][1] == fd)
 		cmds->fd[1][1] = -1;
 	return (close(fd));
-}
-
-int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd)
-{
-	char	*line;
-	char	*lim;
-
-	//CHANGE THIS TO USE A TMP FILE (random name in /dev/random)
-	if (pipe(cmds->fd[cmd->n_cmd % 2]) == -1)
-		exit(errno);
-	lim = ft_strjoin(cmd->lim_heredoc, "\n");
-	ft_putstr_fd("> ", STDOUT_FILENO);
-	line = get_next_line(STDIN_FILENO);
-	while (line)
-	{
-		if (!ft_strcmp(lim, line))
-		{
-			free(line);
-			free(lim);
-			close(cmds->fd[0][1]);
-			return (0);
-		}
-		else
-			ft_putstr_fd(line, cmds->fd[0][1]);
-		free(line);
-		ft_putstr_fd("> ", STDOUT_FILENO);
-		line = get_next_line(STDIN_FILENO);
-	}
-	return (0);
 }
 
 static int	get_infile(t_lstcmds *cmds, t_cmd *cmd, char *filename)
