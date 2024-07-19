@@ -6,12 +6,11 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/20 00:01:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/20 00:09:54 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/quoicoushell.h"
-#include <stdlib.h>
+#include "quoicoushell.h"
 
 static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd)
 {
