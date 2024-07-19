@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/19 21:40:34 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/20 00:04:55 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*random_filename(t_lstcmds *cmds)
 
 	fd = open("/dev/random", O_RDONLY);
 	if (fd == -1)
-		stop_error("heredoc", 0, cmds);
+		stop_error("heredoc", 1, cmds);
 	ft_bzero(buf, 4096);
 	ft_bzero(filename, 11);
 	j = 0;
@@ -38,30 +38,27 @@ static char	*random_filename(t_lstcmds *cmds)
 		}
 	}
 	close(fd);
-	return (ft_strdup(filename));
+	return (ft_strjoin_free("/tmp/", ft_strdup(filename), 0, 1));
 }
 
-int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, char *lim, char *filename)
+static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 {
 	char	*line;
+	int		fdn;
 
-	//CHANGE THIS TO USE A TMP FILE (random name in /dev/random)
-	 if (pipe(cmds->fd[cmd->n_cmd % 2]) == -1)
-		exit(errno);
-	lim = ft_strjoin(lim, "\n");
+	fdn = cmd->n_cmd % 2;
 	ft_putstr_fd("> ", STDOUT_FILENO);
 	line = get_next_line(STDIN_FILENO);
 	while (line)
 	{
-		if (!ft_strcmp(lim, line))
+		if (!ft_strcmp(cmd->heredocs[i], line))
 		{
 			free(line);
-			free(lim);
-			close(cmds->fd[0][1]);
+			close(cmds->fd[0][0]);
 			return (0);
 		}
 		else
-			ft_putstr_fd(line, cmds->fd[0][1]);
+			ft_putstr_fd(line, cmds->fd[fdn][0]);
 		free(line);
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		line = get_next_line(STDIN_FILENO);
@@ -71,15 +68,26 @@ int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, char *lim, char *filename)
 
 int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 {
-	int	i;
+	int		i;
 
-	if (!cmd->redirs)
+	if (!cmd->heredocs)
 		return (1);
 	i = 0;
 	while (cmd->heredocs[i])
 	{
-		get_heredoc(cmds, cmd, cmd->heredocs[i], random_filename(cmds));
+		if (i == 0)
+			cmd->hd_filename = random_filename(cmds);
+		if (!cmd->hd_filename)
+			stop_error("random filename", 1, cmds);
+		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
+		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY | O_CREAT
+			| O_TRUNC, 0600);
+		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
+			return (stop_error("in get heredocs", 1, cmds));
+		get_heredoc(cmds, cmd, i);
 		i++;
 	}
+	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
+	cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY);
 	return (0);
 }

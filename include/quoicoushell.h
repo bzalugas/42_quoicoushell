@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/19 20:59:05 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/20 00:01:21 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ typedef struct s_cmd
 	int		argc;
 	char	**argv;
 	t_redir	*redirs;
-	char	**heredocs;
+	char	**heredocs; //please provide limiters with final \n
+	char	*hd_filename;
 	bool	heredoc;
 }	t_cmd;
 
@@ -111,6 +112,7 @@ char	*ft_readline(char *prompt);
 
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
+int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd);
 
 //exec_heredoc.c
 int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);

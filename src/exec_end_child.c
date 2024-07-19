@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/16 18:28:49 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/20 00:05:59 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds)
 		if (cmds->fd[i][1] != -1)
 			ft_close(cmds, cmds->fd[i][1]);
 	}
+	//free all remaining ptrs ?
 	exit(EXIT_FAILURE);
 }
 
@@ -57,5 +58,6 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds)
 		if (cmds->fd[i][1] != -1)
 			ft_close(cmds, cmds->fd[i][1]);
 	}
+	//free all remaining ptrs ?
 	exit(EXIT_FAILURE);
 }

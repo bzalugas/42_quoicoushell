@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/19 17:38:04 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:54:55 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ static int	get_infile(t_lstcmds *cmds, t_cmd *cmd, char *filename)
 	int	fdn;
 
 	fdn = cmd->n_cmd % 2;
-	if (cmds->fd[fdn][0] != -1)
-		ft_close(cmds, cmds->fd[fdn][0]);
+	ft_close(cmds, cmds->fd[fdn][0]);
 	cmds->fd[fdn][0] = open(filename, O_RDONLY);
 	if (cmds->fd[fdn][0] == -1)
 		stop_perror(filename, 0, cmds);
@@ -52,8 +51,7 @@ static int	get_outfile(t_lstcmds *cmds, t_cmd *cmd, int redir_i)
 
 	redir = cmd->redirs[redir_i];
 	fdn = (cmd->n_cmd - 1) % 2;
-	if (cmds->fd[fdn][1] != -1)
-		ft_close(cmds, cmds->fd[fdn][1]);
+	ft_close(cmds, cmds->fd[fdn][1]);
 	if (redir.type == RTOUT_A)
 		cmds->fd[fdn][1] = open(redir.file, O_WRONLY | O_CREAT | O_APPEND,
 			0644);
@@ -67,7 +65,6 @@ static int	get_outfile(t_lstcmds *cmds, t_cmd *cmd, int redir_i)
 int	get_in_out_files(t_lstcmds *cmds, t_cmd *cmd)
 {
 	int	i;
-//SEPARATE HEREDOC (in main process) and in/out files (child process)
 	if (!cmd->redirs)
 		return (1);
 	i = 0;
@@ -75,10 +72,9 @@ int	get_in_out_files(t_lstcmds *cmds, t_cmd *cmd)
 	{
 		if (cmd->redirs[i].type == RTIN)
 			get_infile(cmds, cmd, cmd->redirs[i].file);
-		else if (cmd->redirs[i].type == RTHEREDOC)
-			get_heredoc(cmds, cmd);
 		else
 			get_outfile(cmds, cmd, i);
 		i++;
 	}
+	return (0);
 }
