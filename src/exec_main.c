@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/20 00:09:54 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/22 14:18:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd)
 	return (stop_error(cmd->argv[0], 127, cmds));
 }
 
-static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd)
+static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	int		fd_in;
 	int		fd_out;
@@ -45,7 +45,7 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd)
 		dup2(fd_out, STDOUT_FILENO);
 	ft_close(cmds, fd_in);
 	ft_close(cmds, fd_out);
-	status = run_builtin(cmds, cmd, true);
+	status = run_builtin(cmds, cmd, sh, true);
 	if (status)
 		return (status);
 	return (run_non_builtin(cmds, cmd));
@@ -57,7 +57,7 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	int		pipe_in;
 	int		pipe_out;
 
-	sh->exit_code = run_builtin(cmds, cmd, false);
+	sh->exit_code = run_builtin(cmds, cmd, sh, false);
 	if (sh->exit_code)
 		return (-1);
 	pipe_in = cmd->n_cmd % 2;
@@ -70,7 +70,7 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		ft_close(cmds, cmds->fd[pipe_in][1]);
 		ft_close(cmds, cmds->fd[pipe_out][0]);
 		get_in_out_files(cmds, cmd);
-		return (run_cmd(cmds, cmd));
+		return (run_cmd(cmds, cmd, sh));
 	}
 	ft_close(cmds, cmds->fd[pipe_in][0]);
 	ft_close(cmds, cmds->fd[pipe_in][1]);

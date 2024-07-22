@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:45:52 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/17 14:37:09 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/22 13:25:05 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 static void	free_cmd2(void *content)
 {
 	t_cmd	*cmd;
+	int		i;
 
 	cmd = (t_cmd *)content;
 	free_split(cmd->argv);
-	free(cmd->redir_in);
-	free(cmd->redir_out);
-	free(cmd->lim_heredoc);
+	i = 0;
+	free(cmd->redirs);
+	free_split(cmd->heredocs);
 }
 
 static void	free_cmds2(t_lstcmds *cmds)
