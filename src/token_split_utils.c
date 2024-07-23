@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_split_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:13:43 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/08 01:12:16 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/23 16:53:34 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,36 @@ int	next_quote(char *p)
 			return (i);
 	}
 	return (0);
+}
+
+	//TODO: RE WRITE POST PROCESSING
+void	remove_quotes(char *word)
+{
+	int		offset;
+	int		i;
+	int		q;
+	char	c;
+
+	offset = 0;
+	i = -1;
+	c = 0;
+	while (word[++i])
+	{
+		word[i - offset] = word[i];
+		q = next_quote(&word[i]);
+		if (c && c == word[i])
+		{
+			offset++;
+			c = 0;
+		}
+		else if (!c && q > 0)
+		{
+			offset++;
+			c = word[i];
+		}
+	}
+	while (word[i - offset])
+		word[i++ - offset] = 0;
 }
 
 //returns distance to corresponding closing parenthesis

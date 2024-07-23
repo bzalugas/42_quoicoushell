@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/23 16:15:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:12:41 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ int	ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	if (args[1] == NULL)
 		export_variable(sh, args[0]);
 	else
+	{
+		remove_quotes(args[1]);
 		add_variable(sh, args[0], args[1], 1);
+	}
 	free(args);
 	return (0);
 }

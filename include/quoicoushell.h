@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/23 16:13:49 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:54:00 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,9 @@ int		ft_isquot(char c);
 int		ft_isoper(char c);
 int		next_quote(char *p);
 int		close_par(char *p);
+
+//token_split_utils.c
+void	remove_quotes(char *word);
 
 // ft_readline.c
 char	*ft_readline(char *prompt);
