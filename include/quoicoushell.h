@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/22 16:18:47 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:13:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ t_list	*import_env(t_shell *sh, char **envp);
 char	**export_env(t_shell *sh);
 t_list	*add_variable(t_shell *sh, char *name, char *value, int env);
 int		del_variable(t_shell *sh, char *name);
+int		export_variable(t_shell *sh, char *name);
 // variables2.c
 t_list	*set_variable(t_shell *sh, char *name, char *new_value);
 t_list	*get_variable(t_shell *sh, char	*name);
