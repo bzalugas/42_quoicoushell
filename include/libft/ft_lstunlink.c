@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstunlink.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 04:34:41 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/06 04:34:58 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/23 21:38:37 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	ft_lstunlink(t_list **lst, t_list *link)
 	if (first == link)
 	{
 		*lst = (*lst)->next;
+		link->next = NULL;
 		return ;
 	}
 	while (first && first->next && first->next != link)
@@ -28,4 +29,5 @@ void	ft_lstunlink(t_list **lst, t_list *link)
 	{
 		first->next = link->next;
 	}
+	link->next = NULL;
 }

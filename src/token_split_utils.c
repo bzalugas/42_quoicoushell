@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:13:43 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 18:38:08 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/22 19:16:47 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_isoper(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '<' || c == '>');
 }
 
 int	ft_isquot(char c)
@@ -40,7 +40,7 @@ int	next_quote(char *p)
 }
 
 	//TODO: RE WRITE POST PROCESSING
-void	post_processing(char *word)
+void	remove_quotes(char *word)
 {
 	int		offset;
 	int		i;

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 15:36:58 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 17:29:19 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/22 19:16:47 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	count_tokens(char *s, t_tokens *t)
 		if (ft_isoper(s[i]))
 		{
 			tc++;
-			i += (s[i + 1] && s[i] == s[i + 1]);
+			i += (s[i + 1] && ft_isoper(s[i + 1])); //&& s[i] == s[i + 1] changed it because <> is an operator ig
 		}
 		else if (i == 0 && !ft_isspace(s[i]))
 			tc++;
@@ -109,8 +109,8 @@ int	token_len(char *p)
 		return (0);
 	if (ft_isoper(p[0]))
 	{
-		if (p[0] == p[1])
-			return (2);
+		if (ft_isoper(p[1])) // p[0] == p[1] same reason as above
+			return (2); //size is 1 bigger so i can add a special character to differentiate [op] from ["op"] (maybe a negative character or some non printable character that )
 		return (1);
 	}
 	i = 0;
@@ -144,8 +144,8 @@ char	**token_split(char *s, t_tokens *t)
 		ft_strlcpy(split[i], s, tl + 1);
 		s += tl;
 	}
-	i = -1;
-	while (split[++i])
-		post_processing(split[i]);
+	// i = -1;
+	// while (split[++i])
+	// 	remove_quotes(split[i]);
 	return (split);
 }
