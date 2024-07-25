@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 05:24:13 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 17:29:35 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/23 22:58:17 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ char	*get_variable_value(t_shell *sh, char *name)
 	char	*value;
 
 	link = get_variable(sh, name);
+	if (!link)
+		return (NULL);
 	value = ((t_var *)link->content)->value;
 	return (value);
 }

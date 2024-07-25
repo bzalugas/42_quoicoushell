@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 18:00:14 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/25 18:04:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,13 @@ t_list	*import_env(t_shell *sh, char **envp);
 char	**export_env(t_shell *sh);
 t_list	*add_variable(t_shell *sh, char *name, char *value, int env);
 int		del_variable(t_shell *sh, char *name);
-int		export_variable(t_shell *sh, char *name);
+t_list	*export_variable(t_shell *sh, char *name);
 // variables2.c
 t_list	*set_variable(t_shell *sh, char *name, char *new_value);
 t_list	*get_variable(t_shell *sh, char	*name);
 t_var	*new_variable(char *name, char *value);
 void	free_variable(void *var);
+char	*get_variable_value(t_shell *sh, char *name);
 // variables_utils.c
 char	**split_env_entry(char *entry);
 
@@ -115,10 +116,10 @@ int		ft_isquot(char c);
 int		ft_isoper(char c);
 int		next_quote(char *p);
 int		close_par(char *p);
-void	post_processing(char *word);
+void	remove_quotes(char *word);
 
 // tokenize.c
-t_cmd	*get_command(char **tokens, int n);
+t_cmd	*get_command(t_shell *sh, char **tokens, int n);
 
 //token_split_utils.c
 void	remove_quotes(char *word);

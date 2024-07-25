@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 17:29:33 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/23 22:40:53 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ t_list	*import_env(t_shell *sh, char **envp)
 	while (envp[i])
 	{
 		entry_split = split_env_entry(envp[i]);
+		dprintf(2, "0 %s\n", entry_split[0]);
+		dprintf(2, "1 %s\n", entry_split[1]);
 		if (!entry_split)
 			return (NULL);
 		if (!add_variable(sh, entry_split[0], entry_split[1], 1))
@@ -69,16 +71,16 @@ char	**export_env(t_shell *sh)
 * @return 0 on success,
 * -1 on error (ie: variable not found).
 */
-int	export_variable(t_shell *sh, char *name)
+t_list	*export_variable(t_shell *sh, char *name)
 {
 	t_list	*link;
 
 	link = get_variable(sh, name);
 	if (!link)
-		return (-1);
+		return (NULL);
 	ft_lstunlink(&sh->local_vars, link);
 	ft_lstadd_back(&sh->env_vars, link);
-	return (0);
+	return (link);
 }
 
 /*
@@ -94,24 +96,21 @@ int	export_variable(t_shell *sh, char *name)
 */
 t_list	*add_variable(t_shell *sh, char *name, char *value, int env)
 {
-	t_list	**list;
 	t_list	*new;
 	t_var	*var;
 
 	new = set_variable(sh, name, value);
 	if (new)
 		return (new);
-	if (env)
-		list = &sh->env_vars;
-	else
-		list = &sh->local_vars;
 	var = new_variable(name, value);
 	if (!var)
 		return (NULL);
 	new = ft_lstnew(var);
 	if (!new)
 		return (free_variable(var), NULL);
-	ft_lstadd_back(list, new);
+	ft_lstadd_back(&sh->local_vars, new);
+	if (env)
+		export_variable(sh, name);
 	return (new);
 }
 

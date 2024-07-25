@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/18 15:03:15 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/23 21:42:53 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	command_line(t_shell *sh, char *line)
 		printf("\t CMD %d: \n", t.cmd_n);
 		tokens = token_split(line, &t);
 // TODO: PROTECT MALLOC
-		cmd = get_command(tokens, t.cmd_n);
+		cmd = get_command(sh, tokens, t.cmd_n);
 // TODO: PROTECT MALLOC
 		print_cmd(*cmd);
 		free_cmd(cmd);

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:13:43 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 18:02:16 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/25 18:04:54 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_isoper(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '<' || c == '>');
 }
 
 int	ft_isquot(char c)
