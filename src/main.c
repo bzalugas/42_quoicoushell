@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/23 21:42:53 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/25 18:23:07 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,6 @@ void	print_cmd(t_cmd cmd)
 	}
 	dprintf(2, "argc:\t%d, \nargv: ", cmd.argc);
 	print_split(cmd.argv, "\t", "NO ARGUMENTS", "\n");
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	t_redir *tmp;
-
-	tmp = cmd->redirs;
-	while (cmd->redirs->file)
-	{
-		free(cmd->redirs->file);
-		cmd->redirs++;
-	}
-	free(tmp);
-	free_split(cmd->heredocs);
-	free_split(cmd->argv);
-	free(cmd);
 }
 
 // use for parenthesis (bonus so rn useless pretty much)
