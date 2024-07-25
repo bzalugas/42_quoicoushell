@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 17:29:25 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/25 18:36:28 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
 	int		c;
 	int		i;
 
+	(void) sh;
 	i = 0;
 	c = 0;
 	hdc = 0;
@@ -47,7 +48,8 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
 			|| !ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>"))
 			c++;
 		else
-			cmd->argc += count_new_words_in_word(sh, tokens[i]);
+			cmd->argc++;
+			// cmd->argc += count_new_words_in_word(sh, tokens[i]);
 		if (!ft_strcmp(tokens[i], "<<") || !ft_strcmp(tokens[i], "<")
 			|| !ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>"))
 			i++;
@@ -136,7 +138,7 @@ typedef struct s_exvar //TODO: MOVE TO HEADER
 	int		start;
 	int		len;
 }	t_exvar;
-
+/*
 char	*expand_whole(t_shell *sh, char *word)
 {
 	//course of action to be determined
@@ -159,15 +161,54 @@ char	**expand_word(t_shell *sh, char *word)
 
 
 }
+*/
+// int	categorize_token(t_cmd *cmd, char **token, int *ctrs, t_shell *sh)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (!ft_strcmp(*token, "<<"))
+// 	{
+// 		cmd->heredocs[ctrs[1]++] = ft_strjoin(token[++i], "\n");
+// 		cmd->heredoc = 1;
+// 	}
+// 	else if (!ft_strcmp(*token, "<") || !ft_strcmp(*token, ">")
+// 		|| !ft_strcmp(*token, ">>"))
+// 	{
+// 		if (!ft_strcmp(*token, "<"))
+// 			cmd->heredoc = 0;
+// 		cmd->redirs[ctrs[2]].type = RTIN * !ft_strcmp(*token, "<")
+// 			+ RTOUT_T * !ft_strcmp(*token, ">")
+// 			+ RTOUT_A * !ft_strcmp(*token, ">>");
+// 		cmd->redirs[ctrs[2]++].file = prep_redir_word(sh, token[++i]);
+// 	}
+// 	else
+// 		//ft_memcpy(&cmd->argv[ctrs[0]++], words, byte size of words)
+// 		cmd->argv[ctrs[0]++] = ft_strdup(*token);
+// 	return (i);
+// }
+
+char	*prep(char *word, bool hd)
+{
+	char	*nw;
+
+	if (hd)
+		nw = ft_strjoin(word, "\n");
+	else
+		nw = ft_strdup(word);
+	remove_quotes(nw);
+	return (nw);
+}
 
 int	categorize_token(t_cmd *cmd, char **token, int *ctrs, t_shell *sh)
 {
 	int	i;
 
 	i = 0;
+	(void) sh;
 	if (!ft_strcmp(*token, "<<"))
 	{
-		cmd->heredocs[ctrs[1]++] = ft_strjoin(token[++i], "\n");
+		cmd->heredocs[ctrs[1]++] = prep(token[++i], true);
 		cmd->heredoc = 1;
 	}
 	else if (!ft_strcmp(*token, "<") || !ft_strcmp(*token, ">")
@@ -178,11 +219,11 @@ int	categorize_token(t_cmd *cmd, char **token, int *ctrs, t_shell *sh)
 		cmd->redirs[ctrs[2]].type = RTIN * !ft_strcmp(*token, "<")
 			+ RTOUT_T * !ft_strcmp(*token, ">")
 			+ RTOUT_A * !ft_strcmp(*token, ">>");
-		cmd->redirs[ctrs[2]++].file = prep_redir_word(sh, token[++i]);
+		cmd->redirs[ctrs[2]++].file = prep(token[++i], false);
 	}
 	else
 		//ft_memcpy(&cmd->argv[ctrs[0]++], words, byte size of words)
-		cmd->argv[ctrs[0]++] = ft_strdup(*token);
+		cmd->argv[ctrs[0]++] = prep(token[i], false);
 	return (i);
 }
 
