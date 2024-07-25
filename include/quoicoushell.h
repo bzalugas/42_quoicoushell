@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/18 13:58:25 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/25 18:00:14 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 # include "libft.h"
 # include <errno.h>
 # include <fcntl.h>
-# include <wait.h>
+# ifdef __linux__
+#  include <wait.h>
+# endif
 
 typedef enum e_redir_type
 {
@@ -61,11 +63,12 @@ typedef struct s_var
 
 typedef struct s_lstcmds
 {
-	t_list	*cmds; //cmds lst
-	int		fd[2][2]; //pipes
-	int		n_cmds; //total number of commands (not sure i need it)
-	char	**env; //the env in its initial array
-	char	**paths; //a split of the paths (used to do the split only 1 time)
+	t_list	*cmds;
+	int		fd[2][2];
+	int		n_cmds;
+	bool	env_update;
+	char	**env;
+	char	**paths;
 }	t_lstcmds;
 
 typedef struct s_cmd
@@ -75,7 +78,8 @@ typedef struct s_cmd
 	char	**argv;
 	t_redir	*redirs;
 	char	**heredocs;
-	int		heredoc;
+	char	*hd_filename;
+	bool	heredoc;
 }	t_cmd;
 
 //main.c
@@ -116,20 +120,31 @@ void	post_processing(char *word);
 // tokenize.c
 t_cmd	*get_command(char **tokens, int n);
 
+//token_split_utils.c
+void	remove_quotes(char *word);
+
 // ft_readline.c
 char	*ft_readline(char *prompt);
 
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
-int		get_heredoc(t_lstcmds *cmds, t_cmd *cmd);
-int		get_infile(t_lstcmds *cmds, t_cmd *cmd);
-int		get_outfile(t_lstcmds *cmds, t_cmd *cmd);
+int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd);
+
+//exec_heredoc.c
+int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);
 
 //exec_end_child.c
 int		stop_perror(char *msg, int error, t_lstcmds *cmds);
 int		stop_error(char *msg, int error, t_lstcmds *cmds);
 
 //exec_main.c
-int		run_all_cmds(t_lstcmds *cmds);
+int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
+
+//builtins.c
+int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
+
+//free_cmds.c
+void	free_cmd(void *content);
+void	free_cmds(t_lstcmds *cmds);
 
 #endif

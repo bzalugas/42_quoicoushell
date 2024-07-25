@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/06 05:34:40 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/22 15:57:42 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int				free_split(char **arr);
 int				ft_strcmp(const char *s1, const char *s2);
 
 void			ft_lstunlink(t_list **lst, t_list *link);
+size_t			ft_splitlen(char **arr);
 
 /******************************* FT_PRINTF ************************************/
 int				ft_printf(const char *format, ...);
