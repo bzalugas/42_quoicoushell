@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/20 00:04:55 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/25 20:01:58 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 {
 	int		i;
 
-	if (!cmd->heredocs)
+	if (!cmd->heredocs || !cmd->heredoc)
 		return (1);
 	i = 0;
 	while (cmd->heredocs[i])

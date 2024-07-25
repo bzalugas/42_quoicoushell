@@ -6,11 +6,11 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/19 23:54:55 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/25 21:00:52 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/quoicoushell.h"
+#include "quoicoushell.h"
 
 int	ft_close(t_lstcmds *cmds, int fd)
 {
@@ -50,7 +50,7 @@ static int	get_outfile(t_lstcmds *cmds, t_cmd *cmd, int redir_i)
 	t_redir	redir;
 
 	redir = cmd->redirs[redir_i];
-	fdn = (cmd->n_cmd - 1) % 2;
+	fdn = (cmd->n_cmd + 1) % 2;
 	ft_close(cmds, cmds->fd[fdn][1]);
 	if (redir.type == RTOUT_A)
 		cmds->fd[fdn][1] = open(redir.file, O_WRONLY | O_CREAT | O_APPEND,

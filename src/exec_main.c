@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/22 14:18:46 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/25 21:06:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 	pid_t	last;
 
 	cmds->env = export_env(sh);
+	cmds->paths = get_paths(cmds->env);
 	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
@@ -103,5 +104,7 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 		wait(NULL);
 	if (last != -1)
 		sh->exit_code = WEXITSTATUS(sh->exit_code);
+	free_split(cmds->env);
+	free_split(cmds->paths);
 	return (sh->exit_code);
 }

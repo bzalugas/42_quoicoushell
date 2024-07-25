@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/23 22:40:53 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/25 21:04:22 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ t_list	*import_env(t_shell *sh, char **envp)
 	while (envp[i])
 	{
 		entry_split = split_env_entry(envp[i]);
-		dprintf(2, "0 %s\n", entry_split[0]);
-		dprintf(2, "1 %s\n", entry_split[1]);
+		/* dprintf(2, "0 %s\n", entry_split[0]); */
+		/* dprintf(2, "1 %s\n", entry_split[1]); */
 		if (!entry_split)
 			return (NULL);
 		if (!add_variable(sh, entry_split[0], entry_split[1], 1))
@@ -47,7 +47,7 @@ char	**export_env(t_shell *sh)
 	env = sh->env_vars;
 	if (!env)
 		return (NULL);
-	envx = (char **) calloc(ft_lstsize(env), sizeof(char *));
+	envx = (char **) calloc(ft_lstsize(env) + 1, sizeof(char *));
 	if (!envx)
 		return (NULL);
 	i = 0;
