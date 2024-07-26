@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 20:28:54 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 09:58:24 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,5 +150,11 @@ void	free_cmds(t_lstcmds *cmds);
 
 //get_paths.c
 char	**get_paths(char **env);
+
+//ft_export.c
+int		ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+
+//ft_env.c
+int		ft_env(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/25 21:06:49 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 09:54:23 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,12 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	return (pid);
 }
 
-int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
+static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 {
 	t_list	*node_cmd;
 	t_cmd	*cmd;
 	pid_t	last;
 
-	cmds->env = export_env(sh);
-	cmds->paths = get_paths(cmds->env);
 	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
@@ -98,6 +96,16 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 		last = prepare_run_cmd(cmds, cmd, sh);
 		node_cmd = node_cmd->next;
 	}
+	return (last);
+}
+
+int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
+{
+	pid_t	last;
+
+	cmds->env = export_env(sh);//opti: keep it in t_shell and/or use only dyn arrays
+	cmds->paths = get_paths(cmds->env);
+	last = iterate_cmds(cmds, sh);
 	if (last != -1)
 		waitpid(last, &sh->exit_code, 0);
 	while (errno != ECHILD)
