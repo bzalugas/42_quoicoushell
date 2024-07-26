@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/25 21:00:52 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 11:36:52 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_close(t_lstcmds *cmds, int fd)
 	return (close(fd));
 }
 
-static int	get_infile(t_lstcmds *cmds, t_cmd *cmd, char *filename)
+static int	get_infile(t_lstcmds *cmds, t_cmd *cmd, char *filename, bool forked)
 {
 	int	fdn;
 
@@ -40,11 +40,15 @@ static int	get_infile(t_lstcmds *cmds, t_cmd *cmd, char *filename)
 	ft_close(cmds, cmds->fd[fdn][0]);
 	cmds->fd[fdn][0] = open(filename, O_RDONLY);
 	if (cmds->fd[fdn][0] == -1)
-		stop_perror(filename, 0, cmds);
+	{
+		if (forked)
+			stop_perror(filename, 0, cmds);
+		perror(filename);
+	}
 	return (0);
 }
 
-static int	get_outfile(t_lstcmds *cmds, t_cmd *cmd, int redir_i)
+static int	get_outfile(t_lstcmds *cmds, t_cmd *cmd, int redir_i, bool forked)
 {
 	int		fdn;
 	t_redir	redir;
@@ -58,11 +62,15 @@ static int	get_outfile(t_lstcmds *cmds, t_cmd *cmd, int redir_i)
 	else
 		cmds->fd[fdn][1] = open(redir.file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (cmds->fd[fdn][1] == -1)
-		stop_perror(redir.file, 0, cmds);
+	{
+		if (forked)
+			stop_perror(redir.file, 0, cmds);
+		perror(redir.file);
+	}
 	return (0);
 }
 
-int	get_in_out_files(t_lstcmds *cmds, t_cmd *cmd)
+int	get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked)
 {
 	int	i;
 	if (!cmd->redirs)
@@ -71,9 +79,9 @@ int	get_in_out_files(t_lstcmds *cmds, t_cmd *cmd)
 	while (cmd->redirs[i].file)
 	{
 		if (cmd->redirs[i].type == RTIN)
-			get_infile(cmds, cmd, cmd->redirs[i].file);
+			get_infile(cmds, cmd, cmd->redirs[i].file, forked);
 		else
-			get_outfile(cmds, cmd, i);
+			get_outfile(cmds, cmd, i, forked);
 		i++;
 	}
 	return (0);

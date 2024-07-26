@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 09:58:24 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 11:34:58 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ char	*ft_readline(char *prompt);
 
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
-int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd);
+int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked);
 
 //exec_heredoc.c
 int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);

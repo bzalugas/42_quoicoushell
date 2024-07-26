@@ -6,33 +6,84 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 09:58:32 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 12:07:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
+static void	redirect_streams(t_lstcmds *cmds, t_cmd *cmd, int tmp_fds[2])
+{
+	int		fd_in;
+	int		fd_out;
+
+	tmp_fds[0] = -1;
+	tmp_fds[1] = -1;
+	fd_in = cmds->fd[cmd->n_cmd % 2][0];
+	fd_out = cmds->fd[(cmd->n_cmd + 1) % 2][1];
+	if (fd_in > -1)
+	{
+		tmp_fds[0] = dup(STDIN_FILENO);
+		dup2(fd_in, STDIN_FILENO);
+		ft_close(cmds, fd_in);
+	}
+	if (fd_out > -1)
+	{
+		tmp_fds[1] = dup(STDOUT_FILENO);
+		dup2(fd_out, STDOUT_FILENO);
+		ft_close(cmds, fd_out);
+	}
+}
+
+static void	get_back_streams(int fds[2])
+{
+	if (fds[0] > -1)
+	{
+		dup2(fds[0], STDIN_FILENO);
+		close(fds[0]);
+	}
+	if (fds[1] > -1)
+	{
+		dup2(fds[1], STDOUT_FILENO);
+		close(fds[1]);
+	}
+}
+
+static bool	is_builtin(t_cmd *cmd)
+{
+	if (!ft_strcmp(cmd->argv[0], "echo") || !ft_strcmp(cmd->argv[0], "cd")
+		|| !ft_strcmp(cmd->argv[0], "pwd") || !ft_strcmp(cmd->argv[0], "export")
+		|| !ft_strcmp(cmd->argv[0], "unset") || !ft_strcmp(cmd->argv[0], "env")
+		|| !ft_strcmp(cmd->argv[0], "exit"))
+		return (true);
+	return (false);
+}
+
 int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
 {
-	//Handle redirs & heredocs etc
-	(void)cmds;
-	(void)sh;
-	if (cmd->n_cmd > 0 && !forked)
+	int	tmp_fds[2];
+
+	if ((cmd->n_cmd > 0 && !forked) || !is_builtin(cmd))
 		return (0);
+	get_in_out_files(cmds, cmd, forked);
+	redirect_streams(cmds, cmd, tmp_fds);
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (1);
-	if (!ft_strcmp(cmd->argv[0], "cd"))
-		return (1);
-	if (!ft_strcmp(cmd->argv[0], "pwd"))
-		return (1);
-	if (!ft_strcmp(cmd->argv[0], "export"))
-		return (ft_export(cmds, cmd, sh));
-	if (!ft_strcmp(cmd->argv[0], "unset"))
-		return (1);
-	if (!ft_strcmp(cmd->argv[0], "env"))
-		return (ft_env(cmds, cmd, sh));
-	if (!ft_strcmp(cmd->argv[0], "exit"))
-		return (1);
+		;
+	else if (!ft_strcmp(cmd->argv[0], "cd"))
+		;
+	else if (!ft_strcmp(cmd->argv[0], "pwd"))
+		;
+	else if (!ft_strcmp(cmd->argv[0], "export"))
+		ft_export(cmds, cmd, sh);
+	else if (!ft_strcmp(cmd->argv[0], "unset"))
+		;
+	else if (!ft_strcmp(cmd->argv[0], "env"))
+		ft_env(cmds, cmd, sh);
+	else if (!ft_strcmp(cmd->argv[0], "exit"))
+		;
+	else
+		return (0);
 	//handle a=34
-	return (0);
+	get_back_streams(tmp_fds);
+	return (1);
 }

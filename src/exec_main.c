@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/26 09:54:23 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 11:35:05 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	{
 		ft_close(cmds, cmds->fd[pipe_in][1]);
 		ft_close(cmds, cmds->fd[pipe_out][0]);
-		get_in_out_files(cmds, cmd);
+		get_in_out_files(cmds, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
 	ft_close(cmds, cmds->fd[pipe_in][0]);
