@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/26 09:57:14 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 12:37:15 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,5 @@ int	ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	}
 	free(args);
 	sh->exit_code = 0;
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 12:07:02 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:54:55 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,8 @@ static bool	is_builtin(t_cmd *cmd)
 	return (false);
 }
 
-int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
+static int	run_right_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
-	int	tmp_fds[2];
-
-	if ((cmd->n_cmd > 0 && !forked) || !is_builtin(cmd))
-		return (0);
-	get_in_out_files(cmds, cmd, forked);
-	redirect_streams(cmds, cmd, tmp_fds);
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		;
 	else if (!ft_strcmp(cmd->argv[0], "cd"))
@@ -76,7 +70,7 @@ int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
 	else if (!ft_strcmp(cmd->argv[0], "export"))
 		ft_export(cmds, cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
-		;
+		ft_unset(cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "env"))
 		ft_env(cmds, cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "exit"))
@@ -84,6 +78,20 @@ int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
 	else
 		return (0);
 	//handle a=34
+	return (1);
+}
+
+//TODO: Correctly return/exit functions if in fork or not
+int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
+{
+	int	tmp_fds[2];
+
+	if (!cmd->argv[0] || (cmds->n_cmds > 1 && !forked) || !is_builtin(cmd))
+		return (0);
+	get_in_out_files(cmds, cmd, forked);
+	redirect_streams(cmds, cmd, tmp_fds);
+	if (run_right_builtin(cmds, cmd, sh) == 0 || forked)
+		exit(sh->exit_code);
 	get_back_streams(tmp_fds);
 	return (1);
 }

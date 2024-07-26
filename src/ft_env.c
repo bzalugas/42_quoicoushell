@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 09:41:59 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/26 09:58:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 12:35:39 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_env(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 
 	(void)cmd;
 	if (!cmds->env)
-		return (2);
+		return (sh->exit_code = 1, 1);
 	i = 0;
 	while (cmds->env[i])
 	{
@@ -26,5 +26,5 @@ int	ft_env(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		i++;
 	}
 	sh->exit_code = 0;
-	return (1);
+	return (0);
 }

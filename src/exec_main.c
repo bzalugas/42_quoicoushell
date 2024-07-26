@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/26 11:35:05 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:46:39 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd)
 	size_t	i;
 	char	*abs_cmd;
 
+	if (!cmd->argv[0])
+		return (1);
 	if (ft_strchr(cmd->argv[0], '/'))
 		if (execve(cmd->argv[0], cmd->argv, cmds->env))
 			stop_perror(cmd->argv[0], 0, cmds);
@@ -57,8 +59,9 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	int		pipe_in;
 	int		pipe_out;
 
-	sh->exit_code = run_builtin(cmds, cmd, sh, false);
-	if (sh->exit_code)
+	if (cmds->n_cmds == 1)
+		sh->exit_code = run_builtin(cmds, cmd, sh, false);
+	if (cmds->n_cmds == 1 && sh->exit_code)
 		return (-1);
 	pipe_in = cmd->n_cmd % 2;
 	pipe_out = (cmd->n_cmd + 1) % 2;
