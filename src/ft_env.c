@@ -6,17 +6,16 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 09:41:59 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/26 12:35:39 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:41:44 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-int	ft_env(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
+int	ft_env(t_lstcmds *cmds, t_shell *sh)
 {
 	int	i;
 
-	(void)cmd;
 	if (!cmds->env)
 		return (sh->exit_code = 1, 1);
 	i = 0;

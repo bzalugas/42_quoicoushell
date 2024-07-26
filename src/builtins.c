@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 18:54:55 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:42:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static bool	is_builtin(t_cmd *cmd)
 	if (!ft_strcmp(cmd->argv[0], "echo") || !ft_strcmp(cmd->argv[0], "cd")
 		|| !ft_strcmp(cmd->argv[0], "pwd") || !ft_strcmp(cmd->argv[0], "export")
 		|| !ft_strcmp(cmd->argv[0], "unset") || !ft_strcmp(cmd->argv[0], "env")
-		|| !ft_strcmp(cmd->argv[0], "exit"))
+		|| !ft_strcmp(cmd->argv[0], "exit") || ft_strchr(cmd->argv[0], '='))
 		return (true);
 	return (false);
 }
@@ -72,11 +72,14 @@ static int	run_right_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		ft_unset(cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "env"))
-		ft_env(cmds, cmd, sh);
+		ft_env(cmds, sh);
 	else if (!ft_strcmp(cmd->argv[0], "exit"))
 		;
+	else if (ft_local_export(cmds, cmd, sh) == 0)
+		return (1);
 	else
 		return (0);
+
 	//handle a=34
 	return (1);
 }
