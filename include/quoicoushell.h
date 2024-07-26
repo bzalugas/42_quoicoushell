@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 22:41:25 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 22:45:29 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ char	**export_env(t_shell *sh);
 char	**export_all_env(t_shell *sh);
 
 // sighandlers.c
-void	sigint_handler(int signum);
+void	sigint_handler(int signum, siginfo_t *info, void *context);
 
 // token_split.c
 char	**token_split(char *s, t_tokens *t);

@@ -6,17 +6,24 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 22:43:40 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 22:45:43 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-//TODO: LEARN SIGACTION AND REPLACE SIGNAL WITH SIGACTION
+//TODO: ERRORS
 void	set_signals(void)
 {
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	struct sigaction	sa;
+
+	sa.sa_sigaction = &sigint_handler;
+	sa.sa_flags = SA_RESTART | SA_SIGINFO;
+	if (sigemptyset(&sa.sa_mask) < 0)
+		;
+	if (sigaction(SIGINT, &sa, NULL) != 0)
+		;
+	// sigaction(SIGINT, SIG_IGN);
 }
 
 void	init_shell(t_shell *sh, char **envp)
