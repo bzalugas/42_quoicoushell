@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 15:36:23 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/05/26 19:00:20 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 12:47:56 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	ft_lstremove(t_list **lst, t_list *link, void (*del)(void *))
 {
 	t_list	*first;
 
+	if (!lst || !*lst)
+		return ;
 	first = *lst;
 	if (first == link)
 	{

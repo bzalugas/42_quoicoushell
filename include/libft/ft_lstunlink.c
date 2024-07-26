@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 04:34:41 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/23 21:38:37 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/26 14:18:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	ft_lstunlink(t_list **lst, t_list *link)
 {
 	t_list	*first;
 
+	if (!lst || !*lst)
+		return ;
 	first = *lst;
 	if (first == link)
 	{

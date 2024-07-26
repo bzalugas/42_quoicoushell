@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 11:34:58 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:35:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_lstcmds
 	t_list	*cmds;
 	int		fd[2][2];
 	int		n_cmds;
-	bool	env_update;
+	bool	env_update; // to t_shell
 	char	**env;
 	char	**paths;
 }	t_lstcmds;
@@ -141,9 +141,6 @@ int		stop_error(char *msg, int error, t_lstcmds *cmds);
 //exec_main.c
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
 
-//builtins.c
-int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
-
 //free_cmds.c
 void	free_cmd(void *content);
 void	free_cmds(t_lstcmds *cmds);
@@ -151,10 +148,10 @@ void	free_cmds(t_lstcmds *cmds);
 //get_paths.c
 char	**get_paths(char **env);
 
-//ft_export.c
+/********************************** BUILTINS **********************************/
+int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 int		ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
-
-//ft_env.c
 int		ft_env(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		ft_unset(t_cmd *cmd, t_shell *sh);
 
 #endif
