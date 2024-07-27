@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:08:29 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/25 18:23:04 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:20:51 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,4 @@ void	free_cmd(void *content)
 void	free_cmds(t_lstcmds *cmds)
 {
 	ft_lstclear(&cmds->cmds, free_cmd);
-	free_split(cmds->paths);
 }

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/25 20:22:57 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:15:47 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ void	init_shell(t_shell *sh, char **envp)
 	import_env(sh, envp);
 	sh->cwd = getcwd(NULL, 0);
 	sh->prompt = build_prompt(sh);
+	sh->env_update = true;
+	sh->env = NULL;
+	sh->paths = NULL;
+	sh->exit_code = 0;
 }
 
 void	print_split(char **sp, char *start, char *none, char *end)

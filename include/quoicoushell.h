@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 18:35:09 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:22:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ typedef struct s_shell
 	t_list	*local_vars;
 	char	*cwd;
 	char	*prompt;
+	bool	env_update;
+	char	**env;
+	char	**paths;
 	int		exit_code;
 }	t_shell;
 
@@ -66,9 +69,6 @@ typedef struct s_lstcmds
 	t_list	*cmds;
 	int		fd[2][2];
 	int		n_cmds;
-	bool	env_update; // to t_shell
-	char	**env;
-	char	**paths;
 }	t_lstcmds;
 
 typedef struct s_cmd
@@ -151,7 +151,8 @@ char	**get_paths(char **env);
 /********************************** BUILTINS **********************************/
 int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 int		ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
-int		ft_env(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		ft_env(t_shell *sh);
 int		ft_unset(t_cmd *cmd, t_shell *sh);
 
 #endif

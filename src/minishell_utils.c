@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/18 14:09:00 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/27 13:18:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	exit_shell(t_shell *sh, int exit_code)
 	ft_lstclear(&sh->env_vars, (&free_variable));
 	free(sh->cwd);
 	free(sh->prompt);
+	free_split(sh->env);
+	free_split(sh->paths);
 	exit(exit_code);
 }
 

@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/26 18:46:39 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:20:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd)
+static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	size_t	i;
 	char	*abs_cmd;
@@ -20,13 +20,13 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd)
 	if (!cmd->argv[0])
 		return (1);
 	if (ft_strchr(cmd->argv[0], '/'))
-		if (execve(cmd->argv[0], cmd->argv, cmds->env))
+		if (execve(cmd->argv[0], cmd->argv, sh->env))
 			stop_perror(cmd->argv[0], 0, cmds);
 	i = 0;
-	while (cmds->paths[i])
+	while (sh->paths[i])
 	{
-		abs_cmd = ft_strjoin(cmds->paths[i], cmd->argv[0]);
-		execve(abs_cmd, cmd->argv, cmds->env);
+		abs_cmd = ft_strjoin(sh->paths[i], cmd->argv[0]);
+		execve(abs_cmd, cmd->argv, sh->env);
 		free(abs_cmd);
 		i++;
 	}
@@ -50,7 +50,7 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	status = run_builtin(cmds, cmd, sh, true);
 	if (status)
 		return (status);
-	return (run_non_builtin(cmds, cmd));
+	return (run_non_builtin(cmds, cmd, sh));
 }
 
 static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
@@ -106,8 +106,14 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 {
 	pid_t	last;
 
-	cmds->env = export_env(sh);//opti: keep it in t_shell and/or use only dyn arrays
-	cmds->paths = get_paths(cmds->env);
+	if (sh->env_update)
+	{
+		free_split(sh->env);
+		free_split(sh->paths);
+		sh->env = export_env(sh);
+		sh->paths = get_paths(sh->env);
+	}
+
 	last = iterate_cmds(cmds, sh);
 	if (last != -1)
 		waitpid(last, &sh->exit_code, 0);
@@ -115,7 +121,5 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 		wait(NULL);
 	if (last != -1)
 		sh->exit_code = WEXITSTATUS(sh->exit_code);
-	free_split(cmds->env);
-	free_split(cmds->paths);
 	return (sh->exit_code);
 }
