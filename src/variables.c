@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/27 15:41:27 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 18:49:23 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,12 @@ t_list	*export_variable(t_shell *sh, char *name)
 
 	link = get_variable(sh, name);
 	if (!link)
-		return (NULL);
-	ft_lstunlink(&sh->local_vars, link);
-	ft_lstadd_back(&sh->env_vars, link);
+		link = add_variable(sh, name, NULL, 1);
+	else
+	{
+		ft_lstunlink(&sh->local_vars, link);
+		ft_lstadd_back(&sh->env_vars, link);
+	}
 	return (link);
 }
 
@@ -46,15 +49,16 @@ t_list	*add_variable(t_shell *sh, char *name, char *value, int env)
 	t_var	*var;
 
 	new = set_variable(sh, name, value);
-	if (new)
-		return (new);
-	var = new_variable(name, value);
-	if (!var)
-		return (NULL);
-	new = ft_lstnew(var);
 	if (!new)
-		return (free_variable(var), NULL);
-	ft_lstadd_back(&sh->local_vars, new);
+	{
+		var = new_variable(name, value);
+		if (!var)
+			return (NULL);
+		new = ft_lstnew(var);
+		if (!new)
+			return (free_variable(var), NULL);
+		ft_lstadd_back(&sh->local_vars, new);
+	}
 	if (env)
 		export_variable(sh, name);
 	return (new);

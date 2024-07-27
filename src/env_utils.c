@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 15:41:53 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 15:57:00 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 18:30:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_list	*import_env(t_shell *sh, char **envp)
 	return (sh->env_vars);
 }
 
-static char *str_var_env(t_var *var)
+static char *str_var_env(t_var *var, bool add_quotes)
 {
 	char	*str;
 	size_t	len_name;
@@ -63,12 +63,19 @@ static char *str_var_env(t_var *var)
 
 	len_name = ft_strlen(var->name);
 	len_value = ft_strlen(var->value);
-	str = ft_calloc(len_name + len_value + 2, sizeof(char));
+	str = ft_calloc(len_name + len_value + (add_quotes * 2) + 2, sizeof(char));
 	if (!str)
 		return (NULL);
-	ft_strlcat(str, var->name, len_name);
-	ft_strlcat(str, "=", 1);
-	ft_strlcat(str, var->value, len_value);
+	ft_strlcat(str, var->name, len_name + 1);
+	if (var->value)
+	{
+		ft_strlcat(str, "=", len_name + 2);
+		if (add_quotes)
+			ft_strlcat(str, "\"", len_name + 3);
+		ft_strlcat(str, var->value, len_name + len_value + 1 + add_quotes + 1);
+		if (add_quotes)
+			ft_strlcat(str, "\"", len_name + len_value + 4);
+	}
 	return (str);
 }
 
@@ -81,7 +88,7 @@ char	**export_env(t_shell *sh)
 	env = sh->env_vars;
 	if (!env)
 		return (NULL);
-	envx = (char **) calloc(ft_lstsize(env) + 1, sizeof(char *));
+	envx = (char **)ft_calloc(ft_lstsize(env) + 1, sizeof(char *));
 	if (!envx)
 		return (NULL);
 	i = 0;
@@ -89,7 +96,7 @@ char	**export_env(t_shell *sh)
 	{
 		if (((t_var*)env->content)->value)
 		{
-			envx[i] = str_var_env((t_var*)env->content);
+			envx[i] = str_var_env((t_var *)env->content, false);
 			if (!envx[i])
 				return (free_split(envx), NULL);
 		}
@@ -99,12 +106,27 @@ char	**export_env(t_shell *sh)
 	return (envx);
 }
 
-/* char	**export_all_env(t_shell *sh) */ //needs to add export infront of lines
-/* { */
-/* 	t_list	*env; */
+char	**export_all_env(t_shell *sh)
+{
+	t_list	*env;
+	char	**envx;
+	int		i;
 
-/* 	env = sh->env_vars; */
-/* 	if (!env) */
-/* 		return (NULL); */
-
+	env = sh->env_vars;
+	if (!env)
+		return (NULL);
+	envx = (char**)ft_calloc(ft_lstsize(env) + 1, sizeof(char *));
+	if (!envx)
+		return (NULL);
+	i = 0;
+	while (env)
+	{
+		envx[i] = ft_strjoin_free("export ",
+			str_var_env((t_var *)env->content, true), 0, 1);
+		if (!envx[i])
+			return (free_split(envx), NULL);
+		env = env->next;
+		i++;
+	}
+	return (envx);
 }

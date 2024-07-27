@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 13:24:51 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 19:01:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,33 +39,32 @@ static int var_error(char *arg)
 	return (1);
 }
 
-static int	ft_alone_export(t_shell *sh, t_lstcmds *cmds) //will need only sh when paths, env in it
+static int	ft_alone_export(t_shell *sh)
 {
 	int		i;
-	char	*line;
+	char	**env;
 
-	if (!sh->env)
+	env = export_all_env(sh);
+	if (!env)
 		return (sh->exit_code = 1, 1);
 	i = 0;
-	while (sh->env[i])
+	while (env[i])
 	{
-		line = ft_calloc(ft_strlen(sh->env[i]) + 9, sizeof(char));
-		if (!line)
-			stop_error("alone export", 1, cmds);
-		ft_strlcpy(line, "export ", 7);
-		ft_putendl_fd(sh->env[i], STDOUT_FILENO);
+		ft_putendl_fd(env[i], STDOUT_FILENO);
 		i++;
 	}
 	sh->exit_code = 0;
 	return (0);
 }
 
+//TODO: fix infinite loop sometimes when export a=
+//TODO: get correct behavior with export a, export a=
 int	ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	char	**args;
 
 	if (!cmd->argv[1])
-		return (ft_alone_export(sh, cmds));
+		return (ft_alone_export(sh));
 	args = split_env_entry(cmd->argv[1]);
 	if (!args)
 	{
