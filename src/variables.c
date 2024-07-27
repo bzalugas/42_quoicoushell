@@ -6,71 +6,17 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 21:04:22 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/27 15:41:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
 /*
-* @brief Imports env variables from envp as a linked list.
-* Adds those variables to sh->env_vars.
-* @return Pointer to the first link of sh->env_vars.
-*/
-t_list	*import_env(t_shell *sh, char **envp)
-{
-	int		i;
-	char	**entry_split;
-
-	i = 0;
-	while (envp[i])
-	{
-		entry_split = split_env_entry(envp[i]);
-		/* dprintf(2, "0 %s\n", entry_split[0]); */
-		/* dprintf(2, "1 %s\n", entry_split[1]); */
-		if (!entry_split)
-			return (NULL);
-		if (!add_variable(sh, entry_split[0], entry_split[1], 1))
-			return (free_split(entry_split), NULL);
-		free(entry_split);
-		i++;
-	}
-	return (sh->env_vars);
-}
-
-char	**export_env(t_shell *sh)
-{
-	int		i;
-	t_list	*env;
-	char	**envx;
-
-	env = sh->env_vars;
-	if (!env)
-		return (NULL);
-	envx = (char **) calloc(ft_lstsize(env) + 1, sizeof(char *));
-	if (!envx)
-		return (NULL);
-	i = 0;
-	while (env)
-	{
-		envx[i] = ft_strjoin(((t_var *)env->content)->name, "=");
-		if (!envx[i])
-			return (free_split(envx), NULL);
-		envx[i] = ft_strjoin_free(envx[i],
-				((t_var *)env->content)->value, 1, 0);
-		if (!envx[i])
-			return (free_split(envx), NULL);
-		env = env->next;
-		i++;
-	}
-	return (envx);
-}
-
-/*
-* @brief Moves variable from sh->local_vars to sh->env_vars.
-* @return 0 on success,
-* -1 on error (ie: variable not found).
-*/
+ * @brief Moves variable from sh->local_vars to sh->env_vars.
+ * @return 0 on success,
+ * -1 on error (ie: variable not found).
+ */
 t_list	*export_variable(t_shell *sh, char *name)
 {
 	t_list	*link;
@@ -84,16 +30,16 @@ t_list	*export_variable(t_shell *sh, char *name)
 }
 
 /*
-* @brief Adds variable to either sh->local_vars or sh->env-vars. 
-* If there already is a variable with this name,
-* it edits the value of the existing variable.
-* @return A pointer to the new variable. If the variable already exists,
-*  it returns a pointer to
-* the existing link. Returns NULL if somthing goes wrong.
-* @param name The name of the new variable.
-* @param value The value of the new variable.
-* @param env Boolean, decides wether to add variable to local or env_vars.
-*/
+ * @brief Adds variable to either sh->local_vars or sh->env-vars.
+ * If there already is a variable with this name,
+ * it edits the value of the existing variable.
+ * @return A pointer to the new variable. If the variable already exists,
+ *  it returns a pointer to
+ * the existing link. Returns NULL if somthing goes wrong.
+ * @param name The name of the new variable.
+ * @param value The value of the new variable.
+ * @param env Boolean, decides wether to add variable to local or env_vars.
+ */
 t_list	*add_variable(t_shell *sh, char *name, char *value, int env)
 {
 	t_list	*new;
