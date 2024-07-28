@@ -6,23 +6,23 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 21:45:24 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 22:33:10 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
 //TODO: might need to split these into two functions
-void	exit_shell(t_shell *sh, int exit_code)
+void	exit_shell(t_shell *sh, int exit_code, bool display)
 {
-	if (exit_code == EXIT_SUCCESS)
+	if (display)
 	{
 		ft_putstr_fd("exit\n", 1);
 	}
-	else if (exit_code == EXIT_FAILURE)
-	{
-		perror("idk yet");
-	}
+	/* else if (exit_code == EXIT_FAILURE) */
+	/* { */
+	/* 	perror("idk yet"); */
+	/* } */
 	ft_lstclear(&sh->local_vars, (&free_variable));
 	ft_lstclear(&sh->env_vars, (&free_variable));
 	free(sh->cwd);
@@ -42,7 +42,7 @@ char	*current_dir_name(t_shell *sh, int depth)
 		return (NULL);
 	pwd_split = ft_split(sh->cwd, '/');
 	if (!pwd_split)
-		exit_shell(sh, EXIT_FAILURE);
+		exit_shell(sh, EXIT_FAILURE, false);
 	if (!pwd_split[0])
 		return (NULL);
 	i = 0;

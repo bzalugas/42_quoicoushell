@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 13:15:47 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 22:34:22 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,11 +128,11 @@ int	main(int ac, char **av, char **envp)
 	{
 		line = readline(sh.prompt);
 		if (!line)
-			exit_shell(&sh, EXIT_SUCCESS);
+			exit_shell(&sh, EXIT_SUCCESS, true);
 		if (*line)
 			add_history(line);
 		command_line(&sh, line);
 		free(line);
 	}
-	exit_shell(&sh, EXIT_SUCCESS);
+	exit_shell(&sh, EXIT_SUCCESS, true);
 }

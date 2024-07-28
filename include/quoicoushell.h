@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 22:08:48 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 22:32:57 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	init_shell(t_shell *sh, char **envp);
 void	command_line(t_shell *sh, char *line);
 
 // minishell_utils.c
-void	exit_shell(t_shell *sh, int exit_code);
+void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
 
@@ -169,5 +169,6 @@ int		ft_env(t_shell *sh);
 int		ft_unset(t_cmd *cmd, t_shell *sh);
 int		ft_cd(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(t_shell *sh);
+int		ft_exit(t_cmd *cmd, t_shell *sh);
 
 #endif

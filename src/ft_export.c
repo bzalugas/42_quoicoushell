@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 19:53:14 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 22:33:42 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	iterate_exports(char **argv, t_shell *sh)
 	{
 		args = split_env_entry(argv[i]);
 		if (!args)
-			exit_shell(sh, 1);
+			exit_shell(sh, 1, true);
 		if (!valid_var_name(args[0]))
 			return (free_split(args), var_error(argv[i]));
 		if (args[1])
@@ -76,7 +76,7 @@ int	ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	{
 		if (cmds->n_cmds > 1)
 			return (stop_error("local_export", 1, cmds));
-		exit_shell(sh, 1);
+		exit_shell(sh, 1, true);
 	}
 	if (!valid_var_name(args[0]))
 		return (free_split(args), var_error(cmd->argv[1]));
