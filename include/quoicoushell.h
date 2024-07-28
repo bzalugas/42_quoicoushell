@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 19:52:21 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 21:22:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked);
 int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);
 
 //exec_end_child.c
+void	print_perror(char *msg1, char *msg2);
 int		stop_perror(char *msg, int error, t_lstcmds *cmds);
 int		stop_error(char *msg, int error, t_lstcmds *cmds);
 
@@ -166,5 +167,6 @@ bool	valid_var_name(char *name);
 int		var_error(char *arg);
 int		ft_env(t_shell *sh);
 int		ft_unset(t_cmd *cmd, t_shell *sh);
+int		ft_cd(t_cmd *cmd, t_shell *sh);
 
 #endif
