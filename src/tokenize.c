@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 22:30:26 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 23:17:40 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*retrieve_var_name(char *p)
 	i = 1;
 	while (valid_name_char(p[i]))
 		i++;
-	if (ft_isquot(p[i]))
+	if (i == 1 && ft_isquot(p[i]))
 		return (ft_strdup(""));
 	if (i == 1)
 		return (NULL);
@@ -117,63 +117,6 @@ typedef struct s_exvar //TODO: MOVE TO HEADER
 	int		start;
 	int		len;
 }	t_exvar;
-/*
-
-char	*prep_redir_word(t_shell *sh, char *word)
-{
-	char	*expanded;
-
-	if (!word)
-		return (NULL);
-	expanded = expand_whole(sh, word);
-	remove_quotes(expanded);
-	return (expanded);
-}
-
-char	**expand_word(t_shell *sh, char *word)
-{
-	char	*name;
-
-
-}
-*/
-// int	categorize_token(t_cmd *cmd, char **token, int *ctrs, t_shell *sh)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (!ft_strcmp(*token, "<<"))
-// 	{
-// 		cmd->heredocs[ctrs[1]++] = ft_strjoin(token[++i], "\n");
-// 		cmd->heredoc = 1;
-// 	}
-// 	else if (!ft_strcmp(*token, "<") || !ft_strcmp(*token, ">")
-// 		|| !ft_strcmp(*token, ">>"))
-// 	{
-// 		if (!ft_strcmp(*token, "<"))
-// 			cmd->heredoc = 0;
-// 		cmd->redirs[ctrs[2]].type = RTIN * !ft_strcmp(*token, "<")
-// 			+ RTOUT_T * !ft_strcmp(*token, ">")
-// 			+ RTOUT_A * !ft_strcmp(*token, ">>");
-// 		cmd->redirs[ctrs[2]++].file = prep_redir_word(sh, token[++i]);
-// 	}
-// 	else
-// 		//ft_memcpy(&cmd->argv[ctrs[0]++], words, byte size of words)
-// 		cmd->argv[ctrs[0]++] = ft_strdup(*token);
-// 	return (i);
-// }
-
-char	*prep(char *word, bool hd)
-{
-	char	*nw;
-
-	if (hd)
-		nw = ft_strjoin(word, "\n");
-	else
-		nw = ft_strdup(word);
-	remove_quotes(nw);
-	return (nw);
-}
 
 typedef struct s_quot
 {
@@ -237,13 +180,13 @@ char	*simple_expand(t_shell *sh, char *word, t_quot *qi)
 	{
 		if (qi->size && i == qi->start)
 		{
-			i += qi->size;
+			while (--qi->size)
+				new_word[j++] = word[i++];
 			qi++;
 			continue ;
 		}
 		if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
 		{
-			dprintf(2, "%s\n", tmp_val);
 			if (tmp_val)
 				ft_strcpy(&new_word[j], tmp_val);
 			i += name_size + 1;
