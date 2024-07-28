@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/27 15:58:54 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/28 19:43:32 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,9 @@ LIBFT	    :=	$(LIBFTDIR)/libft.a
 
 SRC			:=	builtins.c env_utils.c exec_end_child.c exec_handle_streams.c \
 				exec_heredoc.c exec_main.c free_cmds.c ft_env.c ft_export.c \
-				ft_unset.c get_paths.c minishell_utils.c sighandlers.c token_split.c \
-				token_split_utils.c tokenize.c variables.c variables2.c
+				ft_export_utils.c ft_unset.c get_paths.c minishell_utils.c \
+				sighandlers.c token_split.c token_split_utils.c tokenize.c \
+				variables.c variables2.c
 
 MAIN		:=	main.c
 
