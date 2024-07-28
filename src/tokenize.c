@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/26 22:20:09 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 22:30:26 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,46 +22,6 @@
 	melenshell: syntax error near unexpected token 'token's
 */
 
-void	syntax_error(char *token)
-{
-	//syntax error near token "token".
-	(void) token;
-}
-
-t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
-{
-	t_cmd	*cmd;
-	int		hdc;
-	int		c;
-	int		i;
-
-	(void) sh;
-	i = 0;
-	c = 0;
-	hdc = 0;
-	cmd = (t_cmd *) calloc(1, sizeof(t_cmd));
-	while (tokens[i])
-	{
-		if (!ft_strcmp(tokens[i], "<<"))
-			hdc++;
-		else if (!ft_strcmp(tokens[i], "<")
-			|| !ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>"))
-			c++;
-		else
-			cmd->argc++;
-			// cmd->argc += count_new_words_in_word(sh, tokens[i]);
-		if (!ft_strcmp(tokens[i], "<<") || !ft_strcmp(tokens[i], "<")
-			|| !ft_strcmp(tokens[i], ">") || !ft_strcmp(tokens[i], ">>"))
-			i++;
-		if (tokens[i])
-			i++;
-	}
-	cmd->argv = (char **) calloc(cmd->argc + 1, sizeof(char *));
-	cmd->heredocs = (char **) calloc(hdc + 1, sizeof(char *));
-	cmd->redirs = (t_redir *) calloc(c + 1, sizeof(t_redir));
-	cmd->n_cmd = n;
-	return (cmd);
-}
 // TODO: PROTECT MALLOCS (3)
 
 int	valid_name_char(char c)
@@ -79,6 +39,8 @@ char	*retrieve_var_name(char *p)
 	i = 1;
 	while (valid_name_char(p[i]))
 		i++;
+	if (ft_isquot(p[i]))
+		return (ft_strdup(""));
 	if (i == 1)
 		return (NULL);
 	name = (char *) calloc(i + 1, sizeof(char));
@@ -86,6 +48,21 @@ char	*retrieve_var_name(char *p)
 	while (valid_name_char(p[++i]))
 		name[i - 1] = p[i];
 	return (name);
+}
+
+int	retrieve_var_value(t_shell *sh, char *p, char **value, int *name_size)
+{
+	char	*name;
+
+	name = retrieve_var_name(p);
+	if (!name)
+		return (0);
+	if (!value || !name_size)
+		return (-1);
+	*value = get_variable_value(sh, name);
+	*name_size = ft_strlen(name);
+	free(name);
+	return (1);
 }
 
 int	var_word_count(t_shell *sh, char *p)
@@ -98,6 +75,8 @@ int	var_word_count(t_shell *sh, char *p)
 	name = retrieve_var_name(p);
 	words = 0;
 	content = get_variable_value(sh, name);
+	if (!content)
+		return (0);
 	if (ft_isspace(content[0]))
 		words++;
 	i = 0;
@@ -105,7 +84,7 @@ int	var_word_count(t_shell *sh, char *p)
 		i++;
 	if (ft_isspace(content[i - 1]))
 		words++;
-	// words += count_wordsf(content, ft_isspace);
+	words += count_wordsf(content, &ft_isspace);
 	return (words);
 }
 
@@ -139,10 +118,6 @@ typedef struct s_exvar //TODO: MOVE TO HEADER
 	int		len;
 }	t_exvar;
 /*
-char	*expand_whole(t_shell *sh, char *word)
-{
-	//course of action to be determined
-}
 
 char	*prep_redir_word(t_shell *sh, char *word)
 {
@@ -200,49 +175,261 @@ char	*prep(char *word, bool hd)
 	return (nw);
 }
 
-int	categorize_token(t_cmd *cmd, char **token, int *ctrs, t_shell *sh)
+typedef struct s_quot
+{
+	int	start;
+	int	size;
+}	t_quot;
+
+typedef struct s_cbv
+{
+	t_cmd	*cmd;
+	char	**tks;
+	int		arg_i;
+	int		tk_i;
+	int		hd_i;
+	int		rd_i;
+}	t_cbv;
+
+int	get_new_size(t_shell *sh, char *word, t_quot *qi)
+{
+	int		i;
+	int		name_size;
+	int		new_size;
+	char	*tmp_val;
+
+	(void) qi;
+	i = 0;
+	new_size = ft_strlen(word);
+	while (word[i])
+	{
+		if (qi->size && i == qi->start)
+		{
+			i += qi->size;
+			qi++;
+			continue ;
+		}
+		if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
+		{
+			new_size -= name_size + 1;
+			new_size += ft_strlen(tmp_val);
+			i += name_size + 1;
+		}
+		else
+			i++;
+	}
+	return (new_size);
+}
+
+char	*simple_expand(t_shell *sh, char *word, t_quot *qi)
+{
+	int		i;
+	int		j;
+	char	*new_word;
+	int		name_size;
+	char	*tmp_val;
+
+	i = 0;
+	(void) qi;
+	j = 0;
+	new_word = (char *) calloc(get_new_size(sh, word, qi) + 1, sizeof(char));
+	while (word[i])
+	{
+		if (qi->size && i == qi->start)
+		{
+			i += qi->size;
+			qi++;
+			continue ;
+		}
+		if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
+		{
+			dprintf(2, "%s\n", tmp_val);
+			if (tmp_val)
+				ft_strcpy(&new_word[j], tmp_val);
+			i += name_size + 1;
+			j += ft_strlen(tmp_val);
+		}
+		else
+			new_word[j++] = word[i++];
+	}
+	return (new_word);
+}
+
+void	alloc_quotes_position(char *word, char quot, t_quot **qi)
+{
+	int	qc;
+	int	q;
+	int	i;
+
+	qc = 0;
+	i = -1;
+	while (word[++i])
+	{
+		q = next_quote(&word[i]);
+		if (q > 0 && (!quot || quot == word[i]))
+		{
+			qc++;
+			i += q;
+		}
+	}
+	*qi = (t_quot *) calloc(qc + 1, sizeof(t_quot));
+}
+
+t_quot	*get_quotes_position(char *word, char quot)
+{
+	int		offset;
+	int		qc;
+	int		i;
+	int		q;
+	t_quot	*qi;
+
+
+	alloc_quotes_position(word, quot, &qi);
+	offset = 0;
+	qc = 0;
+	i = -1;
+	while (word[++i])
+	{
+		q = next_quote(&word[i]);
+		if (q > 0 && (!quot || quot == word[i]))
+		{
+			qi[qc++] = (t_quot){i - offset, q};
+			offset += 2;
+			i += q;
+		}
+	}
+	return (qi);
+}
+
+char	*remove_quotes_and_expand(t_shell *sh, char *word)
+{
+	char	*expanded;
+	t_quot	*qi;
+
+	qi = get_quotes_position(word, '\'');
+	remove_quotes(word);
+	expanded = simple_expand(sh, word, qi);
+	return (expanded);
+}
+
+void	set_heredoc(t_shell *sh, t_cbv *cbv)
+{
+	(void) sh;
+	cbv->cmd->heredocs[cbv->hd_i++] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
+	cbv->cmd->heredoc = 1;
+}
+
+void	set_redir(t_shell *sh, t_cbv *cbv)
+{
+	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
+		cbv->cmd->heredoc = 0;
+	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
+		cbv->cmd->redirs[cbv->rd_i].type = RTIN;
+	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">"))
+		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_T;
+	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
+		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
+	cbv->cmd->redirs[cbv->rd_i].file = remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
+}
+
+bool	can_be_var_assign(char *word)
 {
 	int	i;
 
 	i = 0;
+	if (!word)
+		return (false);
+	while (word[i])
+	{
+		if (i > 0 && word[i] == '=')
+			return (true);
+		if (!valid_name_char(word[i]))
+			return (false);
+		i++;
+	}
+	return (false);
+}
+
+bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word)
+{
+	int	i;
+
 	(void) sh;
-	if (!ft_strcmp(*token, "<<"))
+	if (!can_be_var_assign(word))
+		return (false);
+	i = -1;
+	while (cbv->cmd->argv[++i])
+		if (!can_be_var_assign(cbv->cmd->argv[i]))
+			return (false);
+	return (true);
+}
+
+void	set_var_assign(t_shell *sh, t_cbv *cbv)
+{
+	cbv->cmd->argv[cbv->arg_i++] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+}
+
+void	set_cmd_word(t_shell *sh, t_cbv *cbv)
+{
+	//expand aand split
+
+	//ft_memcpy(&cmd->argv[ctrs[0]++], split_expanded_word, wcount * sizeof(char *)) //free split_expanded_words
+	cbv->cmd->argv[cbv->arg_i++] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+}
+
+t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
+{
+	int		c[3];
+	t_cmd	*cmd;
+
+	(void) sh;
+	ft_bzero(c, sizeof(c));
+	cmd = (t_cmd *) calloc(1, sizeof(t_cmd));
+	while (tokens[c[0]])
 	{
-		cmd->heredocs[ctrs[1]++] = prep(token[++i], true);
-		cmd->heredoc = 1;
+		if (!ft_strcmp(tokens[c[0]], "<<"))
+			c[1]++;
+		else if (!ft_strcmp(tokens[c[0]], "<")
+			|| !ft_strcmp(tokens[c[0]], ">") || !ft_strcmp(tokens[c[0]], ">>"))
+			c[2]++;
+		else
+			cmd->argc += count_new_words_in_word(sh, tokens[c[0]]);
+		if (!ft_strcmp(tokens[c[0]], "<<") || !ft_strcmp(tokens[c[0]], "<")
+			|| !ft_strcmp(tokens[c[0]], ">") || !ft_strcmp(tokens[c[0]], ">>"))
+			c[0]++;
+		if (tokens[c[0]])
+			c[0]++;
 	}
-	else if (!ft_strcmp(*token, "<") || !ft_strcmp(*token, ">")
-		|| !ft_strcmp(*token, ">>"))
-	{
-		if (!ft_strcmp(*token, "<"))
-			cmd->heredoc = 0;
-		cmd->redirs[ctrs[2]].type = RTIN * !ft_strcmp(*token, "<")
-			+ RTOUT_T * !ft_strcmp(*token, ">")
-			+ RTOUT_A * !ft_strcmp(*token, ">>");
-		cmd->redirs[ctrs[2]++].file = prep(token[++i], false);
-	}
-	else
-		//ft_memcpy(&cmd->argv[ctrs[0]++], words, byte size of words)
-		cmd->argv[ctrs[0]++] = prep(token[i], false);
-	return (i);
+	cmd->argv = (char **) calloc(cmd->argc + 1, sizeof(char *));
+	cmd->heredocs = (char **) calloc(c[1] + 1, sizeof(char *));
+	cmd->redirs = (t_redir *) calloc(c[2] + 1, sizeof(t_redir));
+	cmd->n_cmd = n;
+	return (cmd);
 }
 
 t_cmd	*get_command(t_shell *sh, char **tokens, int n)
 {
-	int			i;
-	int			counters[3];
-	t_cmd		*cmd;
+	t_cbv		cbv;
 
-	i = 0;
-	ft_bzero(counters, sizeof(int) * 3);
-	cmd = init_cmd(sh, tokens, n);
-	while (tokens[i])
+	cbv = (t_cbv){0};
+	cbv.cmd = init_cmd(sh, tokens, n);
+	cbv.tks = tokens;
+	while (tokens[cbv.tk_i])
 	{
-		i += categorize_token(cmd, &tokens[i], counters, sh);
-		if (tokens[i])
-			i++;
+		if (!ft_strcmp(cbv.tks[cbv.tk_i], "<<"))
+			set_heredoc(sh, &cbv);
+		else if (!ft_strcmp(cbv.tks[cbv.tk_i], "<")
+			|| !ft_strcmp(cbv.tks[cbv.tk_i], ">")
+			|| !ft_strcmp(cbv.tks[cbv.tk_i], ">>"))
+			set_redir(sh, &cbv);
+		else if (is_var_assign(sh, &cbv, cbv.tks[cbv.tk_i]))
+			set_var_assign(sh, &cbv);
+		else
+			set_cmd_word(sh, &cbv);
+		if (tokens[cbv.tk_i])
+			cbv.tk_i++;
 	}
-	return (cmd);
+	return (cbv.cmd);
 }
 // TODO: PROTECT MALLOCS (strdups)
 

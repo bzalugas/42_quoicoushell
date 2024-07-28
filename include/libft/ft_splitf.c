@@ -6,13 +6,13 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:00:05 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/17 17:31:10 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 22:06:03 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static unsigned int	count_words(char const *s, int (*f)(char))
+unsigned int	count_wordsf(char const *s, int (*f)(int))
 {
 	size_t	words;
 	size_t	i;
@@ -28,7 +28,7 @@ static unsigned int	count_words(char const *s, int (*f)(char))
 	return (words);
 }
 
-static size_t	len_word(char **s, int (*f)(char))
+static size_t	len_word(char **s, int (*f)(int))
 {
 	size_t	len;
 
@@ -52,7 +52,7 @@ static void	*big_free(char **arr)
 	return (NULL);
 }
 
-char	**ft_splitf(char const *s, int (*f)(char))
+char	**ft_splitf(char const *s, int (*f)(int))
 {
 	size_t	words;
 	size_t	len;
@@ -62,7 +62,7 @@ char	**ft_splitf(char const *s, int (*f)(char))
 
 	if (!s)
 		return (NULL);
-	words = count_words(s, f);
+	words = count_wordsf(s, f);
 	arr = (char **)ft_calloc(words + 1, sizeof(char *));
 	if (!arr)
 		return (NULL);
