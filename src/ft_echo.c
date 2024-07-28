@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   variables_utils.c                                  :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
+/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/06 02:51:47 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 23:31:32 by jsommet          ###   ########.fr       */
+/*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/07/28 23:38:39 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-char	**split_env_entry(char *entry)
+int	ft_echo(t_cmd *cmd)
 {
-	char	**split;
 	int		i;
+	bool	nl;
 
-	split = (char **) ft_calloc(3, sizeof(char *));
-	i = 0;
-	while (entry[i] && entry[i] != '=')
+	nl = !(cmd->argv[1] && !ft_strcmp(cmd->argv[1], "-n"));
+	i = 1 + (!nl);
+	while (cmd->argv[i])
+	{
+		ft_putstr_fd(cmd->argv[i], STDOUT_FILENO);
+		write(1, " ", STDOUT_FILENO);
 		i++;
-	split[0] = ft_substr(entry, 0, i);
-	if (!entry[i])
-		split[1] = NULL;
-	else
-		split[1] = ft_strdup(entry + (++i));
-	return (split);
+	}
+	if (nl)
+		write(1, "\n", STDOUT_FILENO);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 23:17:40 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 23:58:37 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*retrieve_var_name(char *p)
 		return (ft_strdup(""));
 	if (i == 1)
 		return (NULL);
-	name = (char *) calloc(i + 1, sizeof(char));
+	name = (char *) ft_calloc(i + 1, sizeof(char));
 	i = 0;
 	while (valid_name_char(p[++i]))
 		name[i - 1] = p[i];
@@ -141,7 +141,6 @@ int	get_new_size(t_shell *sh, char *word, t_quot *qi)
 	int		new_size;
 	char	*tmp_val;
 
-	(void) qi;
 	i = 0;
 	new_size = ft_strlen(word);
 	while (word[i])
@@ -150,9 +149,8 @@ int	get_new_size(t_shell *sh, char *word, t_quot *qi)
 		{
 			i += qi->size;
 			qi++;
-			continue ;
 		}
-		if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
+		else if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
 		{
 			new_size -= name_size + 1;
 			new_size += ft_strlen(tmp_val);
@@ -173,9 +171,8 @@ char	*simple_expand(t_shell *sh, char *word, t_quot *qi)
 	char	*tmp_val;
 
 	i = 0;
-	(void) qi;
 	j = 0;
-	new_word = (char *) calloc(get_new_size(sh, word, qi) + 1, sizeof(char));
+	new_word = (char *) ft_calloc(get_new_size(sh, word, qi) + 1, sizeof(char));
 	while (word[i])
 	{
 		if (qi->size && i == qi->start)
@@ -183,9 +180,8 @@ char	*simple_expand(t_shell *sh, char *word, t_quot *qi)
 			while (--qi->size)
 				new_word[j++] = word[i++];
 			qi++;
-			continue ;
 		}
-		if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
+		else if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
 		{
 			if (tmp_val)
 				ft_strcpy(&new_word[j], tmp_val);
@@ -215,7 +211,7 @@ void	alloc_quotes_position(char *word, char quot, t_quot **qi)
 			i += q;
 		}
 	}
-	*qi = (t_quot *) calloc(qc + 1, sizeof(t_quot));
+	*qi = (t_quot *) ft_calloc(qc + 1, sizeof(t_quot));
 }
 
 t_quot	*get_quotes_position(char *word, char quot)
@@ -318,6 +314,7 @@ void	set_cmd_word(t_shell *sh, t_cbv *cbv)
 
 	//ft_memcpy(&cmd->argv[ctrs[0]++], split_expanded_word, wcount * sizeof(char *)) //free split_expanded_words
 	cbv->cmd->argv[cbv->arg_i++] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	// ft_putendl_fd(cbv->cmd->argv[cbv->arg_i++], 2);
 }
 
 t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
@@ -327,7 +324,7 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
 
 	(void) sh;
 	ft_bzero(c, sizeof(c));
-	cmd = (t_cmd *) calloc(1, sizeof(t_cmd));
+	cmd = (t_cmd *) ft_calloc(1, sizeof(t_cmd));
 	while (tokens[c[0]])
 	{
 		if (!ft_strcmp(tokens[c[0]], "<<"))
@@ -336,16 +333,16 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
 			|| !ft_strcmp(tokens[c[0]], ">") || !ft_strcmp(tokens[c[0]], ">>"))
 			c[2]++;
 		else
-			cmd->argc += count_new_words_in_word(sh, tokens[c[0]]);
+			cmd->argc ++;
 		if (!ft_strcmp(tokens[c[0]], "<<") || !ft_strcmp(tokens[c[0]], "<")
 			|| !ft_strcmp(tokens[c[0]], ">") || !ft_strcmp(tokens[c[0]], ">>"))
 			c[0]++;
 		if (tokens[c[0]])
 			c[0]++;
 	}
-	cmd->argv = (char **) calloc(cmd->argc + 1, sizeof(char *));
-	cmd->heredocs = (char **) calloc(c[1] + 1, sizeof(char *));
-	cmd->redirs = (t_redir *) calloc(c[2] + 1, sizeof(t_redir));
+	cmd->argv = (char **) ft_calloc(cmd->argc + 1, sizeof(char *));
+	cmd->heredocs = (char **) ft_calloc(c[1] + 1, sizeof(char *));
+	cmd->redirs = (t_redir *) ft_calloc(c[2] + 1, sizeof(t_redir));
 	cmd->n_cmd = n;
 	return (cmd);
 }
