@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/27 13:18:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 21:45:24 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,10 @@ char	*current_dir_name(t_shell *sh, int depth)
 	while (pwd_split[i])
 		i++;
 	i -= depth;
-	dir = (char *) ft_calloc(1, 1);
+	dir = NULL;
 	while (pwd_split[i])
 	{
-		dir = ft_strjoin_free(dir, pwd_split[i++], 1, 0);
-		if (!dir)
-			return (free_split(pwd_split), free(dir), NULL);
-		dir = ft_strjoin_free(dir, "/", 1, 0);
+		dir = ft_strjoin_free(dir, ft_strjoin(pwd_split[i++], "/"), 1, 0);
 		if (!dir)
 			return (free_split(pwd_split), free(dir), NULL);
 	}
