@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 23:31:02 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 23:38:39 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	ft_echo(t_cmd *cmd)
 	while (cmd->argv[i])
 	{
 		ft_putstr_fd(cmd->argv[i], STDOUT_FILENO);
+		write(1, " ", STDOUT_FILENO);
 		i++;
 	}
 	if (nl)
