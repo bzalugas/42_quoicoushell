@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 22:32:57 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 23:16:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,5 +170,6 @@ int		ft_unset(t_cmd *cmd, t_shell *sh);
 int		ft_cd(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(t_shell *sh);
 int		ft_exit(t_cmd *cmd, t_shell *sh);
+int		ft_echo(t_cmd *cmd);
 
 #endif

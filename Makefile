@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/28 22:26:10 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/28 23:16:50 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRC			:=	builtins.c \
 				exec_main.c \
 				free_cmds.c \
 				ft_cd.c \
+				ft_echo.c \
 				ft_env.c \
 				ft_exit.c \
 				ft_export.c \

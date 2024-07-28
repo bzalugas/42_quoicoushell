@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 22:25:55 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 23:17:20 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static bool	is_builtin(t_cmd *cmd)
 static int	run_right_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		;
+		ft_echo(cmd);
 	else if (!ft_strcmp(cmd->argv[0], "cd"))
 		ft_cd(cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "pwd"))
