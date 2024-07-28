@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/27 18:49:23 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:31:01 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,34 +21,24 @@ t_list	*export_variable(t_shell *sh, char *name)
 {
 	t_list	*link;
 
-	link = get_variable(sh, name);
+	link = get_variable(sh, name, LST_ENV);
 	if (!link)
-		link = add_variable(sh, name, NULL, 1);
-	else
 	{
+		link = get_variable(sh, name, LST_LOCAL);
+		if (!link)
+			return (NULL);
 		ft_lstunlink(&sh->local_vars, link);
 		ft_lstadd_back(&sh->env_vars, link);
 	}
 	return (link);
 }
 
-/*
- * @brief Adds variable to either sh->local_vars or sh->env-vars.
- * If there already is a variable with this name,
- * it edits the value of the existing variable.
- * @return A pointer to the new variable. If the variable already exists,
- *  it returns a pointer to
- * the existing link. Returns NULL if somthing goes wrong.
- * @param name The name of the new variable.
- * @param value The value of the new variable.
- * @param env Boolean, decides wether to add variable to local or env_vars.
- */
-t_list	*add_variable(t_shell *sh, char *name, char *value, int env)
+t_list	*set_variable(t_shell *sh, char *name, char *value, int where)
 {
 	t_list	*new;
 	t_var	*var;
 
-	new = set_variable(sh, name, value);
+	new = set_variable_value(sh, name, value);
 	if (!new)
 	{
 		var = new_variable(name, value);
@@ -57,10 +47,11 @@ t_list	*add_variable(t_shell *sh, char *name, char *value, int env)
 		new = ft_lstnew(var);
 		if (!new)
 			return (free_variable(var), NULL);
-		ft_lstadd_back(&sh->local_vars, new);
+		if (where == LST_LOCAL)
+			ft_lstadd_back(&sh->local_vars, new);
+		else if (where == LST_ENV)
+			ft_lstadd_back(&sh->env_vars, new);
 	}
-	if (env)
-		export_variable(sh, name);
 	return (new);
 }
 
@@ -68,10 +59,29 @@ int	del_variable(t_shell *sh, char *name)
 {
 	t_list	*link;
 
-	link = get_variable(sh, name);
+	link = get_variable(sh, name, LST_BOTH);
 	if (!link)
 		return (-1);
 	ft_lstremove(&sh->local_vars, link, &free_variable);
 	ft_lstremove(&sh->env_vars, link, &free_variable);
 	return (0);
+}
+
+t_var	*new_variable(char *name, char *value)
+{
+	t_var	*var;
+
+	var = (t_var *) malloc(sizeof(t_var));
+	if (!var)
+		return (NULL);
+	var->name = name;
+	var->value = value;
+	return (var);
+}
+
+void	free_variable(void *var)
+{
+	free(((t_var *) var)->name);
+	free(((t_var *) var)->value);
+	free(var);
 }

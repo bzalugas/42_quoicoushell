@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 18:57:17 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:20:57 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 
 	if (sh->env_update)
 	{
+		sh->env_update = false;
 		free_split(sh->env);
 		free_split(sh->paths);
 		sh->env = export_env(sh);

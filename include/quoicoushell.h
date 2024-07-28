@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/27 18:32:01 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:00:03 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # ifdef __linux__
 #  include <wait.h>
 # endif
+# define LST_LOCAL 0
+# define LST_ENV 1
+# define LST_BOTH 2
 
 typedef enum e_redir_type
 {
@@ -93,13 +96,13 @@ char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
 
 // variables.c
-t_list	*add_variable(t_shell *sh, char *name, char *value, int env);
+t_list	*set_variable(t_shell *sh, char *name, char *value, int where);
 int		del_variable(t_shell *sh, char *name);
 t_list	*export_variable(t_shell *sh, char *name);
 
 // variables2.c
-t_list	*set_variable(t_shell *sh, char *name, char *new_value);
-t_list	*get_variable(t_shell *sh, char	*name);
+t_list	*set_variable_value(t_shell *sh, char *name, char *new_value);
+t_list	*get_variable(t_shell *sh, char	*name, int where);
 t_var	*new_variable(char *name, char *value);
 void	free_variable(void *var);
 char	*get_variable_value(t_shell *sh, char *name);
@@ -155,7 +158,7 @@ char	**get_paths(char **env);
 
 /********************************** BUILTINS **********************************/
 int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
-int		ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		ft_export(t_cmd *cmd, t_shell *sh);
 int		ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
 int		ft_env(t_shell *sh);
 int		ft_unset(t_cmd *cmd, t_shell *sh);

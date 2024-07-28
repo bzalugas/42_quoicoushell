@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 15:41:53 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 18:30:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:27:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_list	*import_env(t_shell *sh, char **envp)
 		/* dprintf(2, "1 %s\n", entry_split[1]); */
 		if (!entry_split)
 			return (NULL);
-		if (!add_variable(sh, entry_split[0], entry_split[1], 1))
+		if (!set_variable(sh, entry_split[0], entry_split[1], LST_ENV))
 			return (free_split(entry_split), NULL);
 		free(entry_split);
 		i++;
@@ -99,9 +99,9 @@ char	**export_env(t_shell *sh)
 			envx[i] = str_var_env((t_var *)env->content, false);
 			if (!envx[i])
 				return (free_split(envx), NULL);
+			i++;
 		}
 		env = env->next;
-		i++;
 	}
 	return (envx);
 }

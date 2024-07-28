@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/27 13:22:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:23:01 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	run_right_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	else if (!ft_strcmp(cmd->argv[0], "pwd"))
 		;
 	else if (!ft_strcmp(cmd->argv[0], "export"))
-		ft_export(cmds, cmd, sh);
+		ft_export(cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "unset"))
 		ft_unset(cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "env"))

@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 19:01:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:38:36 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,32 +57,28 @@ static int	ft_alone_export(t_shell *sh)
 	return (0);
 }
 
-//TODO: fix infinite loop sometimes when export a=
-//TODO: get correct behavior with export a, export a=
-int	ft_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
+int	ft_export(t_cmd *cmd, t_shell *sh)
 {
 	char	**args;
+	t_list	*link;
 
 	if (!cmd->argv[1])
 		return (ft_alone_export(sh));
 	args = split_env_entry(cmd->argv[1]);
 	if (!args)
-	{
-		if (cmds->n_cmds > 1)
-			return (stop_error("export", 1, cmds));
 		exit_shell(sh, 1);
-	}
 	if (!valid_var_name(args[0]))
 		return (free_split(args), var_error(cmd->argv[1]));
-	if (args[1] == NULL)
-		export_variable(sh, args[0]);
-	else
-	{
+	if (args[1])
 		remove_quotes(args[1]);
-		add_variable(sh, args[0], args[1], 1);
-	}
+	link = export_variable(sh, args[0]);
+	if (link && args[1])
+		((t_var *)link->content)->value = args[1];
+	else if (!link)
+		set_variable(sh, args[0], args[1], LST_ENV);
 	free(args);
 	sh->exit_code = 0;
+	sh->env_update = true;
 	return (0);
 }
 
@@ -103,7 +99,7 @@ int	ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		free_split(args);
 	else
 	{
-		add_variable(sh, args[0], args[1], 0);
+		set_variable(sh, args[0], args[1], LST_LOCAL);
 		free(args);
 	}
 	t_list	*first = sh->local_vars;
