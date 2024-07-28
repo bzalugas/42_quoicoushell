@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 23:19:55 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/28 23:31:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ int	ft_echo(t_cmd *cmd)
 	int		i;
 	bool	nl;
 
-	nl = true;
-	if (cmd->argv[1] && !ft_strcmp(cmd->argv[1], "-n"))
-		nl = false;
+	nl = !(cmd->argv[1] && !ft_strcmp(cmd->argv[1], "-n"));
 	i = 1 + (!nl);
 	while (cmd->argv[i])
 	{
