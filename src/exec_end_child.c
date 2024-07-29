@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 10:50:54 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 23:57:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds)
 	int		i;
 
 	if (error == 127)
-		print_error(msg, ": command not found");
+		print_error(msg, "command not found");
 	else
 		print_error(msg, NULL);
 	i = -1;

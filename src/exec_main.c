@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 23:27:04 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 23:57:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 
 	if (!cmd->argv[0])
 		exit(0);
-	//doesn't arrive here if no env
-	//+ handle the SHLVL var in case of argv[0] == prog_name
 	if (ft_strchr(cmd->argv[0], '/'))
 		if (execve(cmd->argv[0], cmd->argv, sh->env))
 			stop_perror(cmd->argv[0], 0, cmds);
 	i = 0;
-	while (sh->paths[i])
+	while (sh->paths && sh->paths[i])
 	{
 		abs_cmd = ft_strjoin(sh->paths[i], cmd->argv[0]);
 		execve(abs_cmd, cmd->argv, sh->env);

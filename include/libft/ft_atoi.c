@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:36:25 by bazaluga          #+#    #+#             */
-/*   Updated: 2023/11/17 19:15:39 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 00:01:30 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	ft_atoi(const char *nptr)
 	int				sign;
 	size_t			i;
 
+	if (!nptr)
+		return (0);
 	i = 0;
 	while (nptr[i] && ft_isspace(nptr[i]))
 		i++;

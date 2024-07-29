@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:03:08 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 14:10:40 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 23:41:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ int	ft_cd(t_cmd *cmd, t_shell *sh)
 		print_error(cmd->argv[0], "OLDPWD not set");
 	else if (chdir(path) == -1)
 		print_perror(cmd->argv[0], path);
-	set_variable(sh, "OLDPWD", ft_strdup(sh->cwd), LST_ENV);
+	set_variable(sh, ft_strdup("OLDPWD"), ft_strdup(sh->cwd), LST_ENV);
 	free(sh->cwd);
 	sh->cwd = getcwd(NULL, 0);
 	if (!sh->cwd)
 		print_perror("chdir: error retrieving current directory", "getcwd");
-	set_variable(sh, "PWD", ft_strdup(sh->cwd), LST_ENV);
+	set_variable(sh, ft_strdup("PWD"), ft_strdup(sh->cwd), LST_ENV);
 	sh->prompt = build_prompt(sh);
 	sh->env_update = true;
 	sh->exit_code = 0;

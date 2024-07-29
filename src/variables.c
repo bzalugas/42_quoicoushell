@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 19:31:01 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 23:45:07 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ t_list	*set_variable(t_shell *sh, char *name, char *value, int where)
 		else if (where == LST_ENV)
 			ft_lstadd_back(&sh->env_vars, new);
 	}
+	else
+		free(name);
 	return (new);
 }
 
