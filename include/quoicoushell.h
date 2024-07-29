@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 23:16:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:26:53 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);
 
 //exec_end_child.c
 void	print_perror(char *msg1, char *msg2);
+void	print_error(char *msg1, char *msg2);
 int		stop_perror(char *msg, int error, t_lstcmds *cmds);
 int		stop_error(char *msg, int error, t_lstcmds *cmds);
 

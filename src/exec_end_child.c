@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 21:23:26 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:28:30 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,20 @@ void	print_perror(char *msg1, char *msg2)
 		buf = ft_strjoin_free(buf, msg2, 1, 0);
 	}
 	perror(buf);
+	free(buf);
+}
+
+void	print_error(char *msg1, char *msg2)
+{
+	char	*buf;
+
+	buf = ft_strjoin("quoicoushell: ", msg1);
+	if (msg2)
+	{
+		buf = ft_strjoin_free(buf, ": ", 1, 0);
+		buf = ft_strjoin_free(buf, msg2, 1, 0);
+	}
+	ft_putendl_fd(buf, STDERR_FILENO);
 	free(buf);
 }
 
@@ -49,18 +63,12 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds)
 
 int	stop_error(char *msg, int error, t_lstcmds *cmds)
 {
-	char	*buf;
 	int		i;
 
-	buf = ft_strjoin("quoicoushell: ", msg);
 	if (error == 127)
-	{
-		ft_putstr_fd(buf, STDERR_FILENO);
-		ft_putendl_fd(": command not found", STDERR_FILENO);
-	}
+		print_error(msg, ": command not found");
 	else
-		ft_putendl_fd(buf, STDERR_FILENO);
-	free(buf);
+		print_error(msg, NULL);
 	i = -1;
 	while (++i < 2)
 	{
