@@ -6,22 +6,27 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 22:34:22 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 23:15:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
+int	g_sigint = 0;
 
 //TODO: LEARN SIGACTION AND REPLACE SIGNAL WITH SIGACTION
-void	set_signals(void)
+void	set_signals(t_shell *sh)
 {
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	sh->sa.sa_handler = &signal_handler_main;
+	sigaction(SIGINT, &sh->sa, NULL);
+	sh->sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sh->sa, NULL);
+	/* signal(SIGINT, sigint_handler); */
+	/* signal(SIGQUIT, SIG_IGN); */
 }
 
 void	init_shell(t_shell *sh, char **envp)
 {
-	set_signals();
+	set_signals(sh);
 	sh->local_vars = NULL;
 	sh->env_vars = NULL;
 	import_env(sh, envp);
@@ -126,6 +131,11 @@ int	main(int ac, char **av, char **envp)
 	init_shell(&sh, envp);
 	while (1)
 	{
+		if (g_sigint == 1)
+		{
+			g_sigint = 0;
+			write(1, "\n", 1);
+		}
 		line = readline(sh.prompt);
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS, true);

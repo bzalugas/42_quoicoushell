@@ -6,17 +6,26 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:17:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/17 17:30:48 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/29 23:23:57 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-void	sigint_handler(int signum)
+void	signal_handler_main(int signum)
 {
-	(void) signum;
-	rl_on_new_line();
-	ft_putendl_fd("\nCOMING SOON...", 2);
-	rl_replace_line("", 1);
-	rl_redisplay();
+	if (signum == SIGINT)
+	{
+		g_sigint = 1;
+		rl_on_new_line();
+		rl_replace_line("", 1);
+		write(1, "\n", 1);
+		rl_redisplay();
+	}
+}
+
+void	signal_handler_other(int signum)
+{
+	if (signum == SIGINT)
+		g_sigint = 1;
 }

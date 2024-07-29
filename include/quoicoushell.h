@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/29 10:50:52 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 22:27:36 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # define LST_ENV 1
 # define LST_BOTH 2
 
+extern int	g_sigint;
+
 typedef enum e_redir_type
 {
 	RTIN,
@@ -51,14 +53,16 @@ typedef struct s_tokens
 
 typedef struct s_shell //Add lstcmds
 {
-	t_list	*env_vars;
-	t_list	*local_vars;
-	char	*cwd;
-	char	*prompt;
-	bool	env_update;
-	char	**env;
-	char	**paths;
-	int		exit_code;
+	struct sigaction	sa;
+	struct sigaction	sa_tmp;
+	t_list				*env_vars;
+	t_list				*local_vars;
+	char				*cwd;
+	char				*prompt;
+	bool				env_update;
+	char				**env;
+	char				**paths;
+	int					exit_code;
 }	t_shell;
 
 typedef struct s_var
@@ -82,11 +86,11 @@ typedef struct s_cmd
 	t_redir	*redirs;
 	char	**heredocs;
 	char	*hd_filename;
+	int		fd_hd;
 	bool	heredoc;
 }	t_cmd;
 
 //main.c
-void	set_signals(void);
 void	init_shell(t_shell *sh, char **envp);
 void	command_line(t_shell *sh, char *line);
 
@@ -116,7 +120,8 @@ char	**export_env(t_shell *sh);
 char	**export_all_env(t_shell *sh);
 
 // sighandlers.c
-void	sigint_handler(int signum);
+void	signal_handler_main(int signum);
+void	signal_handler_other(int signum);
 
 // token_split.c
 char	**token_split(char *s, t_tokens *t);

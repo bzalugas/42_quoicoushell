@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 11:56:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 22:53:34 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*random_filename(t_lstcmds *cmds)
 {
 	int		fd;
 	char	buf[4096];
-	char	filename[11];
+	char	filename[43];
 	size_t	i;
 	size_t	j;
 
@@ -24,21 +24,31 @@ static char	*random_filename(t_lstcmds *cmds)
 	if (fd == -1)
 		stop_error("heredoc", 1, cmds);
 	ft_bzero(buf, 4096);
-	ft_bzero(filename, 11);
+	ft_bzero(filename, 43);
 	j = 0;
-	while (j < 10)
+	while (j < 42)
 	{
 		read(fd, buf, 4096);
 		i = 0;
-		while (i < 4096 && j < 10)
+		while (i < 4096 && j < 42)
 		{
-			if (ft_isalnum(buf[i]))
+			if (j > 0 && j % 10 == 0)
+				filename[j++] = '-';
+			else if (ft_isalnum(buf[i]))
 				filename[j++] = buf[i];
 			i++;
 		}
 	}
 	close(fd);
 	return (ft_strjoin_free("/tmp/", ft_strdup(filename), 0, 1));
+}
+
+static int	clean_heredocs(t_lstcmds *cmds, t_cmd *cmd)
+{
+	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
+	unlink(cmd->hd_filename);
+	cmd->hd_filename = NULL;
+	return (2);
 }
 
 static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
@@ -48,9 +58,13 @@ static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 
 	fdn = cmd->n_cmd % 2;
 	ft_putstr_fd("> ", STDOUT_FILENO);
-	line = get_next_line(STDIN_FILENO);
-	while (line)
+	while (1)
 	{
+		line = get_next_line(STDIN_FILENO);
+		if (g_sigint == 1)
+			return (clean_heredocs(cmds, cmd));
+		if (!line)
+			break ;
 		if (!ft_strcmp(cmd->heredocs[i], line))
 		{
 			free(line);
@@ -61,7 +75,6 @@ static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 			ft_putstr_fd(line, cmds->fd[fdn][0]);
 		free(line);
 		ft_putstr_fd("> ", STDOUT_FILENO);
-		line = get_next_line(STDIN_FILENO);
 	}
 	return (0);
 }
@@ -69,7 +82,7 @@ static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 {
 	int		i;
-//need to catch C-c differently from main
+
 	if (!cmd->heredocs || !cmd->heredoc)
 		return (1);
 	i = 0;
@@ -84,7 +97,8 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 			| O_TRUNC, 0600);
 		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
 			return (stop_error("in get heredocs", 1, cmds));
-		get_heredoc(cmds, cmd, i);
+		if (get_heredoc(cmds, cmd, i) == 2)
+			return (2);
 		i++;
 	}
 	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);

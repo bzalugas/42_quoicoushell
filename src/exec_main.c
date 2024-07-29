@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 12:58:16 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 23:27:04 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	if (!cmd->argv[0])
 		exit(0);
 	//doesn't arrive here if no env
+	//+ handle the SHLVL var in case of argv[0] == prog_name
 	if (ft_strchr(cmd->argv[0], '/'))
 		if (execve(cmd->argv[0], cmd->argv, sh->env))
 			stop_perror(cmd->argv[0], 0, cmds);
@@ -74,6 +75,8 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		get_in_out_files(cmds, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
+	sh->sa.sa_handler = &signal_handler_other;
+	sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 	ft_close(cmds, cmds->fd[pipe_in][0]);
 	ft_close(cmds, cmds->fd[pipe_in][1]);
 	if (cmd->hd_filename)
@@ -87,11 +90,18 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 	t_cmd	*cmd;
 	pid_t	last;
 
+	last = -1;
 	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
+		g_sigint = 0;
 		cmd = node_cmd->content;
+		sh->sa.sa_handler = &signal_handler_other;
+		sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 		get_heredocs(cmds, cmd);
+		sigaction(SIGINT, &sh->sa_tmp, NULL);
+		if (g_sigint == 1)
+			return (last);
 		if (cmd->n_cmd < cmds->n_cmds - 1)
 			if (pipe(cmds->fd[(cmd->n_cmd + 1) % 2]) == -1)
 				exit(errno);
@@ -120,5 +130,6 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 		wait(NULL);
 	if (last != -1)
 		sh->exit_code = WEXITSTATUS(sh->exit_code);
+	sigaction(SIGINT, &sh->sa_tmp, NULL);
 	return (sh->exit_code);
 }
