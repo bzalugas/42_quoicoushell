@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/29 14:08:32 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 00:42:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,7 @@
 void	exit_shell(t_shell *sh, int exit_code, bool display)
 {
 	if (display)
-	{
 		ft_putstr_fd("exit\n", 1);
-	}
-	/* else if (exit_code == EXIT_FAILURE) */
-	/* { */
-	/* 	perror("idk yet"); */
-	/* } */
 	ft_lstclear(&sh->local_vars, (&free_variable));
 	ft_lstclear(&sh->env_vars, (&free_variable));
 	free(sh->cwd);
@@ -52,7 +46,7 @@ char	*current_dir_name(t_shell *sh, int depth)
 	dir = NULL;
 	while (pwd_split[i])
 	{
-		dir = ft_strjoin_free(dir, ft_strjoin(pwd_split[i++], "/"), 1, 0);
+		dir = ft_strjoin_free(dir, ft_strjoin(pwd_split[i++], "/"), 1, 1);
 		if (!dir)
 			return (free_split(pwd_split), free(dir), NULL);
 	}

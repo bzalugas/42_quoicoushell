@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 23:57:08 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:15:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	print_error(char *msg1, char *msg2)
 	return (1);
 }
 
-int	stop_perror(char *msg, int error, t_lstcmds *cmds)
+int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 {
 	int		i;
 
@@ -59,11 +59,17 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds)
 		if (cmds->fd[i][1] != -1)
 			ft_close(cmds, cmds->fd[i][1]);
 	}
-	//free all remaining ptrs ?
+	ft_lstclear(&sh->local_vars, (&free_variable));
+	ft_lstclear(&sh->env_vars, (&free_variable));
+	free(sh->cwd);
+	free(sh->prompt);
+	free_split(sh->env);
+	free_split(sh->paths);
+	free_cmds(cmds);
 	exit(EXIT_FAILURE);
 }
 
-int	stop_error(char *msg, int error, t_lstcmds *cmds)
+int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 {
 	int		i;
 
@@ -79,6 +85,12 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds)
 		if (cmds->fd[i][1] != -1)
 			ft_close(cmds, cmds->fd[i][1]);
 	}
-	//free all remaining ptrs ?
+	ft_lstclear(&sh->local_vars, (&free_variable));
+	ft_lstclear(&sh->env_vars, (&free_variable));
+	free(sh->cwd);
+	free(sh->prompt);
+	free_split(sh->env);
+	free_split(sh->paths);
+	free_cmds(cmds);
 	exit(EXIT_FAILURE);
 }

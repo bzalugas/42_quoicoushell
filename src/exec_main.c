@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 23:57:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:07:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		exit(0);
 	if (ft_strchr(cmd->argv[0], '/'))
 		if (execve(cmd->argv[0], cmd->argv, sh->env))
-			stop_perror(cmd->argv[0], 0, cmds);
+			stop_perror(cmd->argv[0], 0, cmds, sh);
 	i = 0;
 	while (sh->paths && sh->paths[i])
 	{
@@ -30,7 +30,7 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		free(abs_cmd);
 		i++;
 	}
-	return (stop_error(cmd->argv[0], 127, cmds));
+	return (stop_error(cmd->argv[0], 127, cmds, sh));
 }
 
 static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
@@ -70,7 +70,7 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	{
 		ft_close(cmds, cmds->fd[pipe_in][1]);
 		ft_close(cmds, cmds->fd[pipe_out][0]);
-		get_in_out_files(cmds, cmd, true);
+		get_in_out_files(sh, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
 	sh->sa.sa_handler = &signal_handler_other;
@@ -96,7 +96,7 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 		cmd = node_cmd->content;
 		sh->sa.sa_handler = &signal_handler_other;
 		sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
-		get_heredocs(cmds, cmd);
+		get_heredocs(cmds, cmd, sh);
 		sigaction(SIGINT, &sh->sa_tmp, NULL);
 		if (g_sigint == 1)
 			return (last);

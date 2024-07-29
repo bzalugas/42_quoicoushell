@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 22:53:34 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:06:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-static char	*random_filename(t_lstcmds *cmds)
+static char	*random_filename(t_lstcmds *cmds, t_shell *sh)
 {
 	int		fd;
 	char	buf[4096];
@@ -22,7 +22,7 @@ static char	*random_filename(t_lstcmds *cmds)
 
 	fd = open("/dev/random", O_RDONLY);
 	if (fd == -1)
-		stop_error("heredoc", 1, cmds);
+		stop_error("heredoc", 1, cmds, sh);
 	ft_bzero(buf, 4096);
 	ft_bzero(filename, 43);
 	j = 0;
@@ -79,7 +79,7 @@ static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 	return (0);
 }
 
-int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
+int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	int		i;
 
@@ -89,14 +89,14 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 	while (cmd->heredocs[i])
 	{
 		if (i == 0)
-			cmd->hd_filename = random_filename(cmds);
+			cmd->hd_filename = random_filename(cmds, sh);
 		if (!cmd->hd_filename)
-			stop_error("random filename", 1, cmds);
+			stop_error("random filename", 1, cmds, sh);
 		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
 		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY | O_CREAT
 			| O_TRUNC, 0600);
 		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
-			return (stop_error("in get heredocs", 1, cmds));
+			return (stop_error("in get heredocs", 1, cmds, sh));
 		if (get_heredoc(cmds, cmd, i) == 2)
 			return (2);
 		i++;

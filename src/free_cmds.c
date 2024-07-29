@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:08:29 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/27 13:20:51 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:12:32 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ void	free_cmd(void *content)
 	t_redir *tmp;
 
 	cmd = (t_cmd *)content;
-	tmp = cmd->redirs;
-	while (cmd->redirs->file)
-	{
-		free(cmd->redirs->file);
-		cmd->redirs++;
-	}
-	free(tmp);
-	free_split(cmd->heredocs);
 	free_split(cmd->argv);
+	tmp = cmd->redirs;
+	while (tmp->file)
+	{
+		free(tmp->file);
+		tmp++;
+	}
+	free(cmd->redirs);
+	free_split(cmd->heredocs);
 	free(cmd);
 }
 

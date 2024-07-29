@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 00:00:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:09:39 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	g_sigint = 0;
 //TODO: LEARN SIGACTION AND REPLACE SIGNAL WITH SIGACTION
 void	set_signals(t_shell *sh)
 {
+	sh->sa = (struct sigaction) {0};
+	sh->sa_tmp = (struct sigaction) {0};
 	sh->sa.sa_handler = &signal_handler_main;
 	sigaction(SIGINT, &sh->sa, NULL);
 	sh->sa.sa_handler = SIG_IGN;
@@ -123,6 +125,7 @@ void	command_line(t_shell *sh, char *line)
 		free_split(tokens);
 	}
 	run_all_cmds(&cmds, sh);
+	free_cmds(&cmds);
 }
 
 int	main(int ac, char **av, char **envp)
