@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 10:28:30 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:50:54 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/quoicoushell.h"
 
-void	print_perror(char *msg1, char *msg2)
+int	print_perror(char *msg1, char *msg2)
 {
 	char	*buf;
 
@@ -24,9 +24,10 @@ void	print_perror(char *msg1, char *msg2)
 	}
 	perror(buf);
 	free(buf);
+	return (1);
 }
 
-void	print_error(char *msg1, char *msg2)
+int	print_error(char *msg1, char *msg2)
 {
 	char	*buf;
 
@@ -38,6 +39,7 @@ void	print_error(char *msg1, char *msg2)
 	}
 	ft_putendl_fd(buf, STDERR_FILENO);
 	free(buf);
+	return (1);
 }
 
 int	stop_perror(char *msg, int error, t_lstcmds *cmds)

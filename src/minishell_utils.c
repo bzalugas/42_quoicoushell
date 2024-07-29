@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 22:33:10 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:08:32 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*current_dir_name(t_shell *sh, int depth)
 	char	*dir;
 	char	**pwd_split;
 
-	if (depth == 0)
+	if (depth == 0 || !sh->cwd)
 		return (NULL);
 	pwd_split = ft_split(sh->cwd, '/');
 	if (!pwd_split)

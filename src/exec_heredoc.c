@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/25 20:01:58 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 11:56:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 {
 	int		i;
-
+//need to catch C-c differently from main
 	if (!cmd->heredocs || !cmd->heredoc)
 		return (1);
 	i = 0;
