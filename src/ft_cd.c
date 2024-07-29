@@ -6,39 +6,53 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:03:08 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 21:29:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:10:40 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-static char	*cd_get_path(t_cmd *cmd, t_shell *sh)
+static int cd_get_path(t_cmd *cmd, t_shell *sh, char **path)
 {
-	char	*path;
-
 	if (!cmd->argv[1])
 	{
-		path = get_variable_value(sh, "HOME");
-		return (path);
+		*path = get_variable_value(sh, "HOME");
+		if (!*path)
+			return (1);
 	}
-	return (cmd->argv[1]);
+	else if (!ft_strcmp(cmd->argv[1], "-"))
+	{
+		*path = get_variable_value(sh, "OLDPWD");
+		if (!*path)
+			return (2);
+	}
+	else
+		*path = cmd->argv[1];
+	return (0);
 }
 
 int	ft_cd(t_cmd *cmd, t_shell *sh)
 {
 	char	*path;
+	int		res;
 
-	path = cd_get_path(cmd, sh);
-	if (!path)
-		return (1);
-	if (chdir(path) == -1)
-	{
-		print_perror(cmd->argv[0], cmd->argv[1]);
-		return (-1);
-	}
+	if (cmd->argc > 2)
+		return (print_error(cmd->argv[0], "too many arguments"));
+	res = cd_get_path(cmd, sh, &path);
+	if (res == 1)
+		print_error(cmd->argv[0], "HOME not set");
+	else if (res == 2)
+		print_error(cmd->argv[0], "OLDPWD not set");
+	else if (chdir(path) == -1)
+		print_perror(cmd->argv[0], path);
+	set_variable(sh, "OLDPWD", ft_strdup(sh->cwd), LST_ENV);
 	free(sh->cwd);
 	sh->cwd = getcwd(NULL, 0);
+	if (!sh->cwd)
+		print_perror("chdir: error retrieving current directory", "getcwd");
+	set_variable(sh, "PWD", ft_strdup(sh->cwd), LST_ENV);
 	sh->prompt = build_prompt(sh);
+	sh->env_update = true;
 	sh->exit_code = 0;
 	return (0);
 }

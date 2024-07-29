@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
+/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 22:42:41 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/29 12:58:16 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 
 	if (!cmd->argv[0])
 		exit(0);
+	//doesn't arrive here if no env
 	if (ft_strchr(cmd->argv[0], '/'))
 		if (execve(cmd->argv[0], cmd->argv, sh->env))
 			stop_perror(cmd->argv[0], 0, cmds);

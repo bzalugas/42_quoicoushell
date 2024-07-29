@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 23:58:37 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/29 18:46:29 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,88 +29,6 @@ int	valid_name_char(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-char	*retrieve_var_name(char *p)
-{
-	int		i;
-	char	*name;
-
-	if (!p || p[0] != '$')
-		return (NULL);
-	i = 1;
-	while (valid_name_char(p[i]))
-		i++;
-	if (i == 1 && ft_isquot(p[i]))
-		return (ft_strdup(""));
-	if (i == 1)
-		return (NULL);
-	name = (char *) ft_calloc(i + 1, sizeof(char));
-	i = 0;
-	while (valid_name_char(p[++i]))
-		name[i - 1] = p[i];
-	return (name);
-}
-
-int	retrieve_var_value(t_shell *sh, char *p, char **value, int *name_size)
-{
-	char	*name;
-
-	name = retrieve_var_name(p);
-	if (!name)
-		return (0);
-	if (!value || !name_size)
-		return (-1);
-	*value = get_variable_value(sh, name);
-	*name_size = ft_strlen(name);
-	free(name);
-	return (1);
-}
-
-int	var_word_count(t_shell *sh, char *p)
-{
-	int		i;
-	int		words;
-	char	*name;
-	char	*content;
-
-	name = retrieve_var_name(p);
-	words = 0;
-	content = get_variable_value(sh, name);
-	if (!content)
-		return (0);
-	if (ft_isspace(content[0]))
-		words++;
-	i = 0;
-	while (content[i])
-		i++;
-	if (ft_isspace(content[i - 1]))
-		words++;
-	words += count_wordsf(content, &ft_isspace);
-	return (words);
-}
-
-int	count_new_words_in_word(t_shell *sh, char *word)
-{
-	int		c;
-	char	q;
-	int		i;
-
-	i = 0;
-	c = 0;
-	while (word[i])
-	{
-		if (word[i] == q)
-			q = 0;
-		else if (word[i] == '"')
-			q = '"';
-		else if (!q && word[i] == '\'')
-			i += next_quote(&word[i]);
-		else if (word[i] == '$' && valid_name_char(word[i + 1]))
-			c += var_word_count(sh, &word[i]);
-		i++;
-	}
-	return (0);
-}
-
 typedef struct s_exvar //TODO: MOVE TO HEADER
 {
 	char	*value;
@@ -120,8 +38,9 @@ typedef struct s_exvar //TODO: MOVE TO HEADER
 
 typedef struct s_quot
 {
-	int	start;
-	int	size;
+	char	q;
+	void	*start;
+	size_t	size;
 }	t_quot;
 
 typedef struct s_cbv
@@ -134,27 +53,116 @@ typedef struct s_cbv
 	int		rd_i;
 }	t_cbv;
 
-int	get_new_size(t_shell *sh, char *word, t_quot *qi)
+typedef struct s_expand_data
+{
+	t_quot	*qi;
+	t_quot	*tqi;
+	char	*tmp_val;
+	int		name_size;
+}	t_expand_data;
+
+char	*retrieve_var_name(char *p, t_expand_data *xdat)
 {
 	int		i;
-	int		name_size;
+	char	*name;
+
+	if (!p || p[0] != '$' || !xdat)
+		return (NULL);
+	i = 1;
+	while (valid_name_char(p[i]) && &p[i] != xdat->tqi->start)
+		i++;
+	dprintf(2, "%s p %p  q %p\n", p, &p[i], xdat->tqi->start);
+	if (i == 1 && &p[i + 1] != xdat->tqi->start)
+		return (NULL);
+	name = (char *) ft_calloc(i, sizeof(char)); //REMOVED +1 BECAUSE I DONT THINK IT IS NECESSARY (i starts at 1 because of $), IF SEGFAULT, THIS IS WHY
+	i = 0;
+	while (valid_name_char(p[++i]) && &p[i] != xdat->tqi->start)
+		name[i - 1] = p[i];
+	return (name);
+}
+
+int	retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat)
+{
+	char	*name;
+
+	name = retrieve_var_name(p, xdat);
+	if (!name)
+		return (0);
+	if (!xdat)
+		return (-1);
+	xdat->tmp_val = get_variable_value(sh, name);
+	xdat->name_size = ft_strlen(name);
+	free(name);
+	return (1);
+}
+
+// int	var_word_count(t_shell *sh, char *p)
+// {
+// 	int		i;
+// 	int		words;
+// 	char	*name;
+// 	char	*content;
+
+// 	name = retrieve_var_name(p);
+// 	words = 0;
+// 	content = get_variable_value(sh, name);
+// 	if (!content)
+// 		return (0);
+// 	if (ft_isspace(content[0]))
+// 		words++;
+// 	i = 0;
+// 	while (content[i])
+// 		i++;
+// 	if (ft_isspace(content[i - 1]))
+// 		words++;
+// 	words += count_wordsf(content, &ft_isspace);
+// 	return (words);
+// }
+
+// int	count_new_words_in_word(t_shell *sh, char *word)
+// {
+// 	int		c;
+// 	char	q;
+// 	int		i;
+
+// 	i = 0;
+// 	c = 0;
+// 	while (word[i])
+// 	{
+// 		if (word[i] == q)
+// 			q = 0;
+// 		else if (word[i] == '"')
+// 			q = '"';
+// 		else if (!q && word[i] == '\'')
+// 			i += next_quote(&word[i]);
+// 		else if (word[i] == '$' && valid_name_char(word[i + 1]))
+// 			c += var_word_count(sh, &word[i]);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+int	get_new_size(t_shell *sh, char *word, t_expand_data *xdat)
+{
+	int		i;
 	int		new_size;
-	char	*tmp_val;
 
 	i = 0;
+	xdat->tqi = xdat->qi;
 	new_size = ft_strlen(word);
 	while (word[i])
 	{
-		if (qi->size && i == qi->start)
+		if (xdat->tqi->size && &word[i] == xdat->tqi->start)
 		{
-			i += qi->size;
-			qi++;
+			if (xdat->tqi->q == '\'')
+				i += xdat->tqi->size;
+			xdat->tqi++;
 		}
-		else if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
+		else if (retrieve_var_value(sh, &word[i], xdat) > 0)
 		{
-			new_size -= name_size + 1;
-			new_size += ft_strlen(tmp_val);
-			i += name_size + 1;
+			new_size -= xdat->name_size + 1;
+			new_size += ft_strlen(xdat->tmp_val);
+			i += xdat->name_size + 1;
 		}
 		else
 			i++;
@@ -162,31 +170,31 @@ int	get_new_size(t_shell *sh, char *word, t_quot *qi)
 	return (new_size);
 }
 
-char	*simple_expand(t_shell *sh, char *word, t_quot *qi)
+char	*simple_expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		i;
 	int		j;
 	char	*new_word;
-	int		name_size;
-	char	*tmp_val;
 
 	i = 0;
 	j = 0;
-	new_word = (char *) ft_calloc(get_new_size(sh, word, qi) + 1, sizeof(char));
+	new_word = (char *) ft_calloc(get_new_size(sh, word, xdat) + 1, 1UL);
+	xdat->tqi = xdat->qi;
 	while (word[i])
 	{
-		if (qi->size && i == qi->start)
+		if (xdat->tqi->size && &word[i] == xdat->tqi->start)
 		{
-			while (--qi->size)
-				new_word[j++] = word[i++];
-			qi++;
+			if (xdat->tqi->q == '\'')
+				while (--xdat->tqi->size)
+					new_word[j++] = word[i++];
+			xdat->tqi++;
 		}
-		else if (retrieve_var_value(sh, &word[i], &tmp_val, &name_size) > 0)
+		else if (retrieve_var_value(sh, &word[i], xdat) > 0)
 		{
-			if (tmp_val)
-				ft_strcpy(&new_word[j], tmp_val);
-			i += name_size + 1;
-			j += ft_strlen(tmp_val);
+			if (xdat->tmp_val)
+				ft_strcpy(&new_word[j], xdat->tmp_val);
+			i += xdat->name_size + 1;
+			j += ft_strlen(xdat->tmp_val);
 		}
 		else
 			new_word[j++] = word[i++];
@@ -194,7 +202,7 @@ char	*simple_expand(t_shell *sh, char *word, t_quot *qi)
 	return (new_word);
 }
 
-void	alloc_quotes_position(char *word, char quot, t_quot **qi)
+void	alloc_quotes_position(char *word, t_quot **qi)
 {
 	int	qc;
 	int	q;
@@ -205,7 +213,7 @@ void	alloc_quotes_position(char *word, char quot, t_quot **qi)
 	while (word[++i])
 	{
 		q = next_quote(&word[i]);
-		if (q > 0 && (!quot || quot == word[i]))
+		if (q > 0)
 		{
 			qc++;
 			i += q;
@@ -214,7 +222,7 @@ void	alloc_quotes_position(char *word, char quot, t_quot **qi)
 	*qi = (t_quot *) ft_calloc(qc + 1, sizeof(t_quot));
 }
 
-t_quot	*get_quotes_position(char *word, char quot)
+t_quot	*get_quotes_position(char *word)
 {
 	int		offset;
 	int		qc;
@@ -222,17 +230,16 @@ t_quot	*get_quotes_position(char *word, char quot)
 	int		q;
 	t_quot	*qi;
 
-
-	alloc_quotes_position(word, quot, &qi);
+	alloc_quotes_position(word, &qi);
 	offset = 0;
 	qc = 0;
 	i = -1;
 	while (word[++i])
 	{
 		q = next_quote(&word[i]);
-		if (q > 0 && (!quot || quot == word[i]))
+		if (q > 0)
 		{
-			qi[qc++] = (t_quot){i - offset, q};
+			qi[qc++] = (t_quot){word[i], &word[i] - offset, q};
 			offset += 2;
 			i += q;
 		}
@@ -242,20 +249,22 @@ t_quot	*get_quotes_position(char *word, char quot)
 
 char	*remove_quotes_and_expand(t_shell *sh, char *word)
 {
-	char	*expanded;
-	t_quot	*qi;
+	char			*expanded;
+	t_expand_data	xdat;
 
-	qi = get_quotes_position(word, '\'');
+	xdat.qi = get_quotes_position(word);
 	remove_quotes(word);
-	expanded = simple_expand(sh, word, qi);
+	expanded = simple_expand(sh, word, &xdat);
+	free(xdat.qi);
 	return (expanded);
 }
 
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
 {
 	(void) sh;
-	cbv->cmd->heredocs[cbv->hd_i++] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
+	cbv->cmd->heredocs[cbv->hd_i] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
 	cbv->cmd->heredoc = 1;
+	cbv->hd_i++;
 }
 
 void	set_redir(t_shell *sh, t_cbv *cbv)
@@ -269,6 +278,7 @@ void	set_redir(t_shell *sh, t_cbv *cbv)
 	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
 		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
 	cbv->cmd->redirs[cbv->rd_i].file = remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
+	cbv->rd_i++;
 }
 
 bool	can_be_var_assign(char *word)
@@ -305,7 +315,14 @@ bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word)
 
 void	set_var_assign(t_shell *sh, t_cbv *cbv)
 {
-	cbv->cmd->argv[cbv->arg_i++] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	cbv->cmd->argv[cbv->arg_i] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	cbv->arg_i++;
+}
+
+void	ft_putstr_err(char *s)
+{
+	while (*s)
+		write(2, s++, 1);
 }
 
 void	set_cmd_word(t_shell *sh, t_cbv *cbv)
@@ -313,8 +330,8 @@ void	set_cmd_word(t_shell *sh, t_cbv *cbv)
 	//expand aand split
 
 	//ft_memcpy(&cmd->argv[ctrs[0]++], split_expanded_word, wcount * sizeof(char *)) //free split_expanded_words
-	cbv->cmd->argv[cbv->arg_i++] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
-	// ft_putendl_fd(cbv->cmd->argv[cbv->arg_i++], 2);
+	cbv->cmd->argv[cbv->arg_i] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	cbv->arg_i++;
 }
 
 t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
