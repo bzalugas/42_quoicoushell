@@ -6,13 +6,29 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/30 02:01:56 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 19:51:37 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-//TODO: might need to split these into two functions
+void	save_history(t_shell *sh)
+{
+
+}
+
+void	get_history(t_shell *sh)
+{
+	int		fd;
+	char	*file;
+
+	file = ft_strreplace(HISTORY_FILE, "$HOME", get_variable_value(sh, "HOME"));
+	fd = open(file, O_RDONLY);
+	if (fd == -1)
+		return (free(file));
+
+}
+
 void	exit_shell(t_shell *sh, int exit_code, bool display)
 {
 	if (display)

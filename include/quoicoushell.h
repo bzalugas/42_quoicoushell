@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/30 01:04:37 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 18:54:22 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define LST_LOCAL 0
 # define LST_ENV 1
 # define LST_BOTH 2
+# define HISTORY_FILE "$HOME/.quoicoushell_history"
 
 extern int	g_sigint;
 

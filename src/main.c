@@ -6,14 +6,14 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 02:15:26 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 18:51:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
+
 int	g_sigint = 0;
 
-//TODO: LEARN SIGACTION AND REPLACE SIGNAL WITH SIGACTION
 void	set_signals(t_shell *sh)
 {
 	sh->sa = (struct sigaction) {0};
@@ -22,8 +22,6 @@ void	set_signals(t_shell *sh)
 	sigaction(SIGINT, &sh->sa, NULL);
 	sh->sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sh->sa, NULL);
-	/* signal(SIGINT, sigint_handler); */
-	/* signal(SIGQUIT, SIG_IGN); */
 }
 
 void	init_shell(t_shell *sh, char **envp)
