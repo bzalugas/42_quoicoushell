@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 16:39:36 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/06/22 13:26:00 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 18:06:15 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool			buff_add_back(t_buffer *buf, t_node *new);
 bool			buff_add_after(t_buffer *buf, t_node *node, t_node *new);
 bool			buff_add_before(t_buffer *buf, t_node *node, t_node *new);
 void			*buff_clear(t_buffer **buf);
-size_t			buff_print(t_buffer *buf);
+size_t			buff_print(t_buffer *buf, int fd);
 size_t			buff_special_print(t_buffer *buf, int count);
 
 t_node			*node_get_next_conversion(t_node *node);

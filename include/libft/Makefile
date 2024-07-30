@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/04 16:22:14 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/29 12:25:53 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/07/30 18:39:41 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC		:=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 			ft_printf_node.c ft_printf_uint_handlers.c ft_printf_utils.c \
 			ft_ftoa.c ft_ftoa_printf.c ft_strdup_free.c ft_strjoin_free.c\
 			free_split.c ft_strcmp.c ft_splitlen.c ft_atou_base.c ft_strreplace.c\
+			ft_dprintf.c \
 			\
 			get_next_line.c get_next_line_utils.c
 

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 12:26:03 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 18:09:45 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,7 @@ char			*ft_strreplace(char *str, char *to_replace, char *new_str);
 
 /******************************* FT_PRINTF ************************************/
 int				ft_printf(const char *format, ...);
+
+int				ft_dprintf(int fd, const char *format, ...);
 
 #endif
