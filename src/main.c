@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 02:01:12 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 02:15:26 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->env_update = true;
 	sh->env = NULL;
 	sh->paths = NULL;
+	sh->cmds = NULL;
 	sh->exit_code = 0;
 	shlvl = ft_atoi(get_variable_value(sh, "SHLVL"));
 	set_variable(sh, ft_strdup("SHLVL"), ft_itoa(shlvl + 1), LST_ENV);
