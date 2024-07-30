@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:06:46 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:29:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	int		i;
 
-	if (!cmd->heredocs || !cmd->heredoc)
+	if (!cmd->heredocs)
 		return (1);
 	i = 0;
 	while (cmd->heredocs[i])
@@ -102,6 +102,7 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		i++;
 	}
 	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
-	cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY);
+	if (cmd->heredoc)
+		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY);
 	return (0);
 }

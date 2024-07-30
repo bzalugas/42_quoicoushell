@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/30 00:42:46 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 02:01:56 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	exit_shell(t_shell *sh, int exit_code, bool display)
 	free(sh->prompt);
 	free_split(sh->env);
 	free_split(sh->paths);
+	free_cmds(sh->cmds);
 	exit(exit_code);
 }
 

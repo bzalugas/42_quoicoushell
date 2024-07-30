@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:03:14 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:53:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,20 @@ int	ft_close(t_lstcmds *cmds, int fd)
 static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename, bool forked)
 {
 	int	fdn;
+	int	tmp_fd;
 
 	fdn = cmd->n_cmd % 2;
-	ft_close(sh->cmds, sh->cmds->fd[fdn][0]);
-	sh->cmds->fd[fdn][0] = open(filename, O_RDONLY);
-	if (sh->cmds->fd[fdn][0] == -1)
+	if (!cmd->heredoc)
+		ft_close(sh->cmds, sh->cmds->fd[fdn][0]);
+	tmp_fd = open(filename, O_RDONLY);
+	if (tmp_fd == -1)
 	{
 		if (forked)
 			stop_perror(filename, 0, sh->cmds, sh);
 		perror(filename);
 	}
+	if (!cmd->heredoc)
+		sh->cmds->fd[fdn][0] = tmp_fd;
 	return (0);
 }
 

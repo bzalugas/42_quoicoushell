@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:09:39 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 02:01:12 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,10 @@ void	command_line(t_shell *sh, char *line)
 		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
 		free_split(tokens);
 	}
+	sh->cmds = &cmds;
 	run_all_cmds(&cmds, sh);
 	free_cmds(&cmds);
+	sh->cmds = NULL;
 }
 
 int	main(int ac, char **av, char **envp)

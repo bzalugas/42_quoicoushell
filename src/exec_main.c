@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:07:46 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:57:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	char	*abs_cmd;
 
 	if (!cmd->argv[0])
-		exit(0);
+		exit_shell(sh, EXIT_SUCCESS, false);
 	if (ft_strchr(cmd->argv[0], '/'))
 		if (execve(cmd->argv[0], cmd->argv, sh->env))
 			stop_perror(cmd->argv[0], 0, cmds, sh);
