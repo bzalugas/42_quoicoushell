@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
+/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 15:41:53 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 23:31:21 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/28 19:27:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	**split_env_entry(char *entry)
 	char	**split;
 	int		i;
 
-	split = (char **) ft_calloc(3, sizeof(char *));
+	split = (char **) calloc(3, sizeof(char *));
 	i = 0;
 	while (entry[i] && entry[i] != '=')
 		i++;

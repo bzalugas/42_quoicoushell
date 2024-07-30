@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 20:27:59 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/25 20:28:58 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/29 11:21:29 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	**get_paths(char **env)
 	size_t	i;
 	char	**paths;
 
+	if (!env)
+		return (NULL);
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		i++;

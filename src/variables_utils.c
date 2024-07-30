@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 02:51:47 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 23:31:32 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/26 19:54:17 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	**split_env_entry(char *entry)
 	char	**split;
 	int		i;
 
-	split = (char **) ft_calloc(3, sizeof(char *));
+	split = (char **) calloc(3, sizeof(char *));
 	i = 0;
 	while (entry[i] && entry[i] != '=')
 		i++;

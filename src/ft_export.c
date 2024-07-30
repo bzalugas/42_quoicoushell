@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 22:33:42 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:07:58 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	if (!args)
 	{
 		if (cmds->n_cmds > 1)
-			return (stop_error("local_export", 1, cmds));
+			return (stop_error("local_export", 1, cmds, sh));
 		exit_shell(sh, 1, true);
 	}
 	if (!valid_var_name(args[0]))

@@ -6,29 +6,31 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 23:41:20 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/30 02:01:12 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
+int	g_sigint = 0;
 
-//TODO: ERRORS
-void	set_signals(void)
+//TODO: LEARN SIGACTION AND REPLACE SIGNAL WITH SIGACTION
+void	set_signals(t_shell *sh)
 {
-	struct sigaction	sa;
-
-	sa.sa_sigaction = &sigint_handler;
-	sa.sa_flags = SA_RESTART | SA_SIGINFO;
-	if (sigemptyset(&sa.sa_mask) < 0)
-		;
-	if (sigaction(SIGINT, &sa, NULL) != 0)
-		;
-	// sigaction(SIGINT, SIG_IGN);
+	sh->sa = (struct sigaction) {0};
+	sh->sa_tmp = (struct sigaction) {0};
+	sh->sa.sa_handler = &signal_handler_main;
+	sigaction(SIGINT, &sh->sa, NULL);
+	sh->sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sh->sa, NULL);
+	/* signal(SIGINT, sigint_handler); */
+	/* signal(SIGQUIT, SIG_IGN); */
 }
 
 void	init_shell(t_shell *sh, char **envp)
 {
-	set_signals();
+	int	shlvl;
+
+	set_signals(sh);
 	sh->local_vars = NULL;
 	sh->env_vars = NULL;
 	import_env(sh, envp);
@@ -38,6 +40,8 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->env = NULL;
 	sh->paths = NULL;
 	sh->exit_code = 0;
+	shlvl = ft_atoi(get_variable_value(sh, "SHLVL"));
+	set_variable(sh, ft_strdup("SHLVL"), ft_itoa(shlvl + 1), LST_ENV);
 }
 
 void	print_split(char **sp, char *start, char *none, char *end)
@@ -116,11 +120,14 @@ void	command_line(t_shell *sh, char *line)
 		cmd = get_command(sh, tokens, cmds.n_cmds);
 		cmds.n_cmds++;
 // TODO: PROTECT MALLOC
-		// print_cmd(*cmd);
+		/* print_cmd(*cmd); */
 		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
 		free_split(tokens);
 	}
+	sh->cmds = &cmds;
 	run_all_cmds(&cmds, sh);
+	free_cmds(&cmds);
+	sh->cmds = NULL;
 }
 
 int	main(int ac, char **av, char **envp)
@@ -133,6 +140,11 @@ int	main(int ac, char **av, char **envp)
 	init_shell(&sh, envp);
 	while (1)
 	{
+		if (g_sigint == 1)
+		{
+			g_sigint = 0;
+			write(1, "\n", 1);
+		}
 		line = readline(sh.prompt);
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS, true);

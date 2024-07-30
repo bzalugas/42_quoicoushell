@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/29 18:46:29 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/30 02:01:26 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,9 @@ char	*retrieve_var_name(char *p, t_expand_data *xdat)
 	i = 1;
 	while (valid_name_char(p[i]) && &p[i] != xdat->tqi->start)
 		i++;
-	dprintf(2, "%s p %p  q %p\n", p, &p[i], xdat->tqi->start);
 	if (i == 1 && &p[i + 1] != xdat->tqi->start)
 		return (NULL);
-	name = (char *) ft_calloc(i, sizeof(char)); //REMOVED +1 BECAUSE I DONT THINK IT IS NECESSARY (i starts at 1 because of $), IF SEGFAULT, THIS IS WHY
+	name = (char *) ft_calloc(i, sizeof(char));
 	i = 0;
 	while (valid_name_char(p[++i]) && &p[i] != xdat->tqi->start)
 		name[i - 1] = p[i];
@@ -259,25 +258,62 @@ char	*remove_quotes_and_expand(t_shell *sh, char *word)
 	return (expanded);
 }
 
+char	*create_quote_mask(char *word, t_quot *qi)
+{
+	char	*mask;
+	int		size;
+	int		i;
+
+	i = 0;
+	size = ft_strlen(word);
+	mask = (char *) calloc(size + 1, sizeof(char));
+	while (i < size)
+	{
+		if (qi->size && (int)(qi->start - (void *)word) == i)
+		{
+			i += qi->size;
+			qi++;
+		}
+		else
+		{
+			mask[i] = 1;
+			i++;
+		}
+	}
+	return (mask);
+}
+
+char	**split_word(char *word, t_quot *qi)
+{
+	char	*mask;
+	char	**split;
+
+	mask = create_quote_mask(word, qi);
+	split = ft_splitf_mask(word, ft_isspace, mask);
+	free(mask);
+	return (split);
+}
+
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
 {
 	(void) sh;
 	cbv->cmd->heredocs[cbv->hd_i] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
-	cbv->cmd->heredoc = 1;
+	cbv->cmd->heredoc = true;
 	cbv->hd_i++;
 }
 
 void	set_redir(t_shell *sh, t_cbv *cbv)
 {
 	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
-		cbv->cmd->heredoc = 0;
+		cbv->cmd->heredoc = false;
 	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
 		cbv->cmd->redirs[cbv->rd_i].type = RTIN;
 	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">"))
 		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_T;
 	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
 		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
-	cbv->cmd->redirs[cbv->rd_i].file = remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
+	cbv->cmd->redirs[cbv->rd_i].file
+		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
 	cbv->rd_i++;
 }
 
@@ -327,11 +363,32 @@ void	ft_putstr_err(char *s)
 
 void	set_cmd_word(t_shell *sh, t_cbv *cbv)
 {
-	//expand aand split
+	char	*simple_exp;
+	char	**split;
+	t_quot	*qi;
 
-	//ft_memcpy(&cmd->argv[ctrs[0]++], split_expanded_word, wcount * sizeof(char *)) //free split_expanded_words
-	cbv->cmd->argv[cbv->arg_i] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	qi = get_quotes_position(cbv->tks[cbv->tk_i]);
+	simple_exp = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	split = split_word(simple_exp, qi);
+	ft_memcpy(&cbv->cmd->argv[cbv->arg_i],
+		split, ft_splitlen(split) * sizeof(char *));
+	free(split);
 	cbv->arg_i++;
+}
+
+int	split_expand_count(t_shell *sh, char *word)
+{
+	char	*simple_exp;
+	char	*mask;
+	t_quot	*qi;
+	int		wc;
+
+	qi = get_quotes_position(word);
+	simple_exp = remove_quotes_and_expand(sh, word);
+	mask = create_quote_mask(word, qi);
+	wc = count_wordsf_mask(word, ft_isspace, mask);
+	free(mask);
+	return (wc);
 }
 
 t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
@@ -350,7 +407,7 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
 			|| !ft_strcmp(tokens[c[0]], ">") || !ft_strcmp(tokens[c[0]], ">>"))
 			c[2]++;
 		else
-			cmd->argc ++;
+			cmd->argc += split_expand_count(sh, tokens[c[0]]);
 		if (!ft_strcmp(tokens[c[0]], "<<") || !ft_strcmp(tokens[c[0]], "<")
 			|| !ft_strcmp(tokens[c[0]], ">") || !ft_strcmp(tokens[c[0]], ">>"))
 			c[0]++;

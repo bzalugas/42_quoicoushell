@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 23:03:01 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/30 01:34:09 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int				ft_strcmp(const char *s1, const char *s2);
 
 char			**ft_splitf(char const *s, int (*f)(int));
 unsigned int	count_wordsf(char const *s, int (*f)(int));
+unsigned int	count_wordsf_mask(char const *s, int (*f)(int), char *mask);
+char			**ft_splitf_mask(char const *s, int (*f)(int), char *mask);
 void			ft_lstunlink(t_list **lst, t_list *link);
 size_t			ft_splitlen(char **arr);
 char			*ft_strcpy(char *dst, const char *src);

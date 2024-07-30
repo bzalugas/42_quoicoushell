@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/29 17:07:02 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/07/30 01:04:37 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # define LST_ENV 1
 # define LST_BOTH 2
 
+extern int	g_sigint;
+
 typedef enum e_redir_type
 {
 	RTIN,
@@ -48,18 +50,6 @@ typedef struct s_tokens
 	int	cmd_n;
 	int	start;
 }	t_tokens;
-
-typedef struct s_shell //Add lstcmds
-{
-	t_list	*env_vars;
-	t_list	*local_vars;
-	char	*cwd;
-	char	*prompt;
-	bool	env_update;
-	char	**env;
-	char	**paths;
-	int		exit_code;
-}	t_shell;
 
 typedef struct s_var
 {
@@ -82,11 +72,26 @@ typedef struct s_cmd
 	t_redir	*redirs;
 	char	**heredocs;
 	char	*hd_filename;
+	int		fd_hd;
 	bool	heredoc;
 }	t_cmd;
 
+typedef struct s_shell
+{
+	struct sigaction	sa;
+	struct sigaction	sa_tmp;
+	t_list				*env_vars;
+	t_list				*local_vars;
+	char				*cwd;
+	char				*prompt;
+	bool				env_update;
+	char				**env;
+	char				**paths;
+	t_lstcmds			*cmds;
+	int					exit_code;
+}	t_shell;
+
 //main.c
-void	set_signals(void);
 void	init_shell(t_shell *sh, char **envp);
 void	command_line(t_shell *sh, char *line);
 
@@ -116,7 +121,8 @@ char	**export_env(t_shell *sh);
 char	**export_all_env(t_shell *sh);
 
 // sighandlers.c
-void	sigint_handler(int signum, siginfo_t *info, void *context);
+void	signal_handler_main(int signum);
+void	signal_handler_other(int signum);
 
 // token_split.c
 char	**token_split(char *s, t_tokens *t);
@@ -137,16 +143,20 @@ char	*ft_readline(char *prompt);
 
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
-int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked);
+/* int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked); */
+int		get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked);
 
 //exec_heredoc.c
-int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd);
+/* int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd); */
+int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
 
 //exec_end_child.c
 int		print_perror(char *msg1, char *msg2);
 int		print_error(char *msg1, char *msg2);
-int		stop_perror(char *msg, int error, t_lstcmds *cmds);
-int		stop_error(char *msg, int error, t_lstcmds *cmds);
+/* int		stop_perror(char *msg, int error, t_lstcmds *cmds); */
+/* int		stop_error(char *msg, int error, t_lstcmds *cmds); */
+int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
+int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
 
 //exec_main.c
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
