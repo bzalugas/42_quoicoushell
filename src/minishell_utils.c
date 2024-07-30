@@ -6,27 +6,43 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/30 19:51:37 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/31 00:04:12 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-void	save_history(t_shell *sh)
+void	save_history(t_shell *sh, char *line)
 {
-
+	if (sh->fd_hist == -1)
+		return ;
+	ft_putendl_fd(line, sh->fd_hist);
 }
 
 void	get_history(t_shell *sh)
 {
-	int		fd;
 	char	*file;
+	char	*line;
+	char	*home;
 
-	file = ft_strreplace(HISTORY_FILE, "$HOME", get_variable_value(sh, "HOME"));
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-		return (free(file));
-
+	home = ft_strjoin(get_variable_value(sh, "HOME"), "/");
+	file = ft_strreplace(HISTORY_FILE, "$HOME", home);
+	free(home);
+	ft_dprintf(2, "<%s>\n", file);
+	sh->fd_hist = open(file, O_RDONLY);
+	if (sh->fd_hist != -1)
+	{
+		line = get_next_line(sh->fd_hist);
+		while (line)
+		{
+			add_history(line);
+			free(line);
+			line = get_next_line(sh->fd_hist);
+		}
+		close(sh->fd_hist);
+	}
+	sh->fd_hist = open(file, O_WRONLY | O_CREAT | O_APPEND, 0600);
+	free(file);
 }
 
 void	exit_shell(t_shell *sh, int exit_code, bool display)
