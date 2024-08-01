@@ -1,2 +1,9 @@
-* PARSING PART
-** TODO <add_variable>: export if already exists and not in env
+* EXEC
+** DONE Fix strreplace
+CLOSED: [2024-08-01 Thu 20:25]
+** TODO Finish history
+** TODO Check if global is correctly used
+If not => Find another way to indicate the C-c has been received in heredoc
+** DONE Clean Makefile
+CLOSED: [2024-08-01 Thu 20:25]
+The libft's one is too verbose
