@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 23:48:27 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:23:05 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ char *get_redir_type(t_redir_type type)
 		case RTOUT_A: return "OUT_APPEND";
 		case RTOUT_T: return "OUT_TRUNC";
 	}
+	return (NULL);
 }
 
 void	print_cmd(t_cmd cmd)
@@ -158,4 +159,5 @@ int	main(int ac, char **av, char **envp)
 		free(line);
 	}
 	exit_shell(&sh, EXIT_SUCCESS, true);
+	return (0);
 }
