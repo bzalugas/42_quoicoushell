@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/04 16:22:14 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/30 18:39:41 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/08/01 17:25:32 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,18 +48,17 @@ CFLAGS	:=	-Wall -Wextra -Werror
 
 ########### COLORS ##########
 
-RED		:=	"\033[31m"
-GREEN	:=	"\033[32m"
+RED		:=  "\033[1;31m"
+GREEN	:=  "\033[1;32m"
 RESET	:=	"\033[0m"
 
 all:		$(NAME)
 
 .c.o:
-			@echo $(GREEN)"Compiling "$<$(RESET)
 			@$(CC) $(CFLAGS) -o $(<:.c=.o) -c $<
 
 $(NAME):	$(OBJ)
-			@echo $(GREEN)"\nAdding obj files to "$(NAME)$(RESET)
+			@echo $(GREEN)"Adding obj files to "$(NAME)$(RESET)
 			@ar -rcs $(NAME) $(OBJ)
 
 bonus:		$(NAME)
@@ -81,17 +80,17 @@ so:
 endif
 
 clean:
-			@echo $(RED)"CLEANING OBJS"
+			@echo $(RED)"LIBFT - CLEANING OBJS"
 			@rm -f $(OBJ)
-			@echo $(RESET)
+			@printf $(RESET)
 
 fclean:		clean
-			@echo $(RED)"CLEANING ALL"
+			@echo $(RED)"LIBFT - CLEANING ALL"
 			@rm -f $(NAME)
 			@rm -f libft.so
 			@rm -f *.out
 			@rm -rf *.dSYM
-			@echo $(RESET)
+			@printf $(RESET)
 
 re:			fclean
 			make -s all

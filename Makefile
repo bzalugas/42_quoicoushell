@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/07/28 23:16:50 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/08/01 17:35:09 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,14 +81,14 @@ $(OBJDIR)/%.o:	$(SRCDIR)/%.c Makefile | $(OBJDIR)
 	@printf $(RESET)
 
 $(LIBFT):
-	@echo $(GREEN)"\n\tCOMPILING LIBFT"$(RESET)
+	@echo $(GREEN)"\tCOMPILING LIBFT"$(RESET)
 	@make -sC $(LIBFTDIR)
-	@echo $(GREEN)"\n\tLIBFT COMPILED"$(RESET)
+	@echo $(GREEN)"\tLIBFT COMPILED"$(RESET)
 
 $(NAME):	$(OBJ) $(OBJMAIN) $(LIBFT)
-	@echo $(GREEN)"LINKING mandatory objects to create $(NAME)"
+	@echo $(GREEN)"LINKING mandatory objects to create <$(NAME)>"
 	$(CC) $(OBJ) $(OBJMAIN) -lreadline -L$(LIBFTDIR) -lft -o $(NAME)
-	@printf $(RESET)
+	@echo "<$(NAME)> Created ✅"$(RESET)
 
 libft:		$(LIBFT)
 	@make -sC $(LIBFTDIR)
@@ -98,17 +98,14 @@ test_exec:	$(LIBFT) $(OBJ) | $(OBJDIR)
 			./$(OBJDIR)/test_exec
 
 clean:
-	@echo $(RED)"CLEANING OBJS"
-	rm -rf $(OBJDIR)
-	@make -sC $(LIBFTDIR) clean
-	@echo $(RESET)
+	@echo $(RED)"CLEANING OBJS"$(RESET)
+	@rm -rf $(OBJDIR)
 
 fclean:		clean
-	@echo $(RED)"CLEANING ALL"
-	rm -f $(NAME)
-	rm -rf *.dSYM
+	@echo $(RED)"CLEANING ALL"$(RESET)
+	@rm -f $(NAME)
+	@rm -rf *.dSYM
 	@make -sC $(LIBFTDIR) fclean
-	@echo $(RESET)
 
 re:		fclean
 	@make -s all
