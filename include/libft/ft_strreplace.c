@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 12:09:17 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/08/01 20:24:30 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 05:26:26 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**alloc_addr_arr(unsigned int occ)
+static char	**alloc_addr_arr(unsigned int occ)
 {
 	size_t	count;
 	char	**arr;
@@ -27,7 +27,7 @@ char	**alloc_addr_arr(unsigned int occ)
 	return (arr);
 }
 
-size_t	get_len_res(char *str, char **arr, unsigned int occ)
+static size_t	get_len_res(char *str, char **arr, unsigned int occ)
 {
 	size_t	to_replace_len;
 	size_t	new_str_len;
@@ -55,7 +55,7 @@ size_t	get_len_res(char *str, char **arr, unsigned int occ)
 	return (len);
 }
 
-void	replace_strs(char *str, char **addrs, char *res)
+static void	replace_strs(char *str, char **addrs, char *res)
 {
 	size_t	i;
 	size_t	to_replace_len;
