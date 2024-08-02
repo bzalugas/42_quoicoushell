@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 18:36:28 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/08/02 04:49:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,28 +109,28 @@ int	var_word_count(t_shell *sh, char *p)
 	return (words);
 }
 
-int	count_new_words_in_word(t_shell *sh, char *word)
-{
-	int		c;
-	char	q;
-	int		i;
+/* int	count_new_words_in_word(t_shell *sh, char *word) */
+/* { */
+/* 	int		c; */
+/* 	char	q; */
+/* 	int		i; */
 
-	i = 0;
-	c = 0;
-	while (word[i])
-	{
-		if (word[i] == q)
-			q = 0;
-		else if (word[i] == '"')
-			q = '"';
-		else if (!q && word[i] == '\'')
-			i += next_quote(&word[i]);
-		else if (word[i] == '$' && valid_name_char(word[i + 1]))
-			c += var_word_count(sh, &word[i]);
-		i++;
-	}
-	return (0);
-}
+/* 	i = 0; */
+/* 	c = 0; */
+/* 	while (word[i]) */
+/* 	{ */
+/* 		if (word[i] == q) */
+/* 			q = 0; */
+/* 		else if (word[i] == '"') */
+/* 			q = '"'; */
+/* 		else if (!q && word[i] == '\'') */
+/* 			i += next_quote(&word[i]); */
+/* 		else if (word[i] == '$' && valid_name_char(word[i + 1])) */
+/* 			c += var_word_count(sh, &word[i]); */
+/* 		i++; */
+/* 	} */
+/* 	return (0); */
+/* } */
 
 typedef struct s_exvar //TODO: MOVE TO HEADER
 {

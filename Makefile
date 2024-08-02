@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/08/01 17:35:09 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/08/02 04:50:00 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,13 @@ CC	    	:=  cc
 
 CFLAGS	    :=  -Wall -Wextra -Werror -I$(INCDIR) -g3
 
+LIBFLAGS	:=	-L$(LIBFTDIR)
+
+ifeq ($(shell uname), Darwin)
+CFLAGS		+=	-I/usr/local/opt/readline/include
+LIBFLAGS	+=	-L/usr/local/opt/readline/lib
+endif
+
 ########### COLORS ##########
 
 RED		:=  "\033[1;31m"
@@ -85,9 +92,9 @@ $(LIBFT):
 	@make -sC $(LIBFTDIR)
 	@echo $(GREEN)"\tLIBFT COMPILED"$(RESET)
 
-$(NAME):	$(OBJ) $(OBJMAIN) $(LIBFT)
+$(NAME):	$(LIBFT) $(OBJ) $(OBJMAIN)
 	@echo $(GREEN)"LINKING mandatory objects to create <$(NAME)>"
-	$(CC) $(OBJ) $(OBJMAIN) -lreadline -L$(LIBFTDIR) -lft -o $(NAME)
+	$(CC) $(OBJ) $(OBJMAIN) $(LIBFLAGS) -lft -lreadline -o $(NAME)
 	@echo "<$(NAME)> Created ✅"$(RESET)
 
 libft:		$(LIBFT)
