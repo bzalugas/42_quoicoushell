@@ -1,8 +1,10 @@
 * EXEC
 ** DONE Fix strreplace
 CLOSED: [2024-08-01 Thu 20:25]
-** TODO Finish history
-** TODO Check if global is correctly used
+** DONE Finish history
+CLOSED: [2024-08-02 Fri 06:44]
+** DONE Check if global is correctly used
+CLOSED: [2024-08-02 Fri 06:54]
 If not => Find another way to indicate the C-c has been received in heredoc
 ** DONE Clean Makefile
 CLOSED: [2024-08-01 Thu 20:25]
