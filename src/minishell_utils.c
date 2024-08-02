@@ -6,42 +6,54 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/02 05:05:56 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 05:25:24 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "quoicoushell.h"
 
-void	save_history(t_shell *sh, char *line)
+static void	save_history(t_shell *sh)
 {
-	if (sh->fd_hist == -1)
-		return ;
-	ft_putendl_fd(line, sh->fd_hist);
+	int		fd;
+	t_list	*tmp;
+
+	fd = open(sh->hist_file, O_WRONLY | O_CREAT | O_APPEND, 0600);
+	if (fd >= -1)
+	{
+		tmp = sh->hist;
+		while (tmp)
+		{
+			ft_putendl_fd((char *)tmp->content, fd);
+			tmp = tmp->next;
+		}
+		close(fd);
+	}
+	ft_lstclear(&sh->hist, &free);
+	free(sh->hist_file);
 }
 
 void	get_history(t_shell *sh)
 {
-	char	*file;
+	int		fd;
 	char	*line;
 	char	*home;
 
 	home = get_variable_value(sh, "HOME");
-	file = ft_strreplace(HISTORY_FILE, "$HOME", home, 0x80000000);
-	sh->fd_hist = open(file, O_RDONLY);
-	if (sh->fd_hist != -1)
+	sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home, 0x80000000);
+	fd = open(sh->hist_file, O_RDONLY);
+	if (fd != -1)
 	{
-		line = get_next_line(sh->fd_hist);
+		line = get_next_line(fd);
 		while (line)
 		{
 			line[ft_strlen(line) - 1] = 0;
 			add_history(line);
 			free(line);
-			line = get_next_line(sh->fd_hist);
+			line = get_next_line(fd);
 		}
-		close(sh->fd_hist);
+		close(fd);
 	}
-	sh->fd_hist = open(file, O_WRONLY | O_CREAT | O_APPEND, 0600);
-	free(file);
 }
 
 void	exit_shell(t_shell *sh, int exit_code, bool display)
@@ -55,8 +67,9 @@ void	exit_shell(t_shell *sh, int exit_code, bool display)
 	free_split(sh->env);
 	free_split(sh->paths);
 	free_cmds(sh->cmds);
-	if (sh->fd_hist > -1)
-		close(sh->fd_hist);
+	/* if (sh->fd_hist > -1) */
+	/* 	close(sh->fd_hist); */
+	save_history(sh);
 	exit(exit_code);
 }
 

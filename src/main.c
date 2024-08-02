@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/08/01 17:23:05 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 05:25:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->exit_code = 0;
 	shlvl = ft_atoi(get_variable_value(sh, "SHLVL"));
 	set_variable(sh, ft_strdup("SHLVL"), ft_itoa(shlvl + 1), LST_ENV);
-	sh->fd_hist = -1;
+	sh->hist = NULL;
+	sh->hist_file = NULL;
 }
 
 void	print_split(char **sp, char *start, char *none, char *end)
@@ -153,10 +154,9 @@ int	main(int ac, char **av, char **envp)
 		if (*line)
 		{
 			add_history(line);
-			save_history(&sh, line);
+			ft_lstadd_back(&sh.hist, ft_lstnew(line));
 		}
 		command_line(&sh, line);
-		free(line);
 	}
 	exit_shell(&sh, EXIT_SUCCESS, true);
 	return (0);

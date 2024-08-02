@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/31 00:00:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 05:25:03 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ typedef struct s_shell
 	char				**paths;
 	t_lstcmds			*cmds;
 	int					exit_code;
-	int					fd_hist;
+	char				*hist_file;
+	t_list				*hist;
 }	t_shell;
 
 //main.c
@@ -102,7 +103,6 @@ void	command_line(t_shell *sh, char *line);
 void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
-void	save_history(t_shell *sh, char *line);
 void	get_history(t_shell *sh);
 
 // variables.c
