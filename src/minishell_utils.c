@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/31 00:04:12 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 05:05:56 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,15 @@ void	get_history(t_shell *sh)
 	char	*line;
 	char	*home;
 
-	home = ft_strjoin(get_variable_value(sh, "HOME"), "/");
-	file = ft_strreplace(HISTORY_FILE, "$HOME", home);
-	free(home);
-	ft_dprintf(2, "<%s>\n", file);
+	home = get_variable_value(sh, "HOME");
+	file = ft_strreplace(HISTORY_FILE, "$HOME", home, 0x80000000);
 	sh->fd_hist = open(file, O_RDONLY);
 	if (sh->fd_hist != -1)
 	{
 		line = get_next_line(sh->fd_hist);
 		while (line)
 		{
+			line[ft_strlen(line) - 1] = 0;
 			add_history(line);
 			free(line);
 			line = get_next_line(sh->fd_hist);
@@ -56,6 +55,8 @@ void	exit_shell(t_shell *sh, int exit_code, bool display)
 	free_split(sh->env);
 	free_split(sh->paths);
 	free_cmds(sh->cmds);
+	if (sh->fd_hist > -1)
+		close(sh->fd_hist);
 	exit(exit_code);
 }
 
