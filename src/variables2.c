@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 05:24:13 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 18:47:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 07:18:34 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ t_list	*get_variable(t_shell *sh, char	*name, int where)
 			link = sh->env_vars;
 		while (link)
 		{
-			if (link->content && !strcmp(((t_var *)link->content)->name, name))
+			if (link->content
+				&& !ft_strcmp(((t_var *)link->content)->name, name))
 				return (link);
 			link = link->next;
 		}

@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:07:58 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 07:23:48 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	iterate_exports(char **argv, t_shell *sh)
 			remove_quotes(args[1]);
 		link = export_variable(sh, args[0]);
 		if (link && args[1])
-			((t_var *)link->content)->value = args[1];
+			set_variable_value(sh, args[0], args[1]);
 		else if (!link)
 			set_variable(sh, args[0], args[1], LST_ENV);
 		free(args);
@@ -66,26 +66,29 @@ int	ft_export(t_cmd *cmd, t_shell *sh)
 	return (0);
 }
 
-//Need to handle a=2 b=5 c=23
-int	ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
+//TODO: Handle 'a=3 echo coucou'
+int	ft_local_export(t_cmd *cmd, t_shell *sh)
 {
 	char	**args;
+	int		i;
 
-	args = split_env_entry(cmd->argv[0]);
-	if (!args)
+	i = 0;
+	while (cmd->argv[i])
 	{
-		if (cmds->n_cmds > 1)
-			return (stop_error("local_export", 1, cmds, sh));
-		exit_shell(sh, 1, true);
-	}
-	if (!valid_var_name(args[0]))
-		return (free_split(args), var_error(cmd->argv[1]));
-	if (!args[1])
-		free_split(args);
-	else
-	{
-		set_variable(sh, args[0], args[1], LST_LOCAL);
-		free(args);
+		if (ft_strchr(cmd->argv[i], '='))
+		{
+			args = split_env_entry(cmd->argv[i]);
+			if (!args)
+				exit_shell(sh, 1, true);
+			if (!valid_var_name(args[0]))
+				return (free_split(args), var_error(cmd->argv[1]));
+			if (args[1])
+				remove_quotes(args[1]);
+			if (!set_variable_value(sh, args[0], args[1]))
+				set_variable(sh, args[0], args[1], LST_LOCAL);
+			free(args);
+		}
+		i++;
 	}
 	t_list	*first = sh->local_vars;
 	while (first)
@@ -94,6 +97,8 @@ int	ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 			((t_var *)first->content)->value);
 		first = first->next;
 	}
+	if (i > 0)
+		sh->env_update = true;
 	sh->exit_code = 0;
 	return (0);
 }

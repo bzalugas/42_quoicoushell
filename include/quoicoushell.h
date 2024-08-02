@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/02 05:25:03 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/08/02 07:10:19 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 
 //export
 int		ft_export(t_cmd *cmd, t_shell *sh);
-int		ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		ft_local_export(t_cmd *cmd, t_shell *sh);
 bool	valid_var_name(char *name);
 int		var_error(char *arg);
 int		ft_env(t_shell *sh);
