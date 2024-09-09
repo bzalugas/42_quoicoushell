@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/02 05:25:24 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:43:29 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,11 @@ void	get_history(t_shell *sh)
 	char	*home;
 
 	home = get_variable_value(sh, "HOME");
-	sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home, 0x80000000);
+	if (!home)
+		return ;
+	sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home,
+		0x8000000000000000);
+	set_variable(sh, ft_strdup("HISTFILE"), home, LST_ENV);
 	fd = open(sh->hist_file, O_RDONLY);
 	if (fd != -1)
 	{
