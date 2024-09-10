@@ -152,10 +152,7 @@ int	main(int ac, char **av, char **envp)
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS, true);
 		if (*line)
-		{
-			add_history(line);
-			ft_lstadd_back(&sh.hist, ft_lstnew(line));
-		}
+			put_history(&sh, line);
 		command_line(&sh, line);
 	}
 	exit_shell(&sh, EXIT_SUCCESS, true);

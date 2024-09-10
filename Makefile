@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/08/02 04:50:00 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/09/10 18:30:23 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC			:=	builtins.c \
 				ft_pwd.c \
 				ft_unset.c \
 				get_paths.c \
+				history.c \
 				minishell_utils.c \
 				sighandlers.c \
 				token_split.c \

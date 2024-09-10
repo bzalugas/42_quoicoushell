@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/02 07:10:19 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:29:37 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define LST_BOTH 2
 # define HISTORY_FILE "$HOME/.quoicoushell_history"
 // "/home/bazaluga/.quoicoushell_history"
+# define HISTORY_MAX_LINES 1000
 
 extern int	g_sigint;
 
@@ -93,6 +94,7 @@ typedef struct s_shell
 	int					exit_code;
 	char				*hist_file;
 	t_list				*hist;
+	int					n_hist;
 }	t_shell;
 
 //main.c
@@ -104,6 +106,8 @@ void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
 void	get_history(t_shell *sh);
+void	save_history(t_shell *sh);
+void	put_history(t_shell *sh, char *line);
 
 // variables.c
 t_list	*set_variable(t_shell *sh, char *name, char *value, int where);

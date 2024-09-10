@@ -6,59 +6,12 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/09 15:43:29 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:59:07 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "quoicoushell.h"
-
-static void	save_history(t_shell *sh)
-{
-	int		fd;
-	t_list	*tmp;
-
-	fd = open(sh->hist_file, O_WRONLY | O_CREAT | O_APPEND, 0600);
-	if (fd >= -1)
-	{
-		tmp = sh->hist;
-		while (tmp)
-		{
-			ft_putendl_fd((char *)tmp->content, fd);
-			tmp = tmp->next;
-		}
-		close(fd);
-	}
-	ft_lstclear(&sh->hist, &free);
-	free(sh->hist_file);
-}
-
-void	get_history(t_shell *sh)
-{
-	int		fd;
-	char	*line;
-	char	*home;
-
-	home = get_variable_value(sh, "HOME");
-	if (!home)
-		return ;
-	sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home,
-		0x8000000000000000);
-	set_variable(sh, ft_strdup("HISTFILE"), home, LST_ENV);
-	fd = open(sh->hist_file, O_RDONLY);
-	if (fd != -1)
-	{
-		line = get_next_line(fd);
-		while (line)
-		{
-			line[ft_strlen(line) - 1] = 0;
-			add_history(line);
-			free(line);
-			line = get_next_line(fd);
-		}
-		close(fd);
-	}
-}
 
 void	exit_shell(t_shell *sh, int exit_code, bool display)
 {
