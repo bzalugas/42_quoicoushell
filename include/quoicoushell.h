@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/10 18:29:37 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:02:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ typedef struct s_shell
 	char				*hist_file;
 	t_list				*hist;
 	int					n_hist;
+	int					stdout_fd;
+	int					tty_fd;
 }	t_shell;
 
 //main.c
