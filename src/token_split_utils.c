@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:13:43 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/25 18:04:54 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:45:02 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_isoper(char c)
 
 int	ft_isquot(char c)
 {
-	return (c == '\"' || c == '\'');
+	return (c == '\"' || c == '\'' || c == C_SQ || c == C_DQ);
 }
 
 int	next_quote(char *p)
@@ -70,6 +70,7 @@ void	remove_quotes(char *word)
 }
 
 //returns distance to corresponding closing parenthesis
+//needs to skip quotes
 //returns 0 if corresponding parenthesis not found
 // int	close_par(char *p)
 // {

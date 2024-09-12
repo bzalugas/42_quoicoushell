@@ -6,21 +6,12 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/30 02:01:26 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/12 14:42:14 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-/*
-	- unmatched quotes
-	- not a word before pipes
-	- no file for given to redirection
-	- no command given before pipe
-	- newline after redirection
-
-	melenshell: syntax error near unexpected token 'token's
-*/
 
 // TODO: PROTECT MALLOCS (3)
 
@@ -28,38 +19,6 @@ int	valid_name_char(char c)
 {
 	return (ft_isalnum(c) || c == '_');
 }
-
-typedef struct s_exvar //TODO: MOVE TO HEADER
-{
-	char	*value;
-	int		start;
-	int		len;
-}	t_exvar;
-
-typedef struct s_quot
-{
-	char	q;
-	void	*start;
-	size_t	size;
-}	t_quot;
-
-typedef struct s_cbv
-{
-	t_cmd	*cmd;
-	char	**tks;
-	int		arg_i;
-	int		tk_i;
-	int		hd_i;
-	int		rd_i;
-}	t_cbv;
-
-typedef struct s_expand_data
-{
-	t_quot	*qi;
-	t_quot	*tqi;
-	char	*tmp_val;
-	int		name_size;
-}	t_expand_data;
 
 char	*retrieve_var_name(char *p, t_expand_data *xdat)
 {
@@ -69,13 +28,13 @@ char	*retrieve_var_name(char *p, t_expand_data *xdat)
 	if (!p || p[0] != '$' || !xdat)
 		return (NULL);
 	i = 1;
-	while (valid_name_char(p[i]) && &p[i] != xdat->tqi->start)
+	while (valid_name_char(p[i]))
 		i++;
-	if (i == 1 && &p[i + 1] != xdat->tqi->start)
+	if (i == 1 && p[i] == '"')
 		return (NULL);
 	name = (char *) ft_calloc(i, sizeof(char));
 	i = 0;
-	while (valid_name_char(p[++i]) && &p[i] != xdat->tqi->start)
+	while (valid_name_char(p[++i]))
 		name[i - 1] = p[i];
 	return (name);
 }
@@ -95,69 +54,18 @@ int	retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat)
 	return (1);
 }
 
-// int	var_word_count(t_shell *sh, char *p)
-// {
-// 	int		i;
-// 	int		words;
-// 	char	*name;
-// 	char	*content;
-
-// 	name = retrieve_var_name(p);
-// 	words = 0;
-// 	content = get_variable_value(sh, name);
-// 	if (!content)
-// 		return (0);
-// 	if (ft_isspace(content[0]))
-// 		words++;
-// 	i = 0;
-// 	while (content[i])
-// 		i++;
-// 	if (ft_isspace(content[i - 1]))
-// 		words++;
-// 	words += count_wordsf(content, &ft_isspace);
-// 	return (words);
-// }
-
-// int	count_new_words_in_word(t_shell *sh, char *word)
-// {
-// 	int		c;
-// 	char	q;
-// 	int		i;
-
-// 	i = 0;
-// 	c = 0;
-// 	while (word[i])
-// 	{
-// 		if (word[i] == q)
-// 			q = 0;
-// 		else if (word[i] == '"')
-// 			q = '"';
-// 		else if (!q && word[i] == '\'')
-// 			i += next_quote(&word[i]);
-// 		else if (word[i] == '$' && valid_name_char(word[i + 1]))
-// 			c += var_word_count(sh, &word[i]);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
 int	get_new_size(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		i;
 	int		new_size;
 
 	i = 0;
-	xdat->tqi = xdat->qi;
 	new_size = ft_strlen(word);
 	while (word[i])
 	{
-		if (xdat->tqi->size && &word[i] == xdat->tqi->start)
-		{
-			if (xdat->tqi->q == '\'')
-				i += xdat->tqi->size;
-			xdat->tqi++;
-		}
-		else if (retrieve_var_value(sh, &word[i], xdat) > 0)
+		if (word[i] == '\'')
+			i += next_quote(&word[i]);
+		if (retrieve_var_value(sh, &word[i], xdat) > 0)
 		{
 			new_size -= xdat->name_size + 1;
 			new_size += ft_strlen(xdat->tmp_val);
@@ -169,26 +77,25 @@ int	get_new_size(t_shell *sh, char *word, t_expand_data *xdat)
 	return (new_size);
 }
 
-char	*simple_expand(t_shell *sh, char *word, t_expand_data *xdat)
+char	*expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		i;
 	int		j;
+	int		quote_size;
 	char	*new_word;
 
 	i = 0;
 	j = 0;
-	new_word = (char *) ft_calloc(get_new_size(sh, word, xdat) + 1, 1UL);
-	xdat->tqi = xdat->qi;
+	new_word = (char *) ft_calloc(xdat->new_size + 1, 1UL);
 	while (word[i])
 	{
-		if (xdat->tqi->size && &word[i] == xdat->tqi->start)
+		if (word[i] == C_SQ)
 		{
-			if (xdat->tqi->q == '\'')
-				while (--xdat->tqi->size)
-					new_word[j++] = word[i++];
-			xdat->tqi++;
+			quote_size = next_quote(&word[i]);
+			while (--quote_size > 0)
+				new_word[j++] = word[i++];
 		}
-		else if (retrieve_var_value(sh, &word[i], xdat) > 0)
+		if (retrieve_var_value(sh, &word[i], xdat) > 0)
 		{
 			if (xdat->tmp_val)
 				ft_strcpy(&new_word[j], xdat->tmp_val);
@@ -201,97 +108,78 @@ char	*simple_expand(t_shell *sh, char *word, t_expand_data *xdat)
 	return (new_word);
 }
 
-void	alloc_quotes_position(char *word, t_quot **qi)
+void	replace_quotes(char *word)
 {
-	int	qc;
-	int	q;
 	int	i;
 
-	qc = 0;
-	i = -1;
-	while (word[++i])
+	i = 0;
+	while (word[i])
 	{
-		q = next_quote(&word[i]);
-		if (q > 0)
-		{
-			qc++;
-			i += q;
-		}
+		if (word[i] == '\'')
+			word[i] = C_SQ;
+		if (word[i] == '"')
+			word[i] = C_DQ;
+		i++;
 	}
-	*qi = (t_quot *) ft_calloc(qc + 1, sizeof(t_quot));
 }
 
-t_quot	*get_quotes_position(char *word)
+void	replace_wsp(char *word)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	quote = 0;
+	while (word[i])
+	{
+		if (!quote && (word[i] == C_SQ || word[i] == C_DQ))
+			quote = word[i];
+		else if (quote == word[i])
+			quote = 0;
+		if (!quote && ft_isspace(word[i]))
+			word[i] = C_WSP;
+		i++;
+	}
+}
+
+void	remove_weird_quotes(char *word)
 {
 	int		offset;
-	int		qc;
 	int		i;
 	int		q;
-	t_quot	*qi;
+	char	c;
 
-	alloc_quotes_position(word, &qi);
 	offset = 0;
-	qc = 0;
 	i = -1;
+	c = 0;
 	while (word[++i])
 	{
-		q = next_quote(&word[i]);
-		if (q > 0)
+		word[i - offset] = word[i];
+		q = (word[i] == C_SQ || word[i] == C_DQ);
+		if (c && c == word[i])
 		{
-			qi[qc++] = (t_quot){word[i], &word[i] - offset, q};
-			offset += 2;
-			i += q;
+			offset++;
+			c = 0;
+		}
+		else if (!c && q > 0)
+		{
+			offset++;
+			c = word[i];
 		}
 	}
-	return (qi);
+	while (word[i - offset])
+		word[i++ - offset] = 0;
 }
 
 char	*remove_quotes_and_expand(t_shell *sh, char *word)
 {
-	char			*expanded;
 	t_expand_data	xdat;
 
-	xdat.qi = get_quotes_position(word);
-	remove_quotes(word);
-	expanded = simple_expand(sh, word, &xdat);
-	free(xdat.qi);
-	return (expanded);
-}
-
-char	*create_quote_mask(char *word, t_quot *qi)
-{
-	char	*mask;
-	int		size;
-	int		i;
-
-	i = 0;
-	size = ft_strlen(word);
-	mask = (char *) calloc(size + 1, sizeof(char));
-	while (i < size)
-	{
-		if (qi->size && (int)(qi->start - (void *)word) == i)
-		{
-			i += qi->size;
-			qi++;
-		}
-		else
-		{
-			mask[i] = 1;
-			i++;
-		}
-	}
-	return (mask);
-}
-
-char	**split_word(char *word, t_quot *qi)
-{
-	char	*mask;
-	char	**split;
-
-	mask = create_quote_mask(word, qi);
-	split = ft_splitf_mask(word, ft_isspace, mask);
-	free(mask);
-	return (split);
+	xdat.new_size = get_new_size(sh, word, &xdat);
+	replace_quotes(word);
+	word = expand(sh, word, &xdat);
+	remove_weird_quotes(word);
+	return (word);
 }
 
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
@@ -300,21 +188,6 @@ void	set_heredoc(t_shell *sh, t_cbv *cbv)
 	cbv->cmd->heredocs[cbv->hd_i] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
 	cbv->cmd->heredoc = true;
 	cbv->hd_i++;
-}
-
-void	set_redir(t_shell *sh, t_cbv *cbv)
-{
-	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
-		cbv->cmd->heredoc = false;
-	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
-		cbv->cmd->redirs[cbv->rd_i].type = RTIN;
-	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">"))
-		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_T;
-	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
-		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
-	cbv->cmd->redirs[cbv->rd_i].file
-		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
-	cbv->rd_i++;
 }
 
 bool	can_be_var_assign(char *word)
@@ -349,9 +222,25 @@ bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word)
 	return (true);
 }
 
+void	set_redir(t_shell *sh, t_cbv *cbv)
+{
+	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
+		cbv->cmd->heredoc = false;
+	if (!ft_strcmp(cbv->tks[cbv->tk_i], "<"))
+		cbv->cmd->redirs[cbv->rd_i].type = RTIN;
+	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">"))
+		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_T;
+	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
+		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
+	cbv->cmd->redirs[cbv->rd_i].file
+		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
+	cbv->rd_i++;
+}
+
 void	set_var_assign(t_shell *sh, t_cbv *cbv)
 {
-	cbv->cmd->argv[cbv->arg_i] = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+	cbv->cmd->argv[cbv->arg_i]
+		= remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
 	cbv->arg_i++;
 }
 
@@ -361,37 +250,59 @@ void	ft_putstr_err(char *s)
 		write(2, s++, 1);
 }
 
+void	split_cpy(char **dest, char **src, size_t src_len)
+{
+	int	i;
+
+	i = 0;
+	while (i < (int) src_len)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+}
+
+/*
+replace quotes ('\'' and '"') with (-1 and -2) and expand variables
+replace every whitespace outside of "quotes" with -3
+split with -3 as separator
+*/
+
 void	set_cmd_word(t_shell *sh, t_cbv *cbv)
 {
-	char	*simple_exp;
-	char	**split;
-	t_quot	*qi;
+	t_expand_data	xdat;
+	char			*word;
+	char			**split;
 
-	qi = get_quotes_position(cbv->tks[cbv->tk_i]);
-	simple_exp = remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
-	split = split_word(simple_exp, qi);
-	ft_memcpy(&cbv->cmd->argv[cbv->arg_i],
-		split, ft_splitlen(split) * sizeof(char *));
+	word = cbv->tks[cbv->tk_i];
+	xdat.new_size = get_new_size(sh, word, &xdat);
+	replace_quotes(word);
+	word = expand(sh, word, &xdat);
+	replace_wsp(word);
+	remove_weird_quotes(word);
+	split = ft_split(word, C_WSP);
+	split_cpy(&cbv->cmd->argv[cbv->arg_i],
+		split, ft_splitlen(split));
+	cbv->arg_i += ft_splitlen(split);
 	free(split);
-	cbv->arg_i++;
 }
 
 int	split_expand_count(t_shell *sh, char *word)
 {
-	char	*simple_exp;
-	char	*mask;
-	t_quot	*qi;
-	int		wc;
+	int				wc;
+	t_expand_data	xdat;
 
-	qi = get_quotes_position(word);
-	simple_exp = remove_quotes_and_expand(sh, word);
-	mask = create_quote_mask(word, qi);
-	wc = count_wordsf_mask(word, ft_isspace, mask);
-	free(mask);
+	word = ft_strdup(word);
+	xdat.new_size = get_new_size(sh, word, &xdat);
+	replace_quotes(word);
+	word = expand(sh, word, &xdat);
+	replace_wsp(word);
+	remove_weird_quotes(word);
+	wc = count_words(word, C_WSP);
 	return (wc);
 }
 
-t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
+t_cmd	*init_cmd(t_shell *sh, char **tokens)
 {
 	int		c[3];
 	t_cmd	*cmd;
@@ -417,7 +328,6 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens, int n)
 	cmd->argv = (char **) ft_calloc(cmd->argc + 1, sizeof(char *));
 	cmd->heredocs = (char **) ft_calloc(c[1] + 1, sizeof(char *));
 	cmd->redirs = (t_redir *) ft_calloc(c[2] + 1, sizeof(t_redir));
-	cmd->n_cmd = n;
 	return (cmd);
 }
 
@@ -426,8 +336,9 @@ t_cmd	*get_command(t_shell *sh, char **tokens, int n)
 	t_cbv		cbv;
 
 	cbv = (t_cbv){0};
-	cbv.cmd = init_cmd(sh, tokens, n);
+	cbv.cmd = init_cmd(sh, tokens);
 	cbv.tks = tokens;
+	cbv.cmd->n_cmd = n;
 	while (tokens[cbv.tk_i])
 	{
 		if (!ft_strcmp(cbv.tks[cbv.tk_i], "<<"))
