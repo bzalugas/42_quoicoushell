@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/11 16:15:32 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:43:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	init_shell(t_shell *sh, char **envp)
 		ft_itoa(ft_atoi(get_variable_value(sh, "SHLVL")) + 1), LST_ENV);
 	sh->hist = NULL;
 	sh->hist_file = NULL;
+	sh->n_hist = 0;
 	sh->stdout_fd = -1;
 	sh->tty_fd = -1;
 	sh->tty_fd = open("/dev/tty", O_WRONLY);

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/08/06 18:06:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:35:04 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,11 @@ char			*ft_strjoin_free(char const *s1, char const *s2, int free1,
 					int free2);
 int				free_split(char **arr);
 int				ft_strcmp(const char *s1, const char *s2);
-
+unsigned int	count_words(char const *s, char c);
 char			**ft_splitf(char const *s, int (*f)(char));
 void			ft_lstunlink(t_list **lst, t_list *link);
 size_t			ft_splitlen(char **arr);
+char			*ft_strcpy(char *dst, const char *src);
 unsigned int	ft_atou_base(const char *nptr, const char *base);
 char			*ft_strreplace(char *str, char *to_replace, char *new_str,
 					unsigned long long occ);

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/11 16:02:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:27:17 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@
 # define LST_ENV 1
 # define LST_BOTH 2
 # define HISTORY_FILE "$HOME/.quoicoushell_history"
-// "/home/bazaluga/.quoicoushell_history"
 # define HISTORY_MAX_LINES 1000
+# define C_SQ -1
+# define C_DQ -2
+# define C_WSP -3
 
 extern int	g_sigint;
 
@@ -98,6 +100,23 @@ typedef struct s_shell
 	int					stdout_fd;
 	int					tty_fd;
 }	t_shell;
+
+typedef struct s_cbv
+{
+    t_cmd    *cmd;
+    char    **tks;
+    int        arg_i;
+    int        tk_i;
+    int        hd_i;
+    int        rd_i;
+}    t_cbv;
+
+typedef struct s_expand_data
+{
+    char    *tmp_val;
+    int        name_size;
+    int        new_size;
+}    t_expand_data;
 
 //main.c
 void	init_shell(t_shell *sh, char **envp);

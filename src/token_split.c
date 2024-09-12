@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 15:36:58 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/22 19:16:47 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/11 21:17:09 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	count_tokens(char *s, t_tokens *t)
 		if (ft_isoper(s[i]))
 		{
 			tc++;
-			i += (s[i + 1] && ft_isoper(s[i + 1])); //&& s[i] == s[i + 1] changed it because <> is an operator ig
+			i += (s[i + 1] && ft_isoper(s[i + 1]));
 		}
 		else if (i == 0 && !ft_isspace(s[i]))
 			tc++;
@@ -133,14 +133,14 @@ char	**token_split(char *s, t_tokens *t)
 	t->cmd_n++;
 	s = &s[t->start];
 	tc = count_tokens(s, t);
-	split = (char **) calloc(tc + 1, sizeof(char *));
+	split = (char **) ft_calloc(tc + 1, sizeof(char *));
 	i = -1;
 	while (++i < tc)
 	{
 		while (ft_isspace(*s))
 			s++;
 		tl = token_len(s);
-		split[i] = (char *) calloc(tl + 1, sizeof(char));
+		split[i] = (char *) ft_calloc(tl + 1, sizeof(char));
 		ft_strlcpy(split[i], s, tl + 1);
 		s += tl;
 	}
