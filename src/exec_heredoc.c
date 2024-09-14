@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/12 21:10:00 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:45:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,11 @@ static int	clean_heredocs(t_lstcmds *cmds, t_cmd *cmd)
 	return (2);
 }
 
-static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
+static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 {
 	char	*line;
-	int		fdn;
+	char	*line_expanded;
 
-	fdn = cmd->n_cmd % 2;
 	while (1)
 	{
 		line = readline("> ");
@@ -68,7 +67,10 @@ static int	get_heredoc(t_lstcmds *cmds, t_cmd *cmd, int i)
 			return (0);
 		}
 		else
-			ft_putstr_fd(line, cmds->fd[fdn][0]);
+		{
+			line_expanded = expand_fhd(sh, line);
+			ft_dprintf(cmds->fd[cmd->n_cmd % 2][0], "%s\n", line_expanded);
+		}
 		free(line);
 	}
 	return (0);
@@ -92,7 +94,7 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 			| O_TRUNC, 0600);
 		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
 			return (stop_error("in get heredocs", 1, cmds, sh));
-		if (get_heredoc(cmds, cmd, i) == 2)
+		if (get_heredoc(sh, cmds, cmd, i) == 2)
 			return (2);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/12 18:27:17 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/14 19:59:12 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void	remove_quotes(char *word);
 
 // tokenize.c
 t_cmd	*get_command(t_shell *sh, char **tokens, int n);
+char	*expand_fhd(t_shell *sh, char *word);
 
 //token_split_utils.c
 void	remove_quotes(char *word);
