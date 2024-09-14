@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 02:01:12 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/12 14:31:12 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,16 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->env_update = true;
 	sh->env = NULL;
 	sh->paths = NULL;
+	sh->cmds = NULL;
 	sh->exit_code = 0;
 	shlvl = ft_atoi(get_variable_value(sh, "SHLVL"));
 	set_variable(sh, ft_strdup("SHLVL"), ft_itoa(shlvl + 1), LST_ENV);
+	// sh->tty_fd = STDOUT_FILENO;
+	// if (!isatty(sh->tty_fd))
+	// {
+	// 	sh->tty_fd = open("/dev/tty", O_WRONLY);
+	// 	dup2(STDOUT_FILENO, sh->tty_fd);
+	// }
 }
 
 void	print_split(char **sp, char *start, char *none, char *end)
@@ -108,19 +115,21 @@ void	command_line(t_shell *sh, char *line)
 	t_cmd		*cmd;
 	t_lstcmds	cmds;
 
-	(void) sh;
+	// if (!check_syntax(line))
+	// {
+	// 	ft_putstr_fd("Syntax Error\n", 2);
+	// 	return ;
+	// }
 	cmds = (t_lstcmds){0, .fd[0][0]=-1, .fd[0][1]=-1, .fd[1][0]=-1,
 		.fd[1][1]=-1, 0};
 	t = (t_tokens){0};
 	while (t.start > -1)
 	{
-		// printf("\t CMD %d: \n", t.cmd_n);
 		tokens = token_split(line, &t);
 // TODO: PROTECT MALLOC
 		cmd = get_command(sh, tokens, cmds.n_cmds);
 		cmds.n_cmds++;
 // TODO: PROTECT MALLOC
-		/* print_cmd(*cmd); */
 		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
 		free_split(tokens);
 	}

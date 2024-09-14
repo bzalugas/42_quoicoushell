@@ -6,12 +6,11 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/12 14:42:14 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/14 17:34:11 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
-
 
 // TODO: PROTECT MALLOCS (3)
 
@@ -27,6 +26,8 @@ char	*retrieve_var_name(char *p, t_expand_data *xdat)
 
 	if (!p || p[0] != '$' || !xdat)
 		return (NULL);
+	if (p[1] == '?')
+		return (ft_strdup("?"));
 	i = 1;
 	while (valid_name_char(p[i]))
 		i++;
@@ -77,6 +78,7 @@ int	get_new_size(t_shell *sh, char *word, t_expand_data *xdat)
 	return (new_size);
 }
 
+//TODO: IF name starts with digit, stop at first digit. IF $? return last exit code, IF
 char	*expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		i;
@@ -108,17 +110,75 @@ char	*expand(t_shell *sh, char *word, t_expand_data *xdat)
 	return (new_word);
 }
 
+int	get_new_size_fhd(t_shell *sh, char *word)
+{
+	int				i;
+	int				new_size;
+	t_expand_data	xdat;
+
+	i = 0;
+	new_size = ft_strlen(word);
+	while (word[i])
+	{
+		if (retrieve_var_value(sh, &word[i], &xdat) > 0)
+		{
+			new_size -= xdat.name_size + 1;
+			new_size += ft_strlen(xdat.tmp_val);
+			i += xdat.name_size + 1;
+		}
+		else
+			i++;
+	}
+	return (new_size);
+}
+
+char	*expand_fhd(t_shell *sh, char *word)
+{
+	int				i;
+	int				j;
+	t_expand_data	xdat;
+	char			*new_word;
+
+	i = 0;
+	j = 0;
+	xdat.new_size = get_new_size_fhd(sh, word);
+	new_word = (char *) ft_calloc(xdat.new_size + 1, 1UL);
+	while (word[i])
+	{
+		if (retrieve_var_value(sh, &word[i], &xdat) > 0)
+		{
+			if (xdat.tmp_val)
+				ft_strcpy(&new_word[j], xdat.tmp_val);
+			i += xdat.name_size + 1;
+			j += ft_strlen(xdat.tmp_val);
+		}
+		else
+			new_word[j++] = word[i++];
+	}
+	return (new_word);
+}
+
 void	replace_quotes(char *word)
 {
 	int	i;
+	int	nq;
 
 	i = 0;
 	while (word[i])
 	{
-		if (word[i] == '\'')
-			word[i] = C_SQ;
-		if (word[i] == '"')
-			word[i] = C_DQ;
+		nq = next_quote(&word[i]);
+		if (nq > 0)
+		{
+			if (word[i] == '\'')
+				word[i] = C_SQ;
+			if (word[i] == '"')
+				word[i] = C_DQ;
+			i += nq;
+			if (word[i] == '\'')
+				word[i] = C_SQ;
+			if (word[i] == '"')
+				word[i] = C_DQ;
+		}
 		i++;
 	}
 }

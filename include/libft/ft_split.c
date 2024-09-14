@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:00:05 by bazaluga          #+#    #+#             */
-/*   Updated: 2023/12/18 11:11:12 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:46:35 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static unsigned int	count_words(char const *s, char c)
+unsigned int	count_words(char const *s, char c)
 {
 	size_t	words;
 	size_t	i;

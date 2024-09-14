@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_dprintf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 23:39:50 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 18:06:38 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/07/30 18:03:54 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/07/30 18:06:55 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static int	tokenize(t_buffer *buf, char *str, va_list args)
 	return (0);
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_dprintf(int fd, const char *format, ...)
 {
 	va_list		args;
 	t_buffer	*buf;
@@ -100,12 +100,12 @@ int	ft_printf(const char *format, ...)
 	va_start(args, format);
 	if (tokenize(buf, str, args) == -1)
 	{
-		count = buff_print(buf, 1);
+		count = buff_print(buf, fd);
 		return (va_end(args), buff_clear(&buf), -1);
 	}
 	if (!convert_buffer(buf, args))
 		return (va_end(args), buff_clear(&buf), -1);
-	count = buff_print(buf, 1);
+	count = buff_print(buf, fd);
 	free(str);
 	buff_clear(&buf);
 	va_end(args);

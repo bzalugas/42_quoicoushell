@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/30 01:04:37 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:26:06 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@
 # define LST_LOCAL 0
 # define LST_ENV 1
 # define LST_BOTH 2
+# define HISTORY_FILE "$HOME/.quoicoushell_history"
+// "/home/bazaluga/.quoicoushell_history"
+# define HISTORY_MAX_LINES 1000
+# define C_SQ -1
+# define C_DQ -2
+# define C_WSP -3
 
 extern int	g_sigint;
 
@@ -89,7 +95,30 @@ typedef struct s_shell
 	char				**paths;
 	t_lstcmds			*cmds;
 	int					exit_code;
+	char				*hist_file;
+	t_list				*hist;
+	int					n_hist;
+	int					stdout_fd;
+	int					tty_fd;
 }	t_shell;
+
+typedef struct s_cbv
+{
+	t_cmd	*cmd;
+	char	**tks;
+	int		arg_i;
+	int		tk_i;
+	int		hd_i;
+	int		rd_i;
+}	t_cbv;
+
+typedef struct s_expand_data
+{
+	char	*tmp_val;
+	int		name_size;
+	int		new_size;
+}	t_expand_data;
+
 
 //main.c
 void	init_shell(t_shell *sh, char **envp);
@@ -99,6 +128,9 @@ void	command_line(t_shell *sh, char *line);
 void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
+void	get_history(t_shell *sh);
+void	save_history(t_shell *sh);
+void	put_history(t_shell *sh, char *line);
 
 // variables.c
 t_list	*set_variable(t_shell *sh, char *name, char *value, int where);
@@ -124,12 +156,15 @@ char	**export_all_env(t_shell *sh);
 void	signal_handler_main(int signum);
 void	signal_handler_other(int signum);
 
+// syntax.c
+int		check_syntax(char *line);
+
 // token_split.c
 char	**token_split(char *s, t_tokens *t);
 int		ft_isquot(char c);
 int		ft_isoper(char c);
 int		next_quote(char *p);
-int		close_par(char *p);
+// int		close_par(char *p);
 void	remove_quotes(char *word);
 
 // tokenize.c
@@ -155,8 +190,8 @@ int		print_perror(char *msg1, char *msg2);
 int		print_error(char *msg1, char *msg2);
 /* int		stop_perror(char *msg, int error, t_lstcmds *cmds); */
 /* int		stop_error(char *msg, int error, t_lstcmds *cmds); */
-int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
-int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
+int		stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
+int		stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
 
 //exec_main.c
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
@@ -173,7 +208,7 @@ int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 
 //export
 int		ft_export(t_cmd *cmd, t_shell *sh);
-int		ft_local_export(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		ft_local_export(t_cmd *cmd, t_shell *sh);
 bool	valid_var_name(char *name);
 int		var_error(char *arg);
 int		ft_env(t_shell *sh);
