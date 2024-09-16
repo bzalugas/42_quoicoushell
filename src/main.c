@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/12 14:31:12 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/15 18:27:40 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,11 @@ void	command_line(t_shell *sh, char *line)
 	t_cmd		*cmd;
 	t_lstcmds	cmds;
 
-	// if (!check_syntax(line))
-	// {
-	// 	ft_putstr_fd("Syntax Error\n", 2);
-	// 	return ;
-	// }
+	if (!check_syntax(line))
+	{
+		ft_putstr_fd("Syntax Error\n", 2);
+		return ;
+	}
 	cmds = (t_lstcmds){0, .fd[0][0]=-1, .fd[0][1]=-1, .fd[1][0]=-1,
 		.fd[1][1]=-1, 0};
 	t = (t_tokens){0};

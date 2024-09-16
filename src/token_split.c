@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 15:36:58 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/11 21:17:09 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/16 16:51:02 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ int	token_len(char *p)
 		return (0);
 	if (ft_isoper(p[0]))
 	{
-		if (ft_isoper(p[1])) // p[0] == p[1] same reason as above
-			return (2); //size is 1 bigger so i can add a special character to differentiate [op] from ["op"] (maybe a negative character or some non printable character that )
+		if (ft_isoper(p[1]))
+			return (2);
 		return (1);
 	}
 	i = 0;
@@ -144,8 +144,5 @@ char	**token_split(char *s, t_tokens *t)
 		ft_strlcpy(split[i], s, tl + 1);
 		s += tl;
 	}
-	// i = -1;
-	// while (split[++i])
-	// 	remove_quotes(split[i]);
 	return (split);
 }

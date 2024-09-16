@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/12 16:26:06 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/16 16:48:54 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,26 +156,51 @@ char	**export_all_env(t_shell *sh);
 void	signal_handler_main(int signum);
 void	signal_handler_other(int signum);
 
+//**************** PARSING ******************/
 // syntax.c
 int		check_syntax(char *line);
+// syntax_utils.c
+int		increment(char *p);
+void	set_expected(int *expected, int a, int b, int c);
+int		has_open_quote(char *line);
+
+// parsing.c
+t_cmd	*get_command(t_shell *sh, char **tokens, int n);
+
+// expand.c
+char	*expand(t_shell *sh, char *word, t_expand_data *xdat);
+void	replace_quotes(char *word);
+void	replace_wsp(char *word);
+void	remove_weird_quotes(char *word);
+char	*remove_quotes_and_expand(t_shell *sh, char *word);
+// expand_utils.c
+int		valid_name_char(char c);
+char	*retrieve_var_name(char *p, t_expand_data *xdat);
+int		retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat);
+int		get_new_size(t_shell *sh, char *word, t_expand_data *xdat);
+
+// tokenize.c
+void	set_heredoc(t_shell *sh, t_cbv *cbv);
+bool	can_be_var_assign(char *word);
+bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word);
+void	set_redir(t_shell *sh, t_cbv *cbv);
+void	set_var_assign(t_shell *sh, t_cbv *cbv);
+void	ft_putstr_err(char *s);
+void	split_cpy(char **dest, char **src, size_t src_len);
+void	set_cmd_word(t_shell *sh, t_cbv *cbv);
+int		split_expand_count(t_shell *sh, char *word);
 
 // token_split.c
 char	**token_split(char *s, t_tokens *t);
 int		ft_isquot(char c);
 int		ft_isoper(char c);
 int		next_quote(char *p);
-// int		close_par(char *p);
-void	remove_quotes(char *word);
-
-// tokenize.c
-t_cmd	*get_command(t_shell *sh, char **tokens, int n);
-
 //token_split_utils.c
 void	remove_quotes(char *word);
 
+/******************* EXEC *********************/
 // ft_readline.c
-char	*ft_readline(char *prompt);
-
+// char	*ft_readline(char *prompt);
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
 /* int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked); */
