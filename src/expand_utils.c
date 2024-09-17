@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:11:26 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/15 19:34:17 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/17 18:53:16 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,22 @@ int	get_new_size(t_shell *sh, char *word, t_expand_data *xdat)
 			i++;
 	}
 	return (new_size);
+}
+
+int	split_expand_count(t_shell *sh, char *word)
+{
+	int				wc;
+	t_expand_data	xdat;
+	char			*ogword;
+
+	ogword = ft_strdup(word);
+	xdat.new_size = get_new_size(sh, word, &xdat);
+	replace_quotes(ogword);
+	word = expand(sh, ogword, &xdat);
+	free(ogword);
+	replace_wsp(word);
+	remove_weird_quotes(word);
+	wc = count_words(word, C_WSP);
+	free(word);
+	return (wc);
 }

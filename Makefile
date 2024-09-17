@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/09/16 16:45:01 by jsommet          ###   ########.fr        #
+#    Updated: 2024/09/17 18:57:09 by jsommet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,13 +42,14 @@ SRC			:=	builtins.c \
 				ft_unset.c \
 				get_paths.c \
 				minishell_utils.c \
+				parsing_utils.c \
+				parsing_utils2.c \
 				parsing.c \
 				sighandlers.c \
 				syntax_utils.c \
 				syntax.c \
 				token_split.c \
 				token_split_utils.c \
-				tokenize.c \
 				variables.c \
 				variables2.c
 

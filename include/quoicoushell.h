@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/16 16:48:54 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/17 18:56:45 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,12 @@ int		has_open_quote(char *line);
 
 // parsing.c
 t_cmd	*get_command(t_shell *sh, char **tokens, int n);
+// parsing_utils.c
+void	set_heredoc(t_shell *sh, t_cbv *cbv);
+void	set_redir(t_shell *sh, t_cbv *cbv);
+void	set_var_assign(t_shell *sh, t_cbv *cbv);
+void	split_cpy(char **dest, char **src, size_t src_len);
+void	set_cmd_word(t_shell *sh, t_cbv *cbv);
 
 // expand.c
 char	*expand(t_shell *sh, char *word, t_expand_data *xdat);
@@ -178,17 +184,11 @@ int		valid_name_char(char c);
 char	*retrieve_var_name(char *p, t_expand_data *xdat);
 int		retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat);
 int		get_new_size(t_shell *sh, char *word, t_expand_data *xdat);
+int		split_expand_count(t_shell *sh, char *word);
 
 // tokenize.c
-void	set_heredoc(t_shell *sh, t_cbv *cbv);
 bool	can_be_var_assign(char *word);
 bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word);
-void	set_redir(t_shell *sh, t_cbv *cbv);
-void	set_var_assign(t_shell *sh, t_cbv *cbv);
-void	ft_putstr_err(char *s);
-void	split_cpy(char **dest, char **src, size_t src_len);
-void	set_cmd_word(t_shell *sh, t_cbv *cbv);
-int		split_expand_count(t_shell *sh, char *word);
 
 // token_split.c
 char	**token_split(char *s, t_tokens *t);
