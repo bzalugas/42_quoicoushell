@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/14 22:45:08 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 09:57:22 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,10 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 			return (2);
 		i++;
 	}
-	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
 	if (cmd->heredoc)
+	{
+		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
 		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY);
+	}
 	return (0);
 }
