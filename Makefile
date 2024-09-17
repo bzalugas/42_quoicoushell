@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/09/17 19:17:44 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/09/17 19:52:40 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRC			:=	builtins.c \
 				syntax.c \
 				token_split.c \
 				token_split_utils.c \
+				utils.c \
 				variables.c \
 				variables2.c
 

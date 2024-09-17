@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 19:11:08 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:50:48 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,29 +42,14 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->hist = NULL;
 	sh->hist_file = NULL;
 	sh->n_hist = 0;
-	sh->stdout_fd = -1;
-	sh->tty_fd = -1;
-	sh->tty_fd = open("/dev/tty", O_WRONLY);
-	if (sh->tty_fd == -1)
-		exit_shell(sh, EXIT_FAILURE, false);
-	sh->stdout_fd = dup(STDOUT_FILENO);
+	/* sh->stdout_fd = -1; */
+	/* sh->tty_fd = -1; */
+	/* sh->tty_fd = open("/dev/tty", O_WRONLY); */
+	/* if (sh->tty_fd == -1) */
+	/* 	exit_shell(sh, EXIT_FAILURE, false); */
+	/* sh->stdout_fd = dup(STDOUT_FILENO); */
 }
 
-void	print_split(char **sp, char *start, char *none, char *end)
-{
-	int		i;
-
-	i = 0;
-	if (!sp[0])
-		dprintf(2, "%s%s%s", start, none, end);
-	while (sp[i])
-	{
-		dprintf(2, "%s[%s] size: %zu%s", start, sp[i], ft_strlen(sp[i]), end);
-		i++;
-	}
-	ft_putchar_fd('\n', 2);
-
-}
 char *get_redir_type(t_redir_type type)
 {
 	switch (type)
@@ -123,9 +108,7 @@ int	main(int ac, char **av, char **envp)
 			g_sigint = 0;
 			write(1, "\n", 1);
 		}
-		dup2(sh.tty_fd, STDOUT_FILENO);
-		line = readline(sh.prompt);
-		dup2(sh.stdout_fd, STDOUT_FILENO);
+		line = readline_fd(&sh);
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS, true);
 		if (*line)
