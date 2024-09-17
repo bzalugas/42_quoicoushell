@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 19:41:42 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 17:55:07 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:46:10 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-bool valid_var_name(char *name)
+bool	valid_var_name(char *name)
 {
 	size_t	i;
 
@@ -32,7 +32,7 @@ bool valid_var_name(char *name)
 	return (true);
 }
 
-int var_error(char *arg, char local)
+int	var_error(char *arg, char local)
 {
 	if (local)
 		ft_dprintf(STDERR_FILENO, "quoicoushell: %s: command not found\n", arg);

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 05:24:13 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/02 07:18:34 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:40:40 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ t_list	*get_variable(t_shell *sh, char	*name, int where)
 		}
 		i++;
 	}
-
 	return (NULL);
 }
 

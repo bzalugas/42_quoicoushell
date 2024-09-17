@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 09:57:22 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:40:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 
 	if (!cmd->heredocs)
 		return (1);
-	i = 0;
-	while (cmd->heredocs[i])
+	i = -1;
+	while (cmd->heredocs[++i])
 	{
 		if (i == 0)
 			cmd->hd_filename = random_filename(cmds, sh);
@@ -91,12 +91,11 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 			stop_error("random filename", 1, cmds, sh);
 		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
 		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY | O_CREAT
-			| O_TRUNC, 0600);
+				| O_TRUNC, 0600);
 		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
 			return (stop_error("in get heredocs", 1, cmds, sh));
 		if (get_heredoc(sh, cmds, cmd, i) == 2)
 			return (2);
-		i++;
 	}
 	if (cmd->heredoc)
 	{

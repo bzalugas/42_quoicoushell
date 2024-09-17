@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:59:11 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/10 19:20:35 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:46:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	get_history(t_shell *sh)
 	if (!home)
 		return ;
 	sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home,
-		0x8000000000000000);
+			0x8000000000000000);
 	set_variable(sh, ft_strdup("HISTFILE"), ft_strdup(home), LST_ENV);
 	fd = open(sh->hist_file, O_RDONLY);
 	if (fd != -1)

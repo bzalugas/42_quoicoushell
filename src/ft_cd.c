@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:03:08 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/29 23:41:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:45:52 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-static int cd_get_path(t_cmd *cmd, t_shell *sh, char **path)
+static int	cd_get_path(t_cmd *cmd, t_shell *sh, char **path)
 {
 	if (!cmd->argv[1])
 	{
