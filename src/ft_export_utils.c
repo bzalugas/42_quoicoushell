@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 19:41:42 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 19:42:26 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:00:13 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,17 @@ int var_error(char *arg)
 	ft_putendl_fd(buf, STDERR_FILENO);
 	free(buf);
 	return (1);
+}
+
+int	cut_local_exports(t_cmd *cmd, int start_cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd->argv[i])
+	{
+		cmd->argv[i] = cmd->argv[start_cmd];
+		//move all ptrs from argv[start_cmd] to 0->end (don't forget to free)
+		i++;
+	}
 }

@@ -5,8 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/17 11:58:32 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/09/17 12:52:26 by bazaluga         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/08/02 07:23:48 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:56:53 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +77,28 @@ int	ft_export(t_cmd *cmd, t_shell *sh)
 	return (0);
 }
 
+static int	other_cmds(t_cmd *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd->argv[i])
+	{
+		if (!ft_strchr(cmd->argv[i], '='))
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
 //TODO: Handle 'a=3 echo coucou'
 int	ft_local_export(t_cmd *cmd, t_shell *sh)
 {
 	char	**args;
 	int		i;
 
+	if (other_cmds(cmd))
+		return (2);
 	i = 0;
 	while (cmd->argv[i])
 	{
@@ -90,15 +117,6 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 		}
 		i++;
 	}
-	t_list	*first = sh->local_vars;
-	while (first)
-	{
-		ft_printf("%s=%s\n", ((t_var *)first->content)->name,
-			((t_var *)first->content)->value);
-		first = first->next;
-	}
-	if (i > 0)
-		sh->env_update = true;
-	sh->exit_code = 0;
-	return (0);
+	sh->env_update = (i > 0); //maybe not needed ?
+	return (sh->exit_code = 0, 0);
 }
