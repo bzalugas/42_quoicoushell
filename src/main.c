@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:52:41 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:11:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,38 +76,6 @@ char *get_redir_type(t_redir_type type)
 	return (NULL);
 }
 
-void	print_cmd(t_cmd cmd)
-{
-	if (cmd.heredocs[0])
-	{
-		print_split(cmd.heredocs, "heredoc\t", "NONE", "\n");
-		dprintf(2, "use heredoc: %s\n", cmd.heredoc ? "yes" : "no");
-	}
-	while (cmd.redirs && cmd.redirs->file)
-	{
-		dprintf(2, "file: [%s] redir type: %s\n", cmd.redirs->file, get_redir_type(cmd.redirs->type));
-		cmd.redirs++;
-	}
-	dprintf(2, "argc:\t%d, \nargv: ", cmd.argc);
-	print_split(cmd.argv, "\t", "NO ARGUMENTS", "\n");
-}
-
-// use for parenthesis (bonus so rn useless pretty much)
-// pid_t	as_subshell(t_shell *sh, char *line)
-// {
-// 	pid_t	pid;
-
-// 	pid = fork();
-// 	if (pid < 0)
-// 		return (perror("fork"), 0);
-// 	if (!pid)
-// 	{
-// 		command_line(sh, line);
-// 	}
-// 	return (pid);
-// }
-
-
 void	command_line(t_shell *sh, char *line)
 {
 	char		**tokens;
@@ -115,19 +83,21 @@ void	command_line(t_shell *sh, char *line)
 	t_cmd		*cmd;
 	t_lstcmds	cmds;
 
-	(void) sh;
+	if (!check_syntax(line))
+	{
+		ft_putstr_fd("Syntax Error\n", 2);
+		return ;
+	}
 	cmds = (t_lstcmds){0, .fd[0][0]=-1, .fd[0][1]=-1, .fd[1][0]=-1,
 		.fd[1][1]=-1, 0};
 	t = (t_tokens){0};
 	while (t.start > -1)
 	{
-		// printf("\t CMD %d: \n", t.cmd_n);
 		tokens = token_split(line, &t);
 // TODO: PROTECT MALLOC
 		cmd = get_command(sh, tokens, cmds.n_cmds);
 		cmds.n_cmds++;
 // TODO: PROTECT MALLOC
-		/* print_cmd(*cmd); */
 		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
 		free_split(tokens);
 	}

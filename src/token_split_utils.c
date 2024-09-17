@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:13:43 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/11 21:45:02 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/17 19:12:07 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	next_quote(char *p)
 	return (0);
 }
 
-	//TODO: RE WRITE POST PROCESSING
 void	remove_quotes(char *word)
 {
 	int		offset;

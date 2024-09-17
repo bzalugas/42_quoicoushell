@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/09/17 18:50:22 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/09/17 19:14:14 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,9 @@ SRC			:=	builtins.c \
 				exec_handle_streams.c \
 				exec_heredoc.c \
 				exec_main.c \
+				expand_fhd.c \
+				expand_utils.c \
+				expand.c \
 				free_cmds.c \
 				ft_cd.c \
 				ft_echo.c \
@@ -40,10 +43,12 @@ SRC			:=	builtins.c \
 				get_paths.c \
 				history.c \
 				minishell_utils.c \
+				parsing.c \
 				sighandlers.c \
+				syntax_utils.c \
+				syntax.c \
 				token_split.c \
 				token_split_utils.c \
-				tokenize.c \
 				variables.c \
 				variables2.c
 

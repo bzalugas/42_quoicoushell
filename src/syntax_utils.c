@@ -1,30 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_split.c                                       :+:      :+:    :+:   */
+/*   syntax_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/04 19:28:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/09 16:04:15 by jsommet          ###   ########.fr       */
+/*   Created: 2024/09/15 18:52:00 by jsommet           #+#    #+#             */
+/*   Updated: 2024/09/15 19:34:22 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "../quoicoushell.h"
+#include "quoicoushell.h"
 
-int	free_split(char **arr)
+int	increment(char *p)
 {
-	size_t	i;
+	int	q;
 
-	if (!arr)
-		return (0);
-	i = 0;
-	// dprintf(2, "%s\n", arr[0]);
-	while (arr[i])
+	q = next_quote(p);
+	if (q > 0)
+		return (q);
+	return (1);
+}
+
+void	set_expected(int *expected, int a, int b, int c)
+{
+	expected[0] = a;
+	expected[1] = b;
+	expected[2] = c;
+}
+
+int	has_open_quote(char *line)
+{
+	int	nq;
+
+	while (*line)
 	{
-		free(arr[i++]);
+		nq = next_quote(line);
+		if (nq == 0)
+			return (1);
+		if (nq > 0)
+			line += nq;
+		line++;
 	}
-	free(arr);
 	return (0);
 }
