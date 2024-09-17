@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/06 18:31:32 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:52:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@
 # define LST_ENV 1
 # define LST_BOTH 2
 # define HISTORY_FILE "$HOME/.quoicoushell_history"
-// "/home/bazaluga/.quoicoushell_history"
+# define HISTORY_MAX_LINES 1000
+# define C_SQ -1
+# define C_DQ -2
+# define C_WSP -3
 
 extern int	g_sigint;
 
@@ -95,7 +98,27 @@ typedef struct s_shell
 	int					exit_code;
 	char				*hist_file;
 	t_list				*hist;
+	int					n_hist;
+	int					stdout_fd;
+	int					tty_fd;
 }	t_shell;
+
+typedef struct s_cbv
+{
+    t_cmd    *cmd;
+    char    **tks;
+    int        arg_i;
+    int        tk_i;
+    int        hd_i;
+    int        rd_i;
+}    t_cbv;
+
+typedef struct s_expand_data
+{
+    char    *tmp_val;
+    int        name_size;
+    int        new_size;
+}    t_expand_data;
 
 //main.c
 void	init_shell(t_shell *sh, char **envp);
@@ -106,6 +129,8 @@ void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
 void	get_history(t_shell *sh);
+void	save_history(t_shell *sh);
+void	put_history(t_shell *sh, char *line);
 
 // variables.c
 t_list	*set_variable(t_shell *sh, char *name, char *value, int where);
@@ -141,6 +166,7 @@ void	remove_quotes(char *word);
 
 // tokenize.c
 t_cmd	*get_command(t_shell *sh, char **tokens, int n);
+char	*expand_fhd(t_shell *sh, char *word);
 
 //token_split_utils.c
 void	remove_quotes(char *word);
@@ -182,12 +208,13 @@ int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 int		ft_export(t_cmd *cmd, t_shell *sh);
 int		ft_local_export(t_cmd *cmd, t_shell *sh);
 bool	valid_var_name(char *name);
-int		var_error(char *arg);
+int		var_error(char *arg, char local);
 int		ft_env(t_shell *sh);
 int		ft_unset(t_cmd *cmd, t_shell *sh);
 int		ft_cd(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(t_shell *sh);
 int		ft_exit(t_cmd *cmd, t_shell *sh);
 int		ft_echo(t_cmd *cmd);
+int		cut_local_exports(t_cmd *cmd, int start_cmd);
 
 #endif

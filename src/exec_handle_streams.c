@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:53:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:45:05 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 int	ft_close(t_lstcmds *cmds, int fd)
 {
-	/* if (fd == -1) */
-	/* { */
-	/* 	ft_putendl_fd("Trying to close -1", STDERR_FILENO); //only for debugging */
-	/* 	exit(-1); // change to return once no debugging needed */
-	/* } */
 	if (fd == -1)
 		return (-1);
 	if (cmds->fd[0][0] == fd)
@@ -62,9 +57,10 @@ static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i, bool forked)
 	ft_close(sh->cmds, sh->cmds->fd[fdn][1]);
 	if (redir.type == RTOUT_A)
 		sh->cmds->fd[fdn][1] = open(redir.file, O_WRONLY | O_CREAT | O_APPEND,
-			0644);
+				0644);
 	else
-		sh->cmds->fd[fdn][1] = open(redir.file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		sh->cmds->fd[fdn][1] = open(redir.file, O_WRONLY | O_CREAT | O_TRUNC,
+				0644);
 	if (sh->cmds->fd[fdn][1] == -1)
 	{
 		if (forked)
@@ -77,6 +73,7 @@ static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i, bool forked)
 int	get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked)
 {
 	int	i;
+
 	if (!cmd->redirs)
 		return (1);
 	i = 0;

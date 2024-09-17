@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 15:36:58 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/28 23:31:32 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/17 18:52:56 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	count_tokens(char *s, t_tokens *t)
 		if (ft_isoper(s[i]))
 		{
 			tc++;
-			i += (s[i + 1] && ft_isoper(s[i + 1])); //&& s[i] == s[i + 1] changed it because <> is an operator ig
+			i += (s[i + 1] && ft_isoper(s[i + 1]));
 		}
 		else if (i == 0 && !ft_isspace(s[i]))
 			tc++;

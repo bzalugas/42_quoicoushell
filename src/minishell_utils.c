@@ -6,60 +6,17 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/08/06 18:35:34 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:52:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "quoicoushell.h"
 
-static void	save_history(t_shell *sh)
-{
-	int		fd;
-	t_list	*tmp;
-
-	fd = open(sh->hist_file, O_WRONLY | O_CREAT | O_APPEND, 0600);
-	if (fd >= -1)
-	{
-		tmp = sh->hist;
-		while (tmp)
-		{
-			ft_putendl_fd((char *)tmp->content, fd);
-			tmp = tmp->next;
-		}
-		close(fd);
-	}
-	ft_lstclear(&sh->hist, &free);
-	free(sh->hist_file);
-}
-
-void	get_history(t_shell *sh)
-{
-	int		fd;
-	char	*line;
-	char	*home;
-
-	home = get_variable_value(sh, "HOME");
-	sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home, 0x80000000);
-	fd = open(sh->hist_file, O_RDONLY);
-	if (fd != -1)
-	{
-		line = get_next_line(fd);
-		while (line)
-		{
-			line[ft_strlen(line) - 1] = 0;
-			add_history(line);
-			free(line);
-			line = get_next_line(fd);
-		}
-		close(fd);
-	}
-}
-
 void	exit_shell(t_shell *sh, int exit_code, bool display)
 {
 	if (display)
-		ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd("exit\n", sh->tty_fd);
 	ft_lstclear(&sh->local_vars, (&free_variable));
 	ft_lstclear(&sh->env_vars, (&free_variable));
 	free(sh->cwd);
@@ -67,8 +24,10 @@ void	exit_shell(t_shell *sh, int exit_code, bool display)
 	free_split(sh->env);
 	free_split(sh->paths);
 	free_cmds(sh->cmds);
-	/* if (sh->fd_hist > -1) */
-	/* 	close(sh->fd_hist); */
+	if (sh->stdout_fd != -1)
+		close(sh->stdout_fd);
+	if (sh->tty_fd != -1)
+		close(sh->tty_fd);
 	save_history(sh);
 	exit(exit_code);
 }

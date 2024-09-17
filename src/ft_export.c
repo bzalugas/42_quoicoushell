@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/08/06 18:34:09 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:52:32 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	iterate_exports(char **argv, t_shell *sh)
 		if (!args)
 			exit_shell(sh, 1, true);
 		if (!valid_var_name(args[0]))
-			return (free_split(args), var_error(argv[i]));
+			return (free_split(args), var_error(argv[i], 0));
 		if (args[1])
 			remove_quotes(args[1]);
 		link = export_variable(sh, args[0]);
@@ -66,12 +66,25 @@ int	ft_export(t_cmd *cmd, t_shell *sh)
 	return (0);
 }
 
-//TODO: Handle 'a=3 echo coucou'
+static int	other_cmds(t_cmd *cmd, int *i)
+{
+	*i = 0;
+	while (cmd->argv[*i])
+	{
+		if (!ft_strchr(cmd->argv[*i], '=') || !valid_var_name(cmd->argv[*i]))
+			return (*i);
+		(*i)++;
+	}
+	return (0);
+}
+
 int	ft_local_export(t_cmd *cmd, t_shell *sh)
 {
 	char	**args;
 	int		i;
 
+	if (other_cmds(cmd, &i))
+		return (i);
 	i = 0;
 	while (cmd->argv[i])
 	{
@@ -81,7 +94,7 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 			if (!args)
 				exit_shell(sh, 1, true);
 			if (!valid_var_name(args[0]))
-				return (free_split(args), var_error(cmd->argv[1]));
+				return (free_split(args), var_error(cmd->argv[i], 1));
 			if (args[1])
 				remove_quotes(args[1]);
 			if (!set_variable_value(sh, args[0], args[1]))
@@ -90,15 +103,5 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 		}
 		i++;
 	}
-	t_list	*first = sh->local_vars;
-	while (first)
-	{
-		ft_printf("%s=%s\n", ((t_var *)first->content)->name,
-			((t_var *)first->content)->value);
-		first = first->next;
-	}
-	if (i > 0)
-		sh->env_update = true;
-	sh->exit_code = 0;
-	return (0);
+	return (sh->exit_code = 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 15:41:53 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 19:27:02 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:43:40 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ t_list	*import_env(t_shell *sh, char **envp)
 	while (envp[i])
 	{
 		entry_split = split_env_entry(envp[i]);
-		/* dprintf(2, "0 %s\n", entry_split[0]); */
-		/* dprintf(2, "1 %s\n", entry_split[1]); */
 		if (!entry_split)
 			return (NULL);
 		if (!set_variable(sh, entry_split[0], entry_split[1], LST_ENV))
@@ -55,7 +53,7 @@ t_list	*import_env(t_shell *sh, char **envp)
 	return (sh->env_vars);
 }
 
-static char *str_var_env(t_var *var, bool add_quotes)
+static char	*str_var_env(t_var *var, bool add_quotes)
 {
 	char	*str;
 	size_t	len_name;
@@ -94,7 +92,7 @@ char	**export_env(t_shell *sh)
 	i = 0;
 	while (env)
 	{
-		if (((t_var*)env->content)->value)
+		if (((t_var *)env->content)->value)
 		{
 			envx[i] = str_var_env((t_var *)env->content, false);
 			if (!envx[i])
@@ -115,14 +113,14 @@ char	**export_all_env(t_shell *sh)
 	env = sh->env_vars;
 	if (!env)
 		return (NULL);
-	envx = (char**)ft_calloc(ft_lstsize(env) + 1, sizeof(char *));
+	envx = (char **)ft_calloc(ft_lstsize(env) + 1, sizeof(char *));
 	if (!envx)
 		return (NULL);
 	i = 0;
 	while (env)
 	{
 		envx[i] = ft_strjoin_free("export ",
-			str_var_env((t_var *)env->content, true), 0, 1);
+				str_var_env((t_var *)env->content, true), 0, 1);
 		if (!envx[i])
 			return (free_split(envx), NULL);
 		env = env->next;

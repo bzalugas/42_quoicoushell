@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/08/06 18:34:58 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:52:41 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void	set_signals(t_shell *sh)
 
 void	init_shell(t_shell *sh, char **envp)
 {
-	int	shlvl;
-
 	set_signals(sh);
 	sh->local_vars = NULL;
 	sh->env_vars = NULL;
@@ -39,10 +37,17 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->paths = NULL;
 	sh->cmds = NULL;
 	sh->exit_code = 0;
-	shlvl = ft_atoi(get_variable_value(sh, "SHLVL"));
-	set_variable(sh, ft_strdup("SHLVL"), ft_itoa(shlvl + 1), LST_ENV);
+	set_variable(sh, ft_strdup("SHLVL"),
+		ft_itoa(ft_atoi(get_variable_value(sh, "SHLVL")) + 1), LST_ENV);
 	sh->hist = NULL;
 	sh->hist_file = NULL;
+	sh->n_hist = 0;
+	sh->stdout_fd = -1;
+	sh->tty_fd = -1;
+	sh->tty_fd = open("/dev/tty", O_WRONLY);
+	if (sh->tty_fd == -1)
+		exit_shell(sh, EXIT_FAILURE, false);
+	sh->stdout_fd = dup(STDOUT_FILENO);
 }
 
 void	print_split(char **sp, char *start, char *none, char *end)
@@ -148,14 +153,13 @@ int	main(int ac, char **av, char **envp)
 			g_sigint = 0;
 			write(1, "\n", 1);
 		}
+		dup2(sh.tty_fd, STDOUT_FILENO);
 		line = readline(sh.prompt);
+		dup2(sh.stdout_fd, STDOUT_FILENO);
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS, true);
 		if (*line)
-		{
-			add_history(line);
-			ft_lstadd_back(&sh.hist, ft_lstnew(line));
-		}
+			put_history(&sh, line);
 		command_line(&sh, line);
 	}
 	exit_shell(&sh, EXIT_SUCCESS, true);

@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/08/06 18:37:18 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/09/17 18:50:22 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC			:=	builtins.c \
 				ft_pwd.c \
 				ft_unset.c \
 				get_paths.c \
+				history.c \
 				minishell_utils.c \
 				sighandlers.c \
 				token_split.c \
@@ -75,26 +76,28 @@ RED		:=  "\033[1;31m"
 GREEN	:=  "\033[1;32m"
 RESET	:=  "\033[0m"
 
+PRINTED_MSG	:=	0
+
 all:		$(NAME)
 
-bonus:		$(NAME)
-
 $(OBJDIR):
-	mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c Makefile | $(OBJDIR)
-	@printf $(GREEN)
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
-	@printf $(RESET)
+	@if [ "$(PRINTED_MSG)" -eq 0 ]; then \
+		printf $(GREEN)"\n\tCOMPILING SOURCES\n"; \
+		$(eval PRINTED_MSG := 1) \
+	fi
+	@$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 $(LIBFT):
-	@echo $(GREEN)"\tCOMPILING LIBFT"$(RESET)
+	@echo $(GREEN)"\n\tCOMPILING LIBFT"$(RESET)
 	@make -sC $(LIBFTDIR)
 	@echo $(GREEN)"\tLIBFT COMPILED"$(RESET)
 
 $(NAME):	$(LIBFT) $(OBJ) $(OBJMAIN)
 	@echo $(GREEN)"LINKING mandatory objects to create <$(NAME)>"
-	$(CC) $(OBJ) $(OBJMAIN) $(LIBFLAGS) -lft -lreadline -o $(NAME)
+	@$(CC) $(OBJ) $(OBJMAIN) $(LIBFLAGS) -lft -lreadline -o $(NAME)
 	@echo "<$(NAME)> Created ✅"$(RESET)
 
 libft:		$(LIBFT)
@@ -119,4 +122,4 @@ re:		fclean
 
 -include	$(OBJ:.o=.d)
 
-.PHONY:		all clean fclean re bonus libft test_exec
+.PHONY:		all clean fclean re libft

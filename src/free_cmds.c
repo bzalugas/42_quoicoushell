@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:08:29 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:12:32 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:45:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	free_cmd(void *content)
 {
 	t_cmd	*cmd;
-	t_redir *tmp;
+	t_redir	*tmp;
 
 	cmd = (t_cmd *)content;
 	free_split(cmd->argv);
