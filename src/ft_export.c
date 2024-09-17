@@ -5,19 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 11:58:32 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 12:52:26 by bazaluga         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_export.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 11:56:53 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:58:07 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +43,7 @@ static int	iterate_exports(char **argv, t_shell *sh)
 		if (!args)
 			exit_shell(sh, 1, true);
 		if (!valid_var_name(args[0]))
-			return (free_split(args), var_error(argv[i]));
+			return (free_split(args), var_error(argv[i], 0));
 		if (args[1])
 			remove_quotes(args[1]);
 		link = export_variable(sh, args[0]);
@@ -77,28 +66,25 @@ int	ft_export(t_cmd *cmd, t_shell *sh)
 	return (0);
 }
 
-static int	other_cmds(t_cmd *cmd)
+static int	other_cmds(t_cmd *cmd, int *i)
 {
-	int	i;
-
-	i = 0;
-	while (cmd->argv[i])
+	*i = 0;
+	while (cmd->argv[*i])
 	{
-		if (!ft_strchr(cmd->argv[i], '='))
-			return (i);
-		i++;
+		if (!ft_strchr(cmd->argv[*i], '=') || !valid_var_name(cmd->argv[*i]))
+			return (*i);
+		(*i)++;
 	}
 	return (0);
 }
 
-//TODO: Handle 'a=3 echo coucou'
 int	ft_local_export(t_cmd *cmd, t_shell *sh)
 {
 	char	**args;
 	int		i;
 
-	if (other_cmds(cmd))
-		return (2);
+	if (other_cmds(cmd, &i))
+		return (i);
 	i = 0;
 	while (cmd->argv[i])
 	{
@@ -108,7 +94,7 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 			if (!args)
 				exit_shell(sh, 1, true);
 			if (!valid_var_name(args[0]))
-				return (free_split(args), var_error(cmd->argv[1]));
+				return (free_split(args), var_error(cmd->argv[i], 1));
 			if (args[1])
 				remove_quotes(args[1]);
 			if (!set_variable_value(sh, args[0], args[1]))
@@ -117,6 +103,5 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 		}
 		i++;
 	}
-	sh->env_update = (i > 0); //maybe not needed ?
 	return (sh->exit_code = 0, 0);
 }

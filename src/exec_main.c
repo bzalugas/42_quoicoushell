@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:57:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:51:44 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	int		pipe_in;
 	int		pipe_out;
 
-	if (cmds->n_cmds == 1 && run_builtin(cmds, cmd, sh, false))
+	if (cmds->n_cmds == 1 && run_builtin(cmds, cmd, sh, false) == 1)
 		return (-1);
 	pipe_in = cmd->n_cmd % 2;
 	pipe_out = (cmd->n_cmd + 1) % 2;

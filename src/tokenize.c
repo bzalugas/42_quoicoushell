@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 10:31:39 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:31:45 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -356,7 +356,7 @@ int	split_expand_count(t_shell *sh, char *word)
 	word = ft_strdup(word);
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
-	word = expand(sh, word, &xdat); //Leak here
+	word = expand(sh, word, &xdat);
 	replace_wsp(word);
 	remove_weird_quotes(word);
 	wc = count_words(word, C_WSP);
