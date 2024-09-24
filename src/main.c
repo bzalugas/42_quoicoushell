@@ -6,13 +6,13 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 19:50:48 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:02:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-int	g_sigint = 0;
+int	g_sig = 0;
 
 void	set_signals(t_shell *sh)
 {
@@ -42,12 +42,6 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->hist = NULL;
 	sh->hist_file = NULL;
 	sh->n_hist = 0;
-	/* sh->stdout_fd = -1; */
-	/* sh->tty_fd = -1; */
-	/* sh->tty_fd = open("/dev/tty", O_WRONLY); */
-	/* if (sh->tty_fd == -1) */
-	/* 	exit_shell(sh, EXIT_FAILURE, false); */
-	/* sh->stdout_fd = dup(STDOUT_FILENO); */
 }
 
 char *get_redir_type(t_redir_type type)
@@ -103,11 +97,9 @@ int	main(int ac, char **av, char **envp)
 	get_history(&sh);
 	while (1)
 	{
-		if (g_sigint == 1)
-		{
-			g_sigint = 0;
-			write(1, "\n", 1);
-		}
+		if (g_sig == SIGINT)
+			g_sig = 0;
+		ft_dprintf(2, "before readline\n");
 		line = readline_fd(&sh);
 		if (!line)
 			exit_shell(&sh, EXIT_SUCCESS, true);

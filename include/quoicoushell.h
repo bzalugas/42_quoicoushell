@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 19:48:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:06:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define C_DQ -2
 # define C_WSP -3
 
-extern int	g_sigint;
+extern int	g_sig;
 
 typedef enum e_redir_type
 {
@@ -154,6 +154,7 @@ char	**export_all_env(t_shell *sh);
 
 // sighandlers.c
 void	signal_handler_main(int signum);
+void	signal_handler_heredoc(int signum);
 void	signal_handler_other(int signum);
 
 //**************** PARSING ******************/

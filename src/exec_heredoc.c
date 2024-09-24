@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:40:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:15:25 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	while (1)
 	{
 		line = readline("> ");
-		if (g_sigint == 1)
+		if (g_sig == SIGINT)
 			return (clean_heredocs(cmds, cmd));
 		if (!line)
 			break ;
 		if (!ft_strcmp(cmd->heredocs[i], line))
 		{
 			free(line);
-			close(cmds->fd[0][0]);
+			close(cmds->fd[cmd->n_cmd % 2][0]);
 			return (0);
 		}
 		else
@@ -73,6 +73,30 @@ static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 		}
 		free(line);
 	}
+	return (0);
+}
+
+static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)//create fork to run heredoc & handle sigint signal
+{
+	int	pid;
+
+	pid = fork();
+	if (pid == -1)
+		exit(errno);
+	if (pid == 0)
+	{
+		sh->sa.sa_handler = &signal_handler_heredoc;
+		sigaction(SIGINT, &sh->sa, &sh->sa_tmp); // WHY IS IT CALLING 2 times
+												 // signal_handler_heredoc ???
+		get_heredoc(sh, cmds, cmd, i);
+		sigaction(SIGINT, &sh->sa_tmp, NULL);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, NULL, 0);
+	ft_dprintf(2, "here\n");
+	sh->sa.sa_handler = &signal_handler_main;
+	sigaction(SIGINT, &sh->sa, NULL);
+	/* sigaction(SIGINT, &sh->sa_tmp, NULL); */
 	return (0);
 }
 
@@ -90,12 +114,13 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		if (!cmd->hd_filename)
 			stop_error("random filename", 1, cmds, sh);
 		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
-		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY | O_CREAT
-				| O_TRUNC, 0600);
+		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY
+				| O_CREAT | O_TRUNC, 0600);
 		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
 			return (stop_error("in get heredocs", 1, cmds, sh));
-		if (get_heredoc(sh, cmds, cmd, i) == 2)
-			return (2);
+		/* if (get_heredoc(sh, cmds, cmd, i) == 2) */
+		/* 	return (2); */
+		run_heredoc(sh, cmds, cmd, i);
 	}
 	if (cmd->heredoc)
 	{

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 18:54:12 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/19 11:33:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
 {
 	(void) sh;
-	cbv->cmd->heredocs[cbv->hd_i] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
+	/* cbv->cmd->heredocs[cbv->hd_i] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n"); */
+	cbv->cmd->heredocs[cbv->hd_i] = ft_strdup(cbv->tks[++cbv->tk_i]);
 	cbv->cmd->heredoc = true;
 	cbv->hd_i++;
 }

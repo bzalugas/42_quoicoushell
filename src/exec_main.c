@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 19:33:11 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:33:48 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,18 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
-		g_sigint = 0;
+		g_sig = 0;
 		cmd = node_cmd->content;
-		sh->sa.sa_handler = &signal_handler_other;
+		sh->sa.sa_handler = &signal_handler_heredoc;
 		sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 		get_heredocs(cmds, cmd, sh);
-		sigaction(SIGINT, &sh->sa_tmp, NULL);
-		if (g_sigint == 1)
+		/* sigaction(SIGINT, &sh->sa_tmp, NULL); */
+		if (g_sig == SIGINT)
+		{
+			/* ft_dprintf(2, "here\n"); */
 			return (last);
+		}
+
 		if (cmd->n_cmd < cmds->n_cmds - 1)
 			if (pipe(cmds->fd[(cmd->n_cmd + 1) % 2]) == -1)
 				exit(errno);
