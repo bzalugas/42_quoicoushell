@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/24 13:15:25 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/26 08:59:59 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,27 +76,25 @@ static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	return (0);
 }
 
-static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)//create fork to run heredoc & handle sigint signal
+static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 {
 	int	pid;
 
+	sh->sa.sa_handler = &signal_handler_other;
+	sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 	pid = fork();
 	if (pid == -1)
 		exit(errno);
 	if (pid == 0)
 	{
 		sh->sa.sa_handler = &signal_handler_heredoc;
-		sigaction(SIGINT, &sh->sa, &sh->sa_tmp); // WHY IS IT CALLING 2 times
-												 // signal_handler_heredoc ???
+		sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 		get_heredoc(sh, cmds, cmd, i);
 		sigaction(SIGINT, &sh->sa_tmp, NULL);
 		exit(EXIT_SUCCESS);
 	}
 	waitpid(pid, NULL, 0);
-	ft_dprintf(2, "here\n");
-	sh->sa.sa_handler = &signal_handler_main;
-	sigaction(SIGINT, &sh->sa, NULL);
-	/* sigaction(SIGINT, &sh->sa_tmp, NULL); */
+	sigaction(SIGINT, &sh->sa_tmp, NULL);
 	return (0);
 }
 
@@ -118,8 +116,6 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 				| O_CREAT | O_TRUNC, 0600);
 		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
 			return (stop_error("in get heredocs", 1, cmds, sh));
-		/* if (get_heredoc(sh, cmds, cmd, i) == 2) */
-		/* 	return (2); */
 		run_heredoc(sh, cmds, cmd, i);
 	}
 	if (cmd->heredoc)
