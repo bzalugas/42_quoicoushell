@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:03:08 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:45:52 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 12:38:22 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	ft_cd(t_cmd *cmd, t_shell *sh)
 	if (!sh->cwd)
 		print_perror("chdir: error retrieving current directory", "getcwd");
 	set_variable(sh, ft_strdup("PWD"), ft_strdup(sh->cwd), LST_ENV);
+	free(sh->prompt);
 	sh->prompt = build_prompt(sh);
 	sh->env_update = true;
 	sh->exit_code = 0;
