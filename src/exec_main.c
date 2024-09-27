@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/26 09:02:27 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 12:27:16 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,15 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		exit(errno);
 	if (pid == 0)
 	{
+		set_exec_child_signals(sh);//not sure to let that bc of the subject (please go ask)
 		ft_close(cmds, cmds->fd[pipe_in][1]);
 		ft_close(cmds, cmds->fd[pipe_out][0]);
 		get_in_out_files(sh, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
-	sh->sa.sa_handler = &signal_handler_other;
-	sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
+	set_exec_parent_signals(sh);
+	/* sh->sa.sa_handler = &signal_handler_other; */
+	/* sigaction(SIGINT, &sh->sa, &sh->sa_tmp); */
 	ft_close(cmds, cmds->fd[pipe_in][0]);
 	ft_close(cmds, cmds->fd[pipe_in][1]);
 	if (cmd->hd_filename)
@@ -101,6 +103,7 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 			if (pipe(cmds->fd[(cmd->n_cmd + 1) % 2]) == -1)
 				exit(errno);
 		last = prepare_run_cmd(cmds, cmd, sh);
+		// maybe need to add if (g_sig != 0) break; but not sure
 		node_cmd = node_cmd->next;
 	}
 	return (last);

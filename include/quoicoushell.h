@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 12:01:08 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 12:22:51 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,10 @@ int		next_quote(char *p);
 void	remove_quotes(char *word);
 
 /******************* EXEC *********************/
+//exec_utils.c
+void	set_exec_parent_signals(t_shell *sh);
+void	set_exec_child_signals(t_shell *sh);
+
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
 int		get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked);
