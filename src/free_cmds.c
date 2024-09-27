@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:08:29 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:45:33 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 11:54:19 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	free_cmd(void *content)
 	}
 	free(cmd->redirs);
 	free_split(cmd->heredocs);
+	free(cmd->hd_filename);
 	free(cmd);
 }
 

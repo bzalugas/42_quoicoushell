@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/19 12:06:11 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 12:01:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define C_SQ -1
 # define C_DQ -2
 # define C_WSP -3
+# define CLEAN_FORK 0
+# define CLEAN_MAIN 4
 
 extern int	g_sig;
 
@@ -69,7 +71,7 @@ typedef struct s_lstcmds
 	int		n_cmds;
 }	t_lstcmds;
 
-typedef struct s_cmd
+typedef struct s_cmd //maybe add idx_in & idx_out ?
 {
 	int		n_cmd;
 	int		argc;
@@ -77,7 +79,6 @@ typedef struct s_cmd
 	t_redir	*redirs;
 	char	**heredocs;
 	char	*hd_filename;
-	int		fd_hd;
 	bool	heredoc;
 }	t_cmd;
 
@@ -97,8 +98,6 @@ typedef struct s_shell
 	char				*hist_file;
 	t_list				*hist;
 	int					n_hist;
-	/* int					stdout_fd; */
-	/* int					tty_fd; */
 }	t_shell;
 
 typedef struct s_cbv
@@ -205,12 +204,15 @@ void	remove_quotes(char *word);
 /******************* EXEC *********************/
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
-/* int		get_in_out_files(t_lstcmds *cmds, t_cmd *cmd, bool forked); */
 int		get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked);
 
 //exec_heredoc.c
 /* int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd); */
 int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+
+//exec_heredoc_utils.
+int		clean_heredocs(t_lstcmds *cmds, t_cmd *cmd, int clean_case);
+int		eof_ending_heredoc(t_lstcmds *cmds, t_cmd *cmd, char *delim);
 
 //exec_end_child.c
 int		print_perror(char *msg1, char *msg2);
