@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/27 12:27:16 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 12:48:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		get_in_out_files(sh, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
-	set_exec_parent_signals(sh);
 	/* sh->sa.sa_handler = &signal_handler_other; */
 	/* sigaction(SIGINT, &sh->sa, &sh->sa_tmp); */
 	ft_close(cmds, cmds->fd[pipe_in][0]);
@@ -92,6 +91,7 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 
 	last = -1;
 	node_cmd = cmds->cmds;
+	set_exec_parent_signals(sh);
 	while (node_cmd && node_cmd->content)
 	{
 		g_sig = 0;
