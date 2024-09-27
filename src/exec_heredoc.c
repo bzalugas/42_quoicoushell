@@ -15,37 +15,31 @@
 static char	*random_filename(t_lstcmds *cmds, t_shell *sh)
 {
 	int		fd;
-	char	filename[43];
+	char	filename[56];///tmp/qcshell-
 	size_t	i;
 	int		offset;
 
 	fd = open("/dev/random", O_RDONLY);
 	if (fd == -1)
 		stop_error("heredoc", 1, cmds, sh);
-	ft_bzero(filename, 43);
-	read(fd, filename, 42);
+	ft_memcpy(filename, "/tmp/qcshell-", 13);
+	ft_bzero(&filename[13], 43);
+	read(fd, &filename[13], 42);
 	i = 0;
 	while (i < 42)
 	{
-		filename[i] = ((unsigned char)filename[i]) % 62;
+		filename[13 + i] = ((unsigned char)filename[13 + i]) % 62;
 		offset = '0';
-		if (filename[i] > 9)
+		if (filename[13 + i] > 9)
 			offset += 'A' - '9' - 1;
-		if (filename[i] > 35)
+		if (filename[13 + i] > 35)
 			offset += 'a' - 'Z' - 1;
-		filename[i] += offset;
+		filename[13 + i] += offset;
 		i++;
 	}
 	close(fd);
-	return (ft_strjoin_free("/tmp/", ft_strdup(filename), 0, 1));
-}
-
-static int	clean_heredocs(t_lstcmds *cmds, t_cmd *cmd)
-{
-	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
-	unlink(cmd->hd_filename);
-	cmd->hd_filename = NULL;
-	return (2);
+	return (ft_strdup(filename));
+	/* return (ft_strjoin_free("/tmp/", ft_strdup(filename), 0, 1)); */
 }
 
 static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
