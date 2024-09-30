@@ -6,14 +6,12 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:10:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 15:44:09 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/30 20:15:06 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-	// xdat->i = 0;
-	// xdat->j = 0;
 void	expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		quote_size;
@@ -34,7 +32,7 @@ void	expand(t_shell *sh, char *word, t_expand_data *xdat)
 		{
 			if (xdat->tmp_val)
 				ft_strcpy(&(xdat->new_word[xdat->j]), xdat->tmp_val);
-			xdat->i += xdat->name_size + 1;
+			xdat->i += xdat->name_size;
 			xdat->j += ft_strlen(xdat->tmp_val);
 			free(xdat->tmp_val);
 		}
