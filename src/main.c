@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/26 16:29:27 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/27 17:52:15 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,23 @@ void	set_signals(t_shell *sh)
 
 void	init_shell(t_shell *sh, char **envp)
 {
+	*sh = (t_shell){0};
 	set_signals(sh);
-	sh->local_vars = NULL;
-	sh->env_vars = NULL;
+	// sh->local_vars = NULL;
+	// sh->env_vars = NULL;
 	import_env(sh, envp);
 	sh->cwd = getcwd(NULL, 0);
 	sh->prompt = build_prompt(sh);
 	sh->env_update = true;
-	sh->env = NULL;
-	sh->paths = NULL;
-	sh->cmds = NULL;
-	sh->exit_code = 0;
+	// sh->env = NULL;
+	// sh->paths = NULL;
+	// sh->cmds = NULL;
+	// sh->exit_code = 0;
 	set_variable(sh, ft_strdup("SHLVL"),
 		ft_itoa(ft_atoi(get_variable_value(sh, "SHLVL")) + 1), LST_ENV);
-	sh->hist = NULL;
-	sh->hist_file = NULL;
-	sh->n_hist = 0;
-	/* sh->stdout_fd = -1; */
-	/* sh->tty_fd = -1; */
-	/* sh->tty_fd = open("/dev/tty", O_WRONLY); */
-	/* if (sh->tty_fd == -1) */
-	/* 	exit_shell(sh, EXIT_FAILURE, false); */
-	/* sh->stdout_fd = dup(STDOUT_FILENO); */
+	// sh->hist = NULL;
+	// sh->hist_file = NULL;
+	// sh->n_hist = 0;
 }
 
 char *get_redir_type(t_redir_type type)

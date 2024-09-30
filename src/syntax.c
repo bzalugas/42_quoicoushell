@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:37:34 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/15 19:34:26 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/27 14:50:50 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*create_syntax_line(char *l)
 
 	syntax_line = calloc(count_total_tokens(l) + 1, sizeof(char));
 	ft_bzero(i, sizeof(int) * 2);
-	while (l[i[0]])
+	while (syntax_line && l[i[0]])
 	{
 		while (ft_isspace(l[i[0]]))
 			i[0]++;
@@ -80,7 +80,7 @@ int	check_syntax(char *line)
 	syntax_line = create_syntax_line(line);
 	i = 0;
 	set_expected(expected, 1, 1, 0);
-	while (syntax_line[i])
+	while (syntax_line && syntax_line[i])
 	{
 		if (!expected[syntax_line[i] - 1])
 		{

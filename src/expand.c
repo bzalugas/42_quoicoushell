@@ -6,42 +6,41 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:10:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 18:51:27 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/27 15:44:09 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-char	*expand(t_shell *sh, char *word, t_expand_data *xdat)
+	// xdat->i = 0;
+	// xdat->j = 0;
+void	expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
-	int		i;
-	int		j;
 	int		quote_size;
-	char	*new_word;
 
-	i = 0;
-	j = 0;
-	new_word = (char *) ft_calloc(xdat->new_size + 1, 1UL);
-	while (word[i])
+	bzero(&xdat->i, sizeof(int) * 2);
+	xdat->new_word = (char *) ft_calloc(xdat->new_size + 1, 1UL);
+	if (!xdat->new_word)
+		return ;
+	while (word[xdat->i])
 	{
-		if (word[i] == C_SQ)
+		if (word[xdat->i] == C_SQ)
 		{
-			quote_size = next_quote(&word[i]);
+			quote_size = next_quote(&word[xdat->i]);
 			while (--quote_size > 0)
-				new_word[j++] = word[i++];
+				xdat->new_word[xdat->j++] = word[xdat->i++];
 		}
-		if (retrieve_var_value(sh, &word[i], xdat) > 0)
+		if (retrieve_var_value(sh, &word[xdat->i], xdat) > 0)
 		{
 			if (xdat->tmp_val)
-				ft_strcpy(&new_word[j], xdat->tmp_val);
-			i += xdat->name_size + 1;
-			j += ft_strlen(xdat->tmp_val);
+				ft_strcpy(&(xdat->new_word[xdat->j]), xdat->tmp_val);
+			xdat->i += xdat->name_size + 1;
+			xdat->j += ft_strlen(xdat->tmp_val);
 			free(xdat->tmp_val);
 		}
 		else
-			new_word[j++] = word[i++];
+			xdat->new_word[xdat->j++] = word[xdat->i++];
 	}
-	return (new_word);
 }
 
 void	replace_quotes(char *word)
@@ -98,7 +97,7 @@ void	remove_weird_quotes(char *word)
 	offset = 0;
 	i = -1;
 	c = 0;
-	while (word[++i])
+	while (word && word[++i])
 	{
 		word[i - offset] = word[i];
 		q = (word[i] == C_SQ || word[i] == C_DQ);
@@ -123,7 +122,9 @@ char	*remove_quotes_and_expand(t_shell *sh, char *word)
 
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
-	word = expand(sh, word, &xdat);
-	remove_weird_quotes(word);
-	return (word);
+	expand(sh, word, &xdat);
+	if (!xdat.new_word)
+		exit_shell(sh, EXIT_FAILURE, false);
+	remove_weird_quotes(xdat.new_word);
+	return (xdat.new_word);
 }

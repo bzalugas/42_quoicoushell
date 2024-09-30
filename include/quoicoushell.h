@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 19:48:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:44:27 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,9 @@ typedef struct s_expand_data
 	char	*tmp_val;
 	int		name_size;
 	int		new_size;
+	char	*new_word;
+	int		i;
+	int		j;
 }	t_expand_data;
 
 //main.c
@@ -174,7 +177,7 @@ void	split_cpy(char **dest, char **src, size_t src_len);
 void	set_cmd_word(t_shell *sh, t_cbv *cbv);
 
 // expand.c
-char	*expand(t_shell *sh, char *word, t_expand_data *xdat);
+void	expand(t_shell *sh, char *word, t_expand_data *xdat);
 void	replace_quotes(char *word);
 void	replace_wsp(char *word);
 void	remove_weird_quotes(char *word);

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 15:36:58 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 19:11:44 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:50:38 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ char	**token_split(char *s, t_tokens *t)
 	s = &s[t->start];
 	tc = count_tokens(s, t);
 	split = (char **) ft_calloc(tc + 1, sizeof(char *));
+	if (!split)
+		return (NULL);
 	i = -1;
 	while (++i < tc)
 	{
@@ -81,6 +83,8 @@ char	**token_split(char *s, t_tokens *t)
 			s++;
 		tl = token_len(s);
 		split[i] = (char *) ft_calloc(tl + 1, sizeof(char));
+		if (!split[i])
+			return (free_split(split), NULL);
 		ft_strlcpy(split[i], s, tl + 1);
 		s += tl;
 	}
