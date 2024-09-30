@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/27 11:56:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:59:37 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static char	*random_filename(t_lstcmds *cmds, t_shell *sh)
 {
 	int		fd;
-	char	filename[56];///tmp/qcshell-
+	char	filename[56];
 	size_t	i;
 	int		offset;
 
@@ -39,7 +39,6 @@ static char	*random_filename(t_lstcmds *cmds, t_shell *sh)
 	}
 	close(fd);
 	return (ft_strdup(filename));
-	/* return (ft_strjoin_free("/tmp/", ft_strdup(filename), 0, 1)); */
 }
 
 static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
@@ -77,7 +76,7 @@ static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	int	status;
 
 	status = 0;
-	sh->sa.sa_handler = SIG_IGN;
+	sh->sa.sa_handler = &signal_handler_other;
 	sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 	pid = fork();
 	if (pid == -1)
@@ -90,8 +89,6 @@ static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	}
 	waitpid(pid, &status, 0);
 	sigaction(SIGINT, &sh->sa_tmp, NULL);
-	/* if (g_sig == SIGINT) */
-	/* 	return (ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]), status); */
 	return (WEXITSTATUS(status));
 }
 
@@ -99,7 +96,7 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	int	i;
 
-	if (!cmd->heredoc || !cmd->heredocs)
+	if (!cmd->heredocs || !cmd->heredocs[0])
 		return (1);
 	i = -1;
 	while (cmd->heredocs[++i])
@@ -116,10 +113,8 @@ int	get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		if (run_heredoc(sh, cmds, cmd, i) != 0) //Check correctly return (CLEAN_CASE)
 			return (clean_heredocs(cmds, cmd, CLEAN_MAIN));
 	}
-	/* if (cmd->heredoc) //not necessary bc of 1st line ? */
-	/* { */
-		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
+	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
+	if (cmd->heredoc)
 		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY);
-	/* } */
 	return (0);
 }
