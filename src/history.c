@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:59:11 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/30 13:01:12 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:04:34 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,8 @@ void	get_history(t_shell *sh)
 {
 	int		fd;
 	char	*line;
-	/* char	*home; */
 
-	//CHANGE WITH EXPAND
-	/* home = get_variable_value(sh, "HOME"); */
-	/* if (!home) */
-	/* 	return ; */
-	/* sh->hist_file = ft_strreplace(HISTORY_FILE, "$HOME", home, */
-	/* 		0x8000000000000000); */
 	sh->hist_file = expand_fhd(sh, HISTORY_FILE);
-	/* set_variable(sh, ft_strdup("HISTFILE"), ft_strdup(home), LST_ENV); */
 	set_variable(sh, ft_strdup("HISTFILE"), ft_strdup(sh->hist_file), LST_ENV);
 	fd = open(sh->hist_file, O_RDONLY);
 	if (fd == -1)
@@ -63,7 +55,8 @@ void	get_history(t_shell *sh)
 void	put_history(t_shell *sh, char *line)
 {
 	add_history(line);
-	ft_lstadd_back(&sh->hist, ft_lstnew(line));
+	if (!ft_lstadd_back(&sh->hist, ft_lstnew(line)))
+		return ;
 	if (sh->n_hist == HISTORY_MAX_LINES)
 		ft_lstremove(&sh->hist, sh->hist, &free);
 	else

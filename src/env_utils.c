@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 15:41:53 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:43:40 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/30 10:56:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ char	**split_env_entry(char *entry)
 	char	**split;
 	int		i;
 
-	split = (char **) calloc(3, sizeof(char *));
+	split = (char **)ft_calloc(3, sizeof(char *));
+	if (!split)
+		return (NULL);
 	i = 0;
 	while (entry[i] && entry[i] != '=')
 		i++;
