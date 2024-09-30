@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/26 08:44:27 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:28:42 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 
 int	g_sig = 0;
 
-void	set_signals(t_shell *sh)
+void	init_shell(t_shell *sh, char **envp)
 {
 	sh->sa = (struct sigaction) {0};
 	sh->sa_tmp = (struct sigaction) {0};
-	sh->sa.sa_handler = &signal_handler_main;
-	sigaction(SIGINT, &sh->sa, NULL);
-	sh->sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sh->sa, NULL);
-}
-
-void	init_shell(t_shell *sh, char **envp)
-{
-	set_signals(sh);
+	set_signals_main(sh);
 	sh->local_vars = NULL;
 	sh->env_vars = NULL;
 	import_env(sh, envp);

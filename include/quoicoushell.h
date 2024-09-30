@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 12:22:51 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:28:38 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,11 @@ void	command_line(t_shell *sh, char *line);
 //utils.c
 char	*readline_fd(t_shell *sh);
 
+//signals_setters.c
+void	set_signals_main(t_shell *sh);
+void	set_exec_parent_signals(t_shell *sh);
+void	set_exec_child_signals(t_shell *sh);
+
 // minishell_utils.c
 void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
@@ -202,9 +207,6 @@ int		next_quote(char *p);
 void	remove_quotes(char *word);
 
 /******************* EXEC *********************/
-//exec_utils.c
-void	set_exec_parent_signals(t_shell *sh);
-void	set_exec_child_signals(t_shell *sh);
 
 //exec_handle_streams.c
 int		ft_close(t_lstcmds *cmds, int fd);
