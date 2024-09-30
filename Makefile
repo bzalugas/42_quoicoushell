@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/09/30 13:30:37 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/09/30 17:45:50 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -130,6 +130,6 @@ fclean:		clean
 re:		fclean
 	@make -s all
 
--include	$(OBJ:.o=.d)
+-include	$(OBJ:.o=.d) $(OBJMAIN:.o=.d)
 
 .PHONY:		all clean fclean re libft
