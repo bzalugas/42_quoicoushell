@@ -1,11 +1,7 @@
 * EXEC
-** DONE Fix strreplace
-CLOSED: [2024-08-01 Thu 20:25]
-** DONE Finish history
-CLOSED: [2024-08-02 Fri 06:44]
-** DONE Check if global is correctly used
-CLOSED: [2024-08-02 Fri 06:54]
-If not => Find another way to indicate the C-c has been received in heredoc
-** DONE Clean Makefile
-CLOSED: [2024-08-01 Thu 20:25]
-The libft's one is too verbose
+** TODO Change heredoc order
+- Bash runs every heredocs of every commands before running the commands themselves
+** TODO Fix the sigpipe with cat
+Examples where there is a pb:
+- cat < /dev/stdin | cat < /dev/stdin
+- echo | echo << a

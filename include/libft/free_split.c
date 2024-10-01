@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_split.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 19:28:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/09 16:04:15 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/01 11:58:19 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	free_split(char **arr)
 	if (!arr)
 		return (0);
 	i = 0;
-	// dprintf(2, "%s\n", arr[0]);
 	while (arr[i])
 	{
 		free(arr[i++]);

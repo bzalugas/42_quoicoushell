@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/30 19:32:19 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:55:47 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,6 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 			if (pipe(cmds->fd[(cmd->n_cmd + 1) % 2]) == -1)
 				exit(errno);
 		last = prepare_run_cmd(cmds, cmd, sh);
-		/* if (g_sig != 0) */
-			/* return (last); */
-		// maybe need to add if (g_sig != 0) break; but not sure
 		node_cmd = node_cmd->next;
 	}
 	return (last);
