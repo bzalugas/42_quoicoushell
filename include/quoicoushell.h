@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/01 11:35:22 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:36:38 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,6 @@ typedef struct s_expand_data
 //main.c
 void	init_shell(t_shell *sh, char **envp);
 void	command_line(t_shell *sh, char *line);
-//utils.c
-char	*readline_fd(t_shell *sh);
 
 //signals_setters.c
 void	set_signals_main(t_shell *sh);
@@ -137,6 +135,9 @@ void	set_exec_child_signals(t_shell *sh);
 void	exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
+char	*readline_fd(t_shell *sh);
+
+//history.c
 void	get_history(t_shell *sh);
 void	save_history(t_shell *sh);
 void	put_history(t_shell *sh, char *line);
