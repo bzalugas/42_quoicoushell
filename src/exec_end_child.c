@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 01:15:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/01 09:44:44 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 	free_split(sh->env);
 	free_split(sh->paths);
 	free_cmds(cmds);
+	ft_lstclear(&sh->hist, &free);
+	free(sh->hist_file);
 	exit(EXIT_FAILURE);
 }
 
@@ -80,10 +82,8 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 	i = -1;
 	while (++i < 2)
 	{
-		if (cmds->fd[i][0] != -1)
-			ft_close(cmds, cmds->fd[i][0]);
-		if (cmds->fd[i][1] != -1)
-			ft_close(cmds, cmds->fd[i][1]);
+		ft_close(cmds, cmds->fd[i][0]);
+		ft_close(cmds, cmds->fd[i][1]);
 	}
 	ft_lstclear(&sh->local_vars, (&free_variable));
 	ft_lstclear(&sh->env_vars, (&free_variable));
@@ -92,5 +92,7 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 	free_split(sh->env);
 	free_split(sh->paths);
 	free_cmds(cmds);
+	ft_lstclear(&sh->hist, &free);
+	free(sh->hist_file);
 	exit(EXIT_FAILURE);
 }
