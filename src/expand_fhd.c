@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:13:14 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/15 19:34:14 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/30 15:06:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	get_new_size_fhd(t_shell *sh, char *word)
 			new_size -= xdat.name_size + 1;
 			new_size += ft_strlen(xdat.tmp_val);
 			i += xdat.name_size + 1;
+			if (xdat.tmp_val)
+				free(xdat.tmp_val);
 		}
 		else
 			i++;
@@ -53,6 +55,7 @@ char	*expand_fhd(t_shell *sh, char *word)
 				ft_strcpy(&new_word[j], xdat.tmp_val);
 			i += xdat.name_size + 1;
 			j += ft_strlen(xdat.tmp_val);
+			free(xdat.tmp_val);
 		}
 		else
 			new_word[j++] = word[i++];

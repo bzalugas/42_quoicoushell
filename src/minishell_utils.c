@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 19:52:03 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/09/30 17:47:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*current_dir_name(t_shell *sh, int depth)
 	if (!pwd_split)
 		exit_shell(sh, EXIT_FAILURE, false);
 	if (!pwd_split[0])
-		return (NULL);
+		return (free(pwd_split), NULL);
 	i = 0;
 	while (pwd_split[i])
 		i++;
@@ -59,7 +59,8 @@ char	*build_prompt(t_shell *sh)
 {
 	char	*prompt;
 
-	prompt = current_dir_name(sh, 2);
-	prompt = ft_strjoin_free(prompt, "$ ", 1, 0);
+	prompt = ft_strdup(PROMPT_COLOUR);
+	prompt = ft_strjoin_free(prompt, current_dir_name(sh, 2), 1, 1);
+	prompt = ft_strjoin_free(prompt, PROMPT_END, 1, 0);
 	return (prompt);
 }
