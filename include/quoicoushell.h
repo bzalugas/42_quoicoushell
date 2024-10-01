@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/01 12:36:38 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:22:41 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,11 @@ typedef struct s_lstcmds
 	int		n_cmds;
 }	t_lstcmds;
 
-typedef struct s_cmd //maybe add idx_in & idx_out ?
+typedef struct s_cmd
 {
 	int		n_cmd;
+	int		idx_in;
+	int		idx_out;
 	int		argc;
 	char	**argv;
 	t_redir	*redirs;
@@ -219,8 +221,7 @@ int		ft_close(t_lstcmds *cmds, int fd);
 int		get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked);
 
 //exec_heredoc.c
-/* int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd); */
-int		get_heredocs(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh);
+int		get_all_heredocs(t_shell *sh, t_lstcmds *cmds);
 
 //exec_heredoc_utils.
 int		clean_heredocs(t_lstcmds *cmds, t_cmd *cmd, int clean_case);

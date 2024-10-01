@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/01 11:55:47 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/01 15:15:43 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,26 +56,26 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	pid_t	pid;
-	int		pipe_in;
-	int		pipe_out;
+	/* int		pipe_in; */
+	/* int		pipe_out; */
 
 	if (cmds->n_cmds == 1 && run_builtin(cmds, cmd, sh, false) == 1)
 		return (-1);
-	pipe_in = cmd->n_cmd % 2;
-	pipe_out = (cmd->n_cmd + 1) % 2;
+	/* pipe_in = cmd->n_cmd % 2; */
+	/* pipe_out = (cmd->n_cmd + 1) % 2; */
 	pid = fork();
 	if (pid == -1)
 		exit(errno);
 	if (pid == 0)
 	{
 		set_exec_child_signals(sh);
-		ft_close(cmds, cmds->fd[pipe_in][1]);
-		ft_close(cmds, cmds->fd[pipe_out][0]);
+		ft_close(cmds, cmds->fd[cmd->pipe_in][1]);
+		ft_close(cmds, cmds->fd[cmd->pipe_out][0]);
 		get_in_out_files(sh, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
-	ft_close(cmds, cmds->fd[pipe_in][0]);
-	ft_close(cmds, cmds->fd[pipe_in][1]);
+	ft_close(cmds, cmds->fd[cmd->pipe_in][0]);
+	ft_close(cmds, cmds->fd[cmd->pipe_in][1]);
 	if (cmd->hd_filename)
 		unlink(cmd->hd_filename);
 	return (pid);
@@ -90,11 +90,12 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 	last = -1;
 	node_cmd = cmds->cmds;
 	set_exec_parent_signals(sh);
+	get_all_heredocs(sh, cmds);
 	while (node_cmd && node_cmd->content)
 	{
 		g_sig = 0;
 		cmd = node_cmd->content;
-		get_heredocs(cmds, cmd, sh);
+		/* get_heredocs(cmds, cmd, sh); */
 		if (g_sig == SIGINT)
 			return (last);
 		if (cmd->n_cmd < cmds->n_cmds - 1)
