@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 16:03:11 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/16 16:45:10 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/09/30 20:08:51 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens)
 	t_cmd	*cmd;
 
 	(void) sh;
-	ft_bzero(c, sizeof(c));
 	cmd = (t_cmd *) ft_calloc(1, sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	ft_bzero(c, sizeof(c));
 	while (tokens[c[0]])
 	{
 		if (!ft_strcmp(tokens[c[0]], "<<"))
@@ -47,6 +49,8 @@ t_cmd	*get_command(t_shell *sh, char **tokens, int n)
 
 	cbv = (t_cbv){0};
 	cbv.cmd = init_cmd(sh, tokens);
+	if (!cbv.cmd || !cbv.cmd->argv || !cbv.cmd->heredocs || !cbv.cmd->redirs)
+		return (NULL);
 	cbv.tks = tokens;
 	cbv.cmd->n_cmd = n;
 	while (tokens[cbv.tk_i])

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/30 13:28:42 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:39:37 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,14 @@ int	g_sig = 0;
 
 void	init_shell(t_shell *sh, char **envp)
 {
-	sh->sa = (struct sigaction) {0};
-	sh->sa_tmp = (struct sigaction) {0};
+	*sh = (t_shell){0};
 	set_signals_main(sh);
-	sh->local_vars = NULL;
-	sh->env_vars = NULL;
 	import_env(sh, envp);
 	sh->cwd = getcwd(NULL, 0);
 	sh->prompt = build_prompt(sh);
 	sh->env_update = true;
-	sh->env = NULL;
-	sh->paths = NULL;
-	sh->cmds = NULL;
-	sh->exit_code = 0;
 	set_variable(sh, ft_strdup("SHLVL"),
 		ft_itoa(ft_atoi(get_variable_value(sh, "SHLVL")) + 1), LST_ENV);
-	sh->hist = NULL;
-	sh->hist_file = NULL;
-	sh->n_hist = 0;
 }
 
 char *get_redir_type(t_redir_type type)
@@ -65,9 +55,13 @@ void	command_line(t_shell *sh, char *line)
 	while (t.start > -1)
 	{
 		tokens = token_split(line, &t);
+		if (!tokens)
+			exit_shell(sh, EXIT_FAILURE, false);
 // TODO: PROTECT MALLOC
 		cmd = get_command(sh, tokens, cmds.n_cmds);
 		cmds.n_cmds++;
+		if (!cmd)
+			exit_shell(sh, EXIT_FAILURE, false);
 // TODO: PROTECT MALLOC
 		ft_lstadd_back(&cmds.cmds, ft_lstnew(cmd));
 		free_split(tokens);
