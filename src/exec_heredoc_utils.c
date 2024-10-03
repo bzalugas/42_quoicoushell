@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:05:54 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/27 12:33:23 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:07:36 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,19 @@
 
 int	clean_heredocs(t_lstcmds *cmds, t_cmd *cmd, int clean_case)
 {
-	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
+	/* ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]); */
+	ft_close(cmds, cmd->fd_hd[1]);
+	/* if (cmd->fd_hd[1] > -1 && close(cmd->fd_hd[1]) == 0) */
+	/* 	cmd->fd_hd[1] = -1; */
 	if (g_sig != 0 && clean_case == CLEAN_FORK)
-		unlink(cmd->hd_filename);
-	free(cmd->hd_filename);
-	cmd->hd_filename = NULL;
+		ft_close(cmds, cmd->fd_hd[0]);
+		/* if (cmd->fd_hd[0] > -1 && close(cmd->fd_hd[0]) == 0) */
+			/* cmd->fd_hd[0] = -1; */
+	/* if (g_sig != 0 && clean_case == CLEAN_FORK) */
+	/* 	unlink(cmd->hd_file); */
+	/* free(cmd->hd_file); */
+	/* cmd->hd_file = NULL; */
+
 	return (clean_case + (g_sig != 0));
 }
 

@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/01 15:39:49 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:08:51 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,12 @@ static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 		if (!ft_strcmp(cmd->heredocs[i], line))
 		{
 			free(line);
-			close(cmds->fd[cmd->n_cmd % 2][0]);
 			return (clean_heredocs(cmds, cmd, CLEAN_FORK));
 		}
 		else
 		{
 			line_expanded = expand_fhd(sh, line);
-			ft_dprintf(cmds->fd[cmd->n_cmd % 2][0], "%s\n", line_expanded);
+			ft_dprintf(cmd->fd_hd[1], "%s\n", line_expanded);
 			free(line_expanded);
 		}
 		free(line);
@@ -97,25 +96,37 @@ static int	get_heredocs_of_cmd( t_shell *sh, t_lstcmds *cmds, t_cmd *cmd)
 	int	i;
 
 	if (!cmd->heredocs || !cmd->heredocs[0])
-		return (1);
+		return (0);
 	i = -1;
 	while (cmd->heredocs[++i])
 	{
 		if (i == 0)
-			cmd->hd_filename = random_filename(sh, cmds);
-		if (!cmd->hd_filename)
+			cmd->hd_file = random_filename(sh, cmds);
+		if (!cmd->hd_file)
 			stop_error("random filename", 1, cmds, sh);
-		ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
-		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY
-				| O_CREAT | O_TRUNC, 0600);
-		if (cmds->fd[cmd->n_cmd % 2][0] == -1)
-			return (stop_error("in get heredocs", 1, cmds, sh));
+		/* ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]); */
+		/* cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY */
+		/* 		| O_CREAT | O_TRUNC, 0600); */
+		/* if (cmds->fd[cmd->n_cmd % 2][0] == -1) */
+		/* 	return (stop_error("in get heredocs", 1, cmds, sh)); */
+		/* if (run_heredoc(sh, cmds, cmd, i) != 0) */
+		/* 	return (clean_heredocs(cmds, cmd, CLEAN_MAIN)); */
+		cmd->fd_hd[1] = open(cmd->hd_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+		if (cmd->fd_hd[1] == -1)
+			return (stop_error("problem with here-document", 1, cmds, sh));
+		cmd->fd_hd[0] = open(cmd->hd_file, O_RDONLY);
+		if (cmd->fd_hd[0] == -1)
+			return (ft_close(cmds, cmd->fd_hd[1]),
+				stop_error("problem with here-document", 1, cmds, sh));
+		unlink(cmd->hd_file);
+		free(cmd->hd_file);
+		cmd->hd_file = NULL;
 		if (run_heredoc(sh, cmds, cmd, i) != 0)
 			return (clean_heredocs(cmds, cmd, CLEAN_MAIN));
 	}
-	ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]);
-	if (cmd->heredoc)
-		cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY);
+	/* ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]); */
+	/* if (cmd->heredoc) */
+		/* cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY); */
 	return (0);
 }
 
@@ -138,6 +149,9 @@ int	get_all_heredocs(t_shell *sh, t_lstcmds *cmds)
 		cmd = node_cmd->content;
 		cmd->idx_in = cmd->n_cmd % 2;
 		cmd->idx_out = (cmd->n_cmd + 1) % 2;
-		get_heredocs_of_cmd(sh, cmds, cmd);
+		if (get_heredocs_of_cmd(sh, cmds, cmd) != 0)
+			return (1);
+		node_cmd = node_cmd->next;
 	}
+	return (0);
 }

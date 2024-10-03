@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:45:05 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 12:50:58 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 int	ft_close(t_lstcmds *cmds, int fd)
 {
-	if (fd == -1)
+	t_list *node;
+
+	if (fd == -1 || !cmds)
 		return (-1);
 	if (cmds->fd[0][0] == fd)
 		cmds->fd[0][0] = -1;
@@ -24,6 +26,15 @@ int	ft_close(t_lstcmds *cmds, int fd)
 		cmds->fd[1][0] = -1;
 	if (cmds->fd[1][1] == fd)
 		cmds->fd[1][1] = -1;
+	node = cmds->cmds;
+	while (node && node->content)
+	{
+		if (((t_cmd *)(node->content))->fd_hd[0] == fd)
+			((t_cmd *)(node->content))->fd_hd[0] = -1;
+		if (((t_cmd *)(node->content))->fd_hd[1] == fd)
+			((t_cmd *)(node->content))->fd_hd[1] = -1;
+		node = node->next;
+	}
 	return (close(fd));
 }
 

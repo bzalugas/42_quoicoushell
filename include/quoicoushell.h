@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/01 15:22:41 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 13:07:46 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,10 @@ typedef struct s_cmd
 	int		argc;
 	char	**argv;
 	t_redir	*redirs;
-	char	**heredocs;
-	char	*hd_filename;
 	bool	heredoc;
+	char	**heredocs;
+	char	*hd_file;
+	int		fd_hd[2];
 }	t_cmd;
 
 typedef struct s_shell

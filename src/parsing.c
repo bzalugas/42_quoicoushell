@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 16:03:11 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/30 20:08:51 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/03 13:03:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens)
 	cmd->argv = (char **) ft_calloc(cmd->argc + 1, sizeof(char *));
 	cmd->heredocs = (char **) ft_calloc(c[1] + 1, sizeof(char *));
 	cmd->redirs = (t_redir *) ft_calloc(c[2] + 1, sizeof(t_redir));
+	ft_memset(cmd->fd_hd, -1, sizeof(int) * 2);
 	return (cmd);
 }
 

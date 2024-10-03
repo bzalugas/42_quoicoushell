@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/01 15:15:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 12:40:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	int		fd_out;
 	int		status;
 
-	fd_in = cmds->fd[cmd->n_cmd % 2][0];
-	fd_out = cmds->fd[(cmd->n_cmd + 1) % 2][1];
+	fd_in = cmds->fd[cmd->idx_in][0];
+	fd_out = cmds->fd[cmd->idx_out][1];
 	if (fd_in > -1)
 		dup2(fd_in, STDIN_FILENO);
 	if (fd_out > -1)
@@ -49,35 +49,34 @@ static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	ft_close(cmds, fd_out);
 	status = run_builtin(cmds, cmd, sh, true);
 	if (status)
-		exit(sh->exit_code);
+		exit_shell(sh, sh->exit_code, false);
 	return (run_non_builtin(cmds, cmd, sh));
 }
 
 static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	pid_t	pid;
-	/* int		pipe_in; */
-	/* int		pipe_out; */
 
 	if (cmds->n_cmds == 1 && run_builtin(cmds, cmd, sh, false) == 1)
 		return (-1);
-	/* pipe_in = cmd->n_cmd % 2; */
-	/* pipe_out = (cmd->n_cmd + 1) % 2; */
 	pid = fork();
 	if (pid == -1)
 		exit(errno);
 	if (pid == 0)
 	{
 		set_exec_child_signals(sh);
-		ft_close(cmds, cmds->fd[cmd->pipe_in][1]);
-		ft_close(cmds, cmds->fd[cmd->pipe_out][0]);
+		ft_close(cmds, cmds->fd[cmd->idx_in][1]);
+		ft_close(cmds, cmds->fd[cmd->idx_out][0]);
+		if (cmd->fd_hd[0] != -1)
+		{
+			ft_close(cmds, cmds->fd[cmd->idx_in][0]);
+			cmds->fd[cmd->idx_in][0] = cmd->fd_hd[0];
+		}
 		get_in_out_files(sh, cmd, true);
 		return (run_cmd(cmds, cmd, sh));
 	}
-	ft_close(cmds, cmds->fd[cmd->pipe_in][0]);
-	ft_close(cmds, cmds->fd[cmd->pipe_in][1]);
-	if (cmd->hd_filename)
-		unlink(cmd->hd_filename);
+	ft_close(cmds, cmds->fd[cmd->idx_in][0]);
+	ft_close(cmds, cmds->fd[cmd->idx_in][1]);
 	return (pid);
 }
 
@@ -88,9 +87,10 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 	pid_t	last;
 
 	last = -1;
-	node_cmd = cmds->cmds;
 	set_exec_parent_signals(sh);
-	get_all_heredocs(sh, cmds);
+	if (get_all_heredocs(sh, cmds) != 0)
+		return (last);
+	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
 		g_sig = 0;
