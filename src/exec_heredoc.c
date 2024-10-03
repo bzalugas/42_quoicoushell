@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/03 13:08:51 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:40:12 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,40 +104,20 @@ static int	get_heredocs_of_cmd( t_shell *sh, t_lstcmds *cmds, t_cmd *cmd)
 			cmd->hd_file = random_filename(sh, cmds);
 		if (!cmd->hd_file)
 			stop_error("random filename", 1, cmds, sh);
-		/* ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]); */
-		/* cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_WRONLY */
-		/* 		| O_CREAT | O_TRUNC, 0600); */
-		/* if (cmds->fd[cmd->n_cmd % 2][0] == -1) */
-		/* 	return (stop_error("in get heredocs", 1, cmds, sh)); */
-		/* if (run_heredoc(sh, cmds, cmd, i) != 0) */
-		/* 	return (clean_heredocs(cmds, cmd, CLEAN_MAIN)); */
 		cmd->fd_hd[1] = open(cmd->hd_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-		if (cmd->fd_hd[1] == -1)
-			return (stop_error("problem with here-document", 1, cmds, sh));
 		cmd->fd_hd[0] = open(cmd->hd_file, O_RDONLY);
-		if (cmd->fd_hd[0] == -1)
-			return (ft_close(cmds, cmd->fd_hd[1]),
-				stop_error("problem with here-document", 1, cmds, sh));
+		if (cmd->fd_hd[0] == -1 || cmd->fd_hd[1] == -1)
+			return (stop_error("problem with here-document", 1, cmds, sh));
 		unlink(cmd->hd_file);
 		free(cmd->hd_file);
 		cmd->hd_file = NULL;
 		if (run_heredoc(sh, cmds, cmd, i) != 0)
 			return (clean_heredocs(cmds, cmd, CLEAN_MAIN));
 	}
-	/* ft_close(cmds, cmds->fd[cmd->n_cmd % 2][0]); */
-	/* if (cmd->heredoc) */
-		/* cmds->fd[cmd->n_cmd % 2][0] = open(cmd->hd_filename, O_RDONLY); */
+	ft_close(cmds, cmd->fd_hd[1]);
 	return (0);
 }
 
-/*
-** CHANGES TO MAKE FOR HEREDOC:
-** 1- ask for all heredocs of all cmds before running commands. (open with 2 fd
-** 1 for write 1 for read) => we can use unlink if we still got a fd pointing to
-** the file so when it's closed it will be deleted.
-** 2- when running a command, read in the heredoc file (if there is one) and put it to
-** the input pipe.
-*/
 int	get_all_heredocs(t_shell *sh, t_lstcmds *cmds)
 {
 	t_list	*node_cmd;

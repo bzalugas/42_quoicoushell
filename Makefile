@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/10/01 12:35:37 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/10/03 14:58:05 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC			:=	builtins.c \
 				env_utils.c \
 				exec_end_child.c \
 				exec_handle_streams.c \
+				exec_handle_streams2.c \
 				exec_heredoc.c \
 				exec_heredoc_utils.c \
 				exec_main.c \
@@ -60,7 +61,7 @@ MAIN		:=	main.c
 
 OBJ			:=  $(SRC:.c=.o)
 
-OBJMAIN		:= $(MAIN:.c=.o)
+OBJMAIN		:=	$(MAIN:.c=.o)
 
 SRC	    	:=  $(addprefix $(SRCDIR)/, $(SRC))
 

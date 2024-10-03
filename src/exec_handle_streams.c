@@ -6,15 +6,40 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/03 12:50:58 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:45:44 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
+int	ft_close_all(t_lstcmds *cmds)
+{
+	int		i;
+	t_list	*node;
+
+	i = -1;
+	while (++i < 2)
+	{
+		if (cmds->fd[i][0] != -1)
+			close(cmds->fd[i][0]);
+		if (cmds->fd[i][1] != -1)
+			close(cmds->fd[i][1]);
+	}
+	node = cmds->cmds;
+	while (node && node->content)
+	{
+		if (((t_cmd *)(node->content))->fd_hd[0] != -1)
+			close(((t_cmd *)(node->content))->fd_hd[0]);
+		if (((t_cmd *)(node->content))->fd_hd[1] != -1)
+			close(((t_cmd *)(node->content))->fd_hd[1]);
+		node = node->next;
+	}
+	return (0);
+}
+
 int	ft_close(t_lstcmds *cmds, int fd)
 {
-	t_list *node;
+	t_list	*node;
 
 	if (fd == -1 || !cmds)
 		return (-1);

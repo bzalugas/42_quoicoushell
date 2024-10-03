@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/03 13:07:46 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:50:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,11 +125,11 @@ typedef struct s_expand_data
 	int		j;
 }	t_expand_data;
 
-//main.c
+// main.c
 void	init_shell(t_shell *sh, char **envp);
 void	command_line(t_shell *sh, char *line);
 
-//signals_setters.c
+// signals_setters.c
 void	set_signals_main(t_shell *sh);
 void	set_exec_parent_signals(t_shell *sh);
 void	set_exec_child_signals(t_shell *sh);
@@ -140,7 +140,7 @@ char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
 char	*readline_fd(t_shell *sh);
 
-//history.c
+// history.c
 void	get_history(t_shell *sh);
 void	save_history(t_shell *sh);
 void	put_history(t_shell *sh, char *line);
@@ -160,7 +160,7 @@ char	*get_variable_value(t_shell *sh, char *name);
 // variables_utils.c
 char	**split_env_entry(char *entry);
 
-//env_utils.c
+// env_utils.c
 t_list	*import_env(t_shell *sh, char **envp);
 char	**export_env(t_shell *sh);
 char	**export_all_env(t_shell *sh);
@@ -212,44 +212,45 @@ char	**token_split(char *s, t_tokens *t);
 int		ft_isquot(char c);
 int		ft_isoper(char c);
 int		next_quote(char *p);
-//token_split_utils.c
+// token_split_utils.c
 void	remove_quotes(char *word);
 
 /******************* EXEC *********************/
 
-//exec_handle_streams.c
+// exec_handle_streams.c
+int		ft_close_all(t_lstcmds *cmds);
 int		ft_close(t_lstcmds *cmds, int fd);
 int		get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked);
+// exec_handle_streams2.c
+int		ft_close_all_heredocs(t_lstcmds *cmds, t_cmd *except_cmd);
 
-//exec_heredoc.c
+// exec_heredoc.c
 int		get_all_heredocs(t_shell *sh, t_lstcmds *cmds);
 
-//exec_heredoc_utils.
+// exec_heredoc_utils.
 int		clean_heredocs(t_lstcmds *cmds, t_cmd *cmd, int clean_case);
 int		eof_ending_heredoc(t_lstcmds *cmds, t_cmd *cmd, char *delim);
 
-//exec_end_child.c
+// exec_end_child.c
 int		print_perror(char *msg1, char *msg2);
 int		print_error(char *msg1, char *msg2);
-/* int		stop_perror(char *msg, int error, t_lstcmds *cmds); */
-/* int		stop_error(char *msg, int error, t_lstcmds *cmds); */
 int		stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
 int		stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
 
-//exec_main.c
+// exec_main.c
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
 
-//free_cmds.c
+// free_cmds.c
 void	free_cmd(void *content);
 void	free_cmds(t_lstcmds *cmds);
 
-//get_paths.c
+// get_paths.c
 char	**get_paths(char **env);
 
 /********************************** BUILTINS **********************************/
 int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 
-//export
+// export
 int		ft_export(t_cmd *cmd, t_shell *sh);
 int		ft_local_export(t_cmd *cmd, t_shell *sh);
 bool	valid_var_name(char *name);

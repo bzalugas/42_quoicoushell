@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/03 12:40:11 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 15:03:58 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		set_exec_child_signals(sh);
 		ft_close(cmds, cmds->fd[cmd->idx_in][1]);
 		ft_close(cmds, cmds->fd[cmd->idx_out][0]);
+		ft_close_all_heredocs(cmds, cmd);
 		if (cmd->fd_hd[0] != -1)
 		{
 			ft_close(cmds, cmds->fd[cmd->idx_in][0]);
@@ -95,7 +96,6 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 	{
 		g_sig = 0;
 		cmd = node_cmd->content;
-		/* get_heredocs(cmds, cmd, sh); */
 		if (g_sig == SIGINT)
 			return (last);
 		if (cmd->n_cmd < cmds->n_cmds - 1)

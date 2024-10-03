@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/01 09:44:44 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 14:32:42 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,12 @@ int	print_error(char *msg1, char *msg2)
 
 int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 {
-	int		i;
-
 	if (error != 0)
 		errno = error;
 	else
 		error = EXIT_FAILURE;
 	print_perror(msg, NULL);
-	i = -1;
-	while (++i < 2)
-	{
-		if (cmds->fd[i][0] != -1)
-			ft_close(cmds, cmds->fd[i][0]);
-		if (cmds->fd[i][1] != -1)
-			ft_close(cmds, cmds->fd[i][1]);
-	}
+	ft_close_all(cmds);
 	ft_lstclear(&sh->local_vars, (&free_variable));
 	ft_lstclear(&sh->env_vars, (&free_variable));
 	free(sh->cwd);
@@ -73,18 +64,11 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 
 int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 {
-	int		i;
-
 	if (error == 127)
 		print_error(msg, "command not found");
 	else
 		print_error(msg, NULL);
-	i = -1;
-	while (++i < 2)
-	{
-		ft_close(cmds, cmds->fd[i][0]);
-		ft_close(cmds, cmds->fd[i][1]);
-	}
+	ft_close_all(cmds);
 	ft_lstclear(&sh->local_vars, (&free_variable));
 	ft_lstclear(&sh->env_vars, (&free_variable));
 	free(sh->cwd);
