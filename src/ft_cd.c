@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 20:03:08 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/27 12:38:22 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/03 12:35:42 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static int	cd_get_path(t_cmd *cmd, t_shell *sh, char **path)
 		*path = get_variable_value(sh, "OLDPWD");
 		if (!*path)
 			return (2);
+		ft_putendl_fd(*path, STDOUT_FILENO);
 	}
 	else
 		*path = cmd->argv[1];
