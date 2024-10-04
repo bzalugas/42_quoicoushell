@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/09/17 19:52:40 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/10/04 12:54:21 by jsommet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRC			:=	builtins.c \
 				exec_main.c \
 				expand_fhd.c \
 				expand_utils.c \
+				expand_utils2.c \
 				expand.c \
 				free_cmds.c \
 				ft_cd.c \

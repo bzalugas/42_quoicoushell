@@ -6,22 +6,14 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 16:03:11 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/30 20:08:51 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/04 13:21:34 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-t_cmd	*init_cmd(t_shell *sh, char **tokens)
+void	count_token_types(t_shell *sh, char **tokens, int *c, t_cmd *cmd)
 {
-	int		c[3];
-	t_cmd	*cmd;
-
-	(void) sh;
-	cmd = (t_cmd *) ft_calloc(1, sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	ft_bzero(c, sizeof(c));
 	while (tokens[c[0]])
 	{
 		if (!ft_strcmp(tokens[c[0]], "<<"))
@@ -37,9 +29,28 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens)
 		if (tokens[c[0]])
 			c[0]++;
 	}
+}
+
+t_cmd	*init_cmd(t_shell *sh, char **tokens)
+{
+	int		c[3];
+	t_cmd	*cmd;
+
+	(void) sh;
+	cmd = (t_cmd *) ft_calloc(1, sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	ft_bzero(c, sizeof(c));
+	count_token_types(sh, tokens, c, cmd);
 	cmd->argv = (char **) ft_calloc(cmd->argc + 1, sizeof(char *));
+	if (!cmd->argv)
+		return (free(cmd), NULL);
 	cmd->heredocs = (char **) ft_calloc(c[1] + 1, sizeof(char *));
+	if (!cmd->heredocs)
+		return (free(cmd), free(cmd->argv), NULL);
 	cmd->redirs = (t_redir *) ft_calloc(c[2] + 1, sizeof(t_redir));
+	if (!cmd->redirs)
+		return (free(cmd), free(cmd->argv), free(cmd->heredocs), NULL);
 	return (cmd);
 }
 
@@ -49,7 +60,7 @@ t_cmd	*get_command(t_shell *sh, char **tokens, int n)
 
 	cbv = (t_cbv){0};
 	cbv.cmd = init_cmd(sh, tokens);
-	if (!cbv.cmd || !cbv.cmd->argv || !cbv.cmd->heredocs || !cbv.cmd->redirs)
+	if (!cbv.cmd)
 		return (NULL);
 	cbv.tks = tokens;
 	cbv.cmd->n_cmd = n;

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 15:44:27 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:54:40 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ typedef struct s_shell
 	char				*hist_file;
 	t_list				*hist;
 	int					n_hist;
-	/* int					stdout_fd; */
-	/* int					tty_fd; */
 }	t_shell;
 
 typedef struct s_cbv
@@ -113,6 +111,7 @@ typedef struct s_cbv
 
 typedef struct s_expand_data
 {
+	char	*full_str;
 	char	*tmp_val;
 	int		name_size;
 	int		new_size;
@@ -167,6 +166,24 @@ int		increment(char *p);
 void	set_expected(int *expected, int a, int b, int c);
 int		has_open_quote(char *line);
 
+// expand.c
+void	expand(t_shell *sh, char *word, t_expand_data *xdat);
+void	replace_quotes(char *word);
+void	replace_wsp(char *word);
+void	remove_weird_quotes(char *word);
+char	*remove_quotes_and_expand(t_shell *sh, char *word);
+// expand_utils.c
+char	*retrieve_var_name(char *p, t_expand_data *xdat);
+int		retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat);
+int		get_new_size(t_shell *sh, char *word, t_expand_data *xdat);
+int		split_expand_count(t_shell *sh, char *word);
+// expand_utils2.c
+int		valid_name_char(char c);
+char	active_quote(char *s, int index);
+bool	is_valid_tilde(char *p, t_expand_data *xdat);
+// expand_fhd.c
+char	*expand_fhd(t_shell *sh, char *word);
+
 // parsing.c
 t_cmd	*get_command(t_shell *sh, char **tokens, int n);
 // parsing_utils.c
@@ -175,22 +192,6 @@ void	set_redir(t_shell *sh, t_cbv *cbv);
 void	set_var_assign(t_shell *sh, t_cbv *cbv);
 void	split_cpy(char **dest, char **src, size_t src_len);
 void	set_cmd_word(t_shell *sh, t_cbv *cbv);
-
-// expand.c
-void	expand(t_shell *sh, char *word, t_expand_data *xdat);
-void	replace_quotes(char *word);
-void	replace_wsp(char *word);
-void	remove_weird_quotes(char *word);
-char	*remove_quotes_and_expand(t_shell *sh, char *word);
-// expand_utils.c
-int		valid_name_char(char c);
-char	*retrieve_var_name(char *p, t_expand_data *xdat);
-int		retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat);
-int		get_new_size(t_shell *sh, char *word, t_expand_data *xdat);
-int		split_expand_count(t_shell *sh, char *word);
-
-// expand_fhd.c
-char	*expand_fhd(t_shell *sh, char *word);
 
 // tokenize.c
 bool	can_be_var_assign(char *word);
