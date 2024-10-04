@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/07/29 23:45:07 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/04 08:28:10 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ t_list	*set_variable(t_shell *sh, char *name, char *value, int where)
 	t_list	*new;
 	t_var	*var;
 
+	if (!name)
+		return (NULL);
 	new = set_variable_value(sh, name, value);
 	if (!new)
 	{

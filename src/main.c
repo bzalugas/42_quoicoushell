@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/01 11:39:37 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/04 09:02:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ int	main(int ac, char **av, char **envp)
 	(void) ac;
 	(void) av;
 	init_shell(&sh, envp);
-	get_history(&sh);
+	if (!get_history(&sh))
+		stop_main_error(&sh, "Problem getting history", EXIT_FAILURE);
 	while (1)
 	{
 		if (g_sig == SIGINT)

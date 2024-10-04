@@ -6,14 +6,14 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/01 12:34:53 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/04 09:02:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "quoicoushell.h"
 
-void	exit_shell(t_shell *sh, int exit_code, bool display)
+int	exit_shell(t_shell *sh, int exit_code, bool display)
 {
 	if (display)
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
@@ -26,6 +26,7 @@ void	exit_shell(t_shell *sh, int exit_code, bool display)
 	free_cmds(sh->cmds);
 	save_history(sh);
 	exit(exit_code);
+	return (exit_code);
 }
 
 char	*current_dir_name(t_shell *sh, int depth)
@@ -90,4 +91,10 @@ char	*readline_fd(t_shell *sh)
 		close(stdout_fd);
 	}
 	return (line);
+}
+
+int	stop_main_error(t_shell *sh, char *msg, int error)
+{
+	ft_dprintf(STDERR_FILENO, "%s\n", msg);
+	return (exit_shell(sh, error, true));
 }

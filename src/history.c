@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:59:11 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/30 18:04:34 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/04 08:56:26 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	save_history(t_shell *sh)
 	int		fd;
 	t_list	*tmp;
 
+	if (!sh->hist_file || sh->n_hist < 1)
+		return ;
 	fd = open(sh->hist_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd > -1)
 	{
@@ -32,16 +34,18 @@ void	save_history(t_shell *sh)
 	free(sh->hist_file);
 }
 
-void	get_history(t_shell *sh)
+int	get_history(t_shell *sh)
 {
 	int		fd;
 	char	*line;
 
 	sh->hist_file = expand_fhd(sh, HISTORY_FILE);
+	if (!sh->hist_file)
+		return (0);
 	set_variable(sh, ft_strdup("HISTFILE"), ft_strdup(sh->hist_file), LST_ENV);
 	fd = open(sh->hist_file, O_RDONLY);
 	if (fd == -1)
-		return ;
+		return (0);
 	line = get_next_line(fd);
 	while (line && sh->n_hist < HISTORY_MAX_LINES)
 	{
@@ -50,15 +54,17 @@ void	get_history(t_shell *sh)
 		line = get_next_line(fd);
 	}
 	close(fd);
+	return (1);
 }
 
-void	put_history(t_shell *sh, char *line)
+int	put_history(t_shell *sh, char *line)
 {
 	add_history(line);
 	if (!ft_lstadd_back(&sh->hist, ft_lstnew(line)))
-		return ;
+		return (0);
 	if (sh->n_hist == HISTORY_MAX_LINES)
 		ft_lstremove(&sh->hist, sh->hist, &free);
 	else
 		sh->n_hist++;
+	return (1);
 }

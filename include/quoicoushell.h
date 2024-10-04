@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/03 14:50:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/04 09:02:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,15 +135,16 @@ void	set_exec_parent_signals(t_shell *sh);
 void	set_exec_child_signals(t_shell *sh);
 
 // minishell_utils.c
-void	exit_shell(t_shell *sh, int exit_code, bool display);
+int		exit_shell(t_shell *sh, int exit_code, bool display);
 char	*current_dir_name(t_shell *sh, int depth);
 char	*build_prompt(t_shell *sh);
 char	*readline_fd(t_shell *sh);
+int		stop_main_error(t_shell *sh, char *msg, int error);
 
 // history.c
-void	get_history(t_shell *sh);
+int		get_history(t_shell *sh);
 void	save_history(t_shell *sh);
-void	put_history(t_shell *sh, char *line);
+int		put_history(t_shell *sh, char *line);
 
 // variables.c
 t_list	*set_variable(t_shell *sh, char *name, char *value, int where);
