@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:17:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/30 15:43:29 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:36:32 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ void	signal_handler_main(int signum)
 	g_sig = signum;
 	if (signum == SIGINT)
 	{
-		rl_on_new_line();
-		rl_replace_line("", 1);
-		write(STDOUT_FILENO, "\n", 1);
-		rl_redisplay();
+		/* write(STDOUT_FILENO, "\n", 1); */
+		/* rl_on_new_line(); */
+		/* rl_replace_line("", 1); */
+		/* rl_redisplay(); */
+		close(STDIN_FILENO);
 	}
 }
 

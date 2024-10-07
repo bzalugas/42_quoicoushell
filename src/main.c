@@ -6,10 +6,11 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/04 09:02:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:31:45 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "quoicoushell.h"
 
 int	g_sig = 0;
@@ -24,6 +25,9 @@ void	init_shell(t_shell *sh, char **envp)
 	sh->env_update = true;
 	set_variable(sh, ft_strdup("SHLVL"),
 		ft_itoa(ft_atoi(get_variable_value(sh, "SHLVL")) + 1), LST_ENV);
+	get_stdin();
+	get_stdout();
+	get_tty();
 }
 
 char *get_redir_type(t_redir_type type)
@@ -44,6 +48,8 @@ void	command_line(t_shell *sh, char *line)
 	t_cmd		*cmd;
 	t_lstcmds	cmds;
 
+	if (!line)
+		return ;
 	if (!check_syntax(line))
 	{
 		ft_putstr_fd("Syntax Error\n", 2);
@@ -85,11 +91,17 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		if (g_sig == SIGINT)
+		{
+			sh.exit_code = 130;
+			if (dup2(get_stdin(), STDIN_FILENO) == -1) //Not needed if i get sh.exit_code
+													   //in handler with the static technique
+				break ;
 			g_sig = 0;
+		}
 		line = readline_fd(&sh);
-		if (!line)
+		if (!line && g_sig == 0)
 			exit_shell(&sh, EXIT_SUCCESS, true);
-		if (*line)
+		if (line && *line)
 			put_history(&sh, line);
 		command_line(&sh, line);
 	}

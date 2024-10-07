@@ -6,12 +6,14 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 09:02:02 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/07 13:25:30 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "quoicoushell.h"
+#include <stdbool.h>
+#include <stdlib.h>
 
 int	exit_shell(t_shell *sh, int exit_code, bool display)
 {
@@ -67,29 +69,22 @@ char	*build_prompt(t_shell *sh)
 
 char	*readline_fd(t_shell *sh)
 {
-	int		tty_fd;
-	int		stdout_fd;
 	char	*line;
 	int		is_tty;
 
+	(void)sh;
 	is_tty = 1;
 	if (!isatty(STDOUT_FILENO))
 		is_tty = 0;
 	if (!is_tty)
-	{
-		tty_fd = open("/dev/tty", O_WRONLY);
-		if (tty_fd == -1)
-			exit_shell(sh, EXIT_FAILURE, false);
-		stdout_fd = dup(STDOUT_FILENO);
-		dup2(tty_fd, STDOUT_FILENO);
-	}
+		if (dup2(get_tty(), STDOUT_FILENO) == -1)
+			return (NULL);
+			/* exit_shell(sh, EXIT_FAILURE, true); */
 	line = readline(sh->prompt);
+	/* dprintf(2, "line = <%s>\n", line); */
 	if (!is_tty)
-	{
-		dup2(stdout_fd, STDOUT_FILENO);
-		close(tty_fd);
-		close(stdout_fd);
-	}
+		if (dup2(get_stdout(), STDOUT_FILENO) == -1)
+			return (NULL);
 	return (line);
 }
 
