@@ -6,15 +6,12 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/30 19:50:26 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:52:27 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-// TODO: PROTECT MALLOCS (3)
-
-	// cbv->cmd->heredocs[cbv->hd_i] = ft_strjoin(cbv->tks[++cbv->tk_i], "\n");
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
 {
 	(void) sh;

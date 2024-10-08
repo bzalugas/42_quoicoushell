@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:10:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/30 20:15:06 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/04 13:16:28 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ char	*remove_quotes_and_expand(t_shell *sh, char *word)
 {
 	t_expand_data	xdat;
 
+	xdat.full_str = word;
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
 	expand(sh, word, &xdat);

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 18:54:16 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 15:42:14 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/04 12:57:23 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	set_cmd_word(t_shell *sh, t_cbv *cbv)
 	word = cbv->tks[cbv->tk_i];
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
+	xdat.full_str = word;
 	expand(sh, word, &xdat);
 	word = xdat.new_word;
 	if (!word)

@@ -6,23 +6,18 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:11:26 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/30 20:15:29 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/04 13:15:29 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
-
-int	valid_name_char(char c)
-{
-	return (ft_isalnum(c) || c == '_');
-}
 
 char	*retrieve_var_name(char *p, t_expand_data *xdat)
 {
 	int		i;
 	char	*name;
 
-	if (p && p[0] == '~' && (!p[1] || ft_isspace(p[1])))
+	if (p && is_valid_tilde(p, xdat))
 		return (ft_strdup("~"));
 	if (!p || p[0] != '$' || !xdat)
 		return (NULL);
@@ -97,6 +92,7 @@ int	split_expand_count(t_shell *sh, char *word)
 	word = ft_strdup(word);
 	if (!word)
 		exit_shell(sh, EXIT_FAILURE, false);
+	xdat.full_str = word;
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
 	expand(sh, word, &xdat);
