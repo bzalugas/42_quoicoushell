@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/07 13:25:30 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:50:59 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char	*current_dir_name(t_shell *sh, int depth)
 	while (pwd_split[i])
 		i++;
 	i -= depth;
+	i = (i > 0) * i;
 	dir = NULL;
 	while (pwd_split[i])
 	{
@@ -79,9 +80,7 @@ char	*readline_fd(t_shell *sh)
 	if (!is_tty)
 		if (dup2(get_tty(), STDOUT_FILENO) == -1)
 			return (NULL);
-			/* exit_shell(sh, EXIT_FAILURE, true); */
 	line = readline(sh->prompt);
-	/* dprintf(2, "line = <%s>\n", line); */
 	if (!is_tty)
 		if (dup2(get_stdout(), STDOUT_FILENO) == -1)
 			return (NULL);

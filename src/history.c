@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:59:11 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/04 08:56:26 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:53:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	get_history(t_shell *sh)
 	if (!sh->hist_file)
 		return (0);
 	set_variable(sh, ft_strdup("HISTFILE"), ft_strdup(sh->hist_file), LST_ENV);
-	fd = open(sh->hist_file, O_RDONLY);
+	fd = open(sh->hist_file, O_RDONLY | O_CREAT, 0600);
 	if (fd == -1)
 		return (0);
 	line = get_next_line(fd);

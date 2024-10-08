@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/07 12:46:52 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:18:10 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ typedef struct s_expand_data
 }	t_expand_data;
 
 // main.c
-void	init_shell(t_shell *sh, char **envp);
+t_shell	*init_shell(char **envp);
 void	command_line(t_shell *sh, char *line);
 
 // signals_setters.c
@@ -266,7 +266,7 @@ int		ft_unset(t_cmd *cmd, t_shell *sh);
 int		ft_cd(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(t_shell *sh);
 int		ft_exit(t_cmd *cmd, t_shell *sh);
-int		ft_echo(t_cmd *cmd);
+int		ft_echo(t_shell *sh, t_cmd *cmd);
 int		cut_local_exports(t_cmd *cmd, int start_cmd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 12:36:14 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:18:13 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	run_right_builtin(t_cmd *cmd, t_shell *sh)
 	int	res;
 
 	if (!ft_strcmp(cmd->argv[0], "echo"))
-		ft_echo(cmd);
+		ft_echo(sh, cmd);
 	else if (!ft_strcmp(cmd->argv[0], "cd"))
 		ft_cd(cmd, sh);
 	else if (!ft_strcmp(cmd->argv[0], "pwd"))

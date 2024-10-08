@@ -6,13 +6,13 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/30 18:26:29 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:17:59 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-int	ft_echo(t_cmd *cmd)
+int	ft_echo(t_shell *sh, t_cmd *cmd)
 {
 	int		i;
 	bool	nl;
@@ -28,5 +28,6 @@ int	ft_echo(t_cmd *cmd)
 	}
 	if (nl)
 		write(STDOUT_FILENO, "\n", 1);
+	sh->exit_code = 0;
 	return (0);
 }

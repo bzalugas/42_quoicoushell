@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/07 14:31:45 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:52:30 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,24 @@
 
 int	g_sig = 0;
 
-void	init_shell(t_shell *sh, char **envp)
+t_shell	*init_shell(char **envp)
 {
-	*sh = (t_shell){0};
-	set_signals_main(sh);
-	import_env(sh, envp);
-	sh->cwd = getcwd(NULL, 0);
-	sh->prompt = build_prompt(sh);
-	sh->env_update = true;
-	set_variable(sh, ft_strdup("SHLVL"),
-		ft_itoa(ft_atoi(get_variable_value(sh, "SHLVL")) + 1), LST_ENV);
-	get_stdin();
-	get_stdout();
-	get_tty();
+	static t_shell sh = (t_shell){0};
+
+	if (!sh.cwd)
+	{
+		set_signals_main(&sh);
+		import_env(&sh, envp);
+		sh.cwd = getcwd(NULL, 0);
+		sh.prompt = build_prompt(&sh);
+		sh.env_update = true;
+		set_variable(&sh, ft_strdup("SHLVL"), ft_itoa(ft_atoi(
+					get_variable_value(&sh, "SHLVL")) + 1), LST_ENV);
+		get_stdin();
+		get_stdout();
+		get_tty();
+	}
+	return (&sh);
 }
 
 char *get_redir_type(t_redir_type type)
@@ -80,31 +85,28 @@ void	command_line(t_shell *sh, char *line)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_shell	sh;
+	t_shell	*sh;
 	char	*line;
 
 	(void) ac;
 	(void) av;
-	init_shell(&sh, envp);
-	if (!get_history(&sh))
-		stop_main_error(&sh, "Problem getting history", EXIT_FAILURE);
+	sh = init_shell(envp);
+	if (!get_history(sh))
+		stop_main_error(sh, "Problem getting history", EXIT_FAILURE);
 	while (1)
 	{
 		if (g_sig == SIGINT)
 		{
-			sh.exit_code = 130;
-			if (dup2(get_stdin(), STDIN_FILENO) == -1) //Not needed if i get sh.exit_code
-													   //in handler with the static technique
-				break ;
+			sh->exit_code = 130;
 			g_sig = 0;
 		}
-		line = readline_fd(&sh);
-		if (!line && g_sig == 0)
-			exit_shell(&sh, EXIT_SUCCESS, true);
+		line = readline_fd(sh);
+		if (!line)
+			exit_shell(sh, EXIT_SUCCESS, true);
 		if (line && *line)
-			put_history(&sh, line);
-		command_line(&sh, line);
+			put_history(sh, line);
+		command_line(sh, line);
 	}
-	exit_shell(&sh, EXIT_SUCCESS, true);
+	exit_shell(sh, EXIT_SUCCESS, true);
 	return (0);
 }
