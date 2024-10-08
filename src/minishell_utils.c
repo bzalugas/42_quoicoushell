@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/08 13:50:59 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:25:50 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,18 +72,27 @@ char	*readline_fd(t_shell *sh)
 {
 	char	*line;
 	int		is_tty;
+	int		tty_fd;
+	int		stdout_fd;
 
-	(void)sh;
 	is_tty = 1;
 	if (!isatty(STDOUT_FILENO))
 		is_tty = 0;
 	if (!is_tty)
-		if (dup2(get_tty(), STDOUT_FILENO) == -1)
+	{
+		stdout_fd = dup(STDOUT_FILENO);
+		tty_fd = open(ttyname(STDIN_FILENO), O_WRONLY);
+		if (dup2(tty_fd, STDOUT_FILENO) == -1)
 			return (NULL);
+	}
 	line = readline(sh->prompt);
 	if (!is_tty)
-		if (dup2(get_stdout(), STDOUT_FILENO) == -1)
+	{
+		if (dup2(stdout_fd, STDOUT_FILENO) == -1)
 			return (NULL);
+		close(stdout_fd);
+		close(tty_fd);
+	}
 	return (line);
 }
 

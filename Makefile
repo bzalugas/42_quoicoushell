@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/10/07 12:52:58 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/10/08 14:26:17 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,6 @@ SRC			:=	builtins.c \
 				ft_pwd.c \
 				ft_unset.c \
 				get_paths.c \
-				get_std_streams.c \
 				history.c \
 				minishell_utils.c \
 				parsing_utils.c \

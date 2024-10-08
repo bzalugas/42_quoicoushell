@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/08 14:14:35 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:49:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,9 @@ static int	get_heredocs_of_cmd( t_shell *sh, t_lstcmds *cmds, t_cmd *cmd)
 		ft_close(cmds, cmd->fd_hd[0]);
 		cmd->fd_hd[1] = open(cmd->hd_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 		cmd->fd_hd[0] = open(cmd->hd_file, O_RDONLY);
+		unlink(cmd->hd_file);
 		if (cmd->fd_hd[0] == -1 || cmd->fd_hd[1] == -1)
 			return (stop_error("problem with here-document", 1, cmds, sh));
-		unlink(cmd->hd_file);
 		if (run_heredoc(sh, cmds, cmd, i) != 0)
 			return (clean_heredocs(cmds, cmd, CLEAN_MAIN));
 	}

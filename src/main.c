@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/08 13:52:30 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:21:40 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,6 @@ t_shell	*init_shell(char **envp)
 		sh.env_update = true;
 		set_variable(&sh, ft_strdup("SHLVL"), ft_itoa(ft_atoi(
 					get_variable_value(&sh, "SHLVL")) + 1), LST_ENV);
-		get_stdin();
-		get_stdout();
-		get_tty();
 	}
 	return (&sh);
 }
