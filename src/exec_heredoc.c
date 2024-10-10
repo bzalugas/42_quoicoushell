@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 12:49:52 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:55:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,7 @@ static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	{
 		sh->sa.sa_handler = &signal_handler_heredoc;
 		sigaction(SIGINT, &sh->sa, NULL);
-		int res = get_heredoc(sh, cmds, cmd, i);
-		exit_shell(sh, res, false);
+		exit_shell(sh, get_heredoc(sh, cmds, cmd, i), false);
 	}
 	waitpid(pid, &status, 0);
 	sigaction(SIGINT, &sh->sa_tmp, NULL);
