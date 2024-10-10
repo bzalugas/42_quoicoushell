@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 11:24:28 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:49:52 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,16 @@ static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	{
 		sh->sa.sa_handler = &signal_handler_heredoc;
 		sigaction(SIGINT, &sh->sa, NULL);
-		exit_shell(sh, get_heredoc(sh, cmds, cmd, i), false);
+		int res = get_heredoc(sh, cmds, cmd, i);
+		exit_shell(sh, res, false);
 	}
 	waitpid(pid, &status, 0);
 	sigaction(SIGINT, &sh->sa_tmp, NULL);
-	return (WEXITSTATUS(status));
+	if (g_sig == SIGINT)
+		sh->exit_code = 130;
+	else
+		sh->exit_code = WEXITSTATUS(status);
+	return (sh->exit_code);
 }
 
 static int	get_heredocs_of_cmd( t_shell *sh, t_lstcmds *cmds, t_cmd *cmd)
@@ -131,8 +136,6 @@ int	get_all_heredocs(t_shell *sh, t_lstcmds *cmds)
 		cmd = node_cmd->content;
 		cmd->idx_in = cmd->n_cmd % 2;
 		cmd->idx_out = (cmd->n_cmd + 1) % 2;
-		cmd->fd_hd[0] = -1;
-		cmd->fd_hd[1] = -1;
 		if (get_heredocs_of_cmd(sh, cmds, cmd) != 0)
 			return (1);
 		node_cmd = node_cmd->next;

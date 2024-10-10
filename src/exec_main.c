@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/08 14:54:36 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:46:07 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 {
 	pid_t	last;
 
+	if (cmds->n_cmds == 1 && !((t_cmd *)(cmds->cmds->content))->argv[0])
+		return (sh->exit_code);
 	if (sh->env_update)
 	{
 		sh->env_update = false;

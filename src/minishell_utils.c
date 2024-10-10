@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/08 14:25:50 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:38:48 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,7 @@ char	*readline_fd(t_shell *sh)
 	int		tty_fd;
 	int		stdout_fd;
 
-	is_tty = 1;
-	if (!isatty(STDOUT_FILENO))
-		is_tty = 0;
+	is_tty = isatty(STDOUT_FILENO);
 	if (!is_tty)
 	{
 		stdout_fd = dup(STDOUT_FILENO);

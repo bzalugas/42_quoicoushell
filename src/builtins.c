@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/08 13:18:13 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/10 11:34:42 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ static int	run_right_builtin(t_cmd *cmd, t_shell *sh)
 	return (1);
 }
 
-//TODO: Correctly return/exit functions if in fork or not
 int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
 {
 	int	tmp_fds[2];
