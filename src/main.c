@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 13:06:20 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:18:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	main(int ac, char **av, char **envp)
 		if (line && *line)
 			put_history(sh, line);
 		command_line(sh, line);
+		free(line);
 	}
 	exit_shell(sh, EXIT_SUCCESS, true);
 	return (0);
