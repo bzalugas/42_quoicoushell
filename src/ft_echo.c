@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 11:37:15 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/12 18:45:03 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	ft_echo(t_shell *sh, t_cmd *cmd)
 	bool	nl;
 
 	sh->exit_code = 0;
-	nl = !(cmd->argv[1] && !ft_strcmp(cmd->argv[1], "-n"));
+	nl = !(cmd->argv[1] && !ft_strcmp(cmd->argv[1], "-n") && cmd->argv[2]
+			&& ft_strcmp(cmd->argv[2], "-n"));
 	i = 1 + (!nl);
 	while (cmd->argv[i])
 	{
