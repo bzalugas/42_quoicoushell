@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 14:18:11 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/12 18:33:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static void	get_cmds(t_shell *sh, char *line, t_lstcmds *cmds)
 
 void	command_line(t_shell *sh, char *line)
 {
-	t_tokens	t;
 	t_lstcmds	cmds;
 
 	if (!line)
@@ -64,7 +63,6 @@ void	command_line(t_shell *sh, char *line)
 		return (ft_putstr_fd("Syntax Error\n", 2));
 	cmds = (t_lstcmds){0, .fd[0][0] = -1, .fd[0][1] = -1, .fd[1][0] = -1,
 		.fd[1][1] = -1, 0};
-	t = (t_tokens){0};
 	get_cmds(sh, line, &cmds);
 	sh->cmds = &cmds;
 	run_all_cmds(&cmds, sh);
@@ -95,7 +93,6 @@ int	main(int ac, char **av, char **envp)
 		if (line && *line)
 			put_history(sh, line);
 		command_line(sh, line);
-		free(line);
 	}
 	exit_shell(sh, EXIT_SUCCESS, true);
 	return (0);
