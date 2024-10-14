@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:11:26 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 13:15:29 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/14 18:22:32 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ char	*retrieve_var_name(char *p, t_expand_data *xdat)
 	i = 1;
 	while (valid_name_char(p[i]))
 		i++;
-	if (i == 1 && p[i] == '"')
+	if (i == 1 && ft_isquot(p[i]))
+		return (ft_strdup(""));
+	if (i == 1)
 		return (NULL);
 	name = (char *) ft_calloc(i, sizeof(char));
 	if (!name)
