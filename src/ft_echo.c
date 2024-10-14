@@ -6,11 +6,38 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/12 18:45:03 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:05:57 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
+
+static bool	dash_n_option(t_cmd *cmd, int *i)
+{
+	int		j;
+
+	*i = 1;
+	while (cmd->argv[*i])
+	{
+		j = 0;
+		if (!ft_strncmp(cmd->argv[*i], "-n", 2))
+		{
+			j = 2;
+			while (cmd->argv[*i][j])
+			{
+				if (cmd->argv[*i][j] != 'n')
+					return (false);
+				j++;
+			}
+		}
+		else if (*i > 1)
+			return (true);
+		else
+			return (false);
+		(*i)++;
+	}
+	return (true);
+}
 
 int	ft_echo(t_shell *sh, t_cmd *cmd)
 {
@@ -18,9 +45,7 @@ int	ft_echo(t_shell *sh, t_cmd *cmd)
 	bool	nl;
 
 	sh->exit_code = 0;
-	nl = !(cmd->argv[1] && !ft_strcmp(cmd->argv[1], "-n") && cmd->argv[2]
-			&& ft_strcmp(cmd->argv[2], "-n"));
-	i = 1 + (!nl);
+	nl = !dash_n_option(cmd, &i);
 	while (cmd->argv[i])
 	{
 		ft_putstr_fd(cmd->argv[i], STDOUT_FILENO);
