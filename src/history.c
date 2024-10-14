@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:59:11 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/08 13:53:08 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:23:33 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	save_history(t_shell *sh)
 	t_list	*tmp;
 
 	if (!sh->hist_file || sh->n_hist < 1)
-		return ;
+		return (free(sh->hist_file));
 	fd = open(sh->hist_file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd > -1)
 	{
