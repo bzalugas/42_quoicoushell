@@ -6,17 +6,12 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 01:10:28 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 08:28:10 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:13:45 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-/*
- * @brief Moves variable from sh->local_vars to sh->env_vars.
- * @return 0 on success,
- * -1 on error (ie: variable not found).
- */
 t_list	*export_variable(t_shell *sh, char *name)
 {
 	t_list	*link;

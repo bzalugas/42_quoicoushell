@@ -6,12 +6,11 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:37:34 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/27 14:50:50 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/14 18:10:57 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
-//either 313131313 or 33333 when i want 31333313111333
 
 int	count_total_tokens(char *l)
 {
@@ -47,7 +46,7 @@ char	*create_syntax_line(char *l)
 	int		i[2];
 	char	*syntax_line;
 
-	syntax_line = calloc(count_total_tokens(l) + 1, sizeof(char));
+	syntax_line = ft_calloc(count_total_tokens(l) + 1, sizeof(char));
 	ft_bzero(i, sizeof(int) * 2);
 	while (syntax_line && l[i[0]])
 	{

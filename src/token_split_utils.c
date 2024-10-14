@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:13:43 by jsommet           #+#    #+#             */
-/*   Updated: 2024/09/17 19:12:07 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/14 18:11:43 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,3 @@ void	remove_quotes(char *word)
 	while (word[i - offset])
 		word[i++ - offset] = 0;
 }
-
-//returns distance to corresponding closing parenthesis
-//needs to skip quotes
-//returns 0 if corresponding parenthesis not found
-// int	close_par(char *p)
-// {
-// 	int		i;
-// 	int		op;
-
-// 	if (!p || *p != '(')
-// 		return (-1);
-// 	i = 0;
-// 	op = 0;
-// 	while (p[++i])
-// 	{
-// 		if (p[i] == '(')
-// 			op++;
-// 		else if (p[i] == ')')
-// 		{
-// 			if (!op)
-// 				return (i);
-// 			op--;
-// 		}
-// 	}
-// 	return (0);
-// }
