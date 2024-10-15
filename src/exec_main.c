@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/15 19:48:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:58:06 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 	pid_t	last;
 
 	if (cmds->n_cmds == 1 && (!((t_cmd *)(cmds->cmds->content))->argv[0])
-		&& !(((t_cmd *)(cmds->cmds->content))->heredoc))
+		&& !(((t_cmd *)(cmds->cmds->content))->heredoc)
+		&& !(((t_cmd *)(cmds->cmds->content))->redirs[0].file))
 		return (sh->exit_code);
 	if (sh->env_update)
 	{
