@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/03 14:32:42 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:33:45 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,5 @@ int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 	free_cmds(cmds);
 	ft_lstclear(&sh->hist, &free);
 	free(sh->hist_file);
-	exit(EXIT_FAILURE);
+	exit(error);
 }
