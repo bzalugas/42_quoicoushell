@@ -3,3 +3,4 @@ minishell
 obj/
 *.out
 *~
+.vscode/

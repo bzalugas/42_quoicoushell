@@ -1,40 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   exec_handle_streams2.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:36:25 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 00:01:30 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/10/03 14:45:54 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/10/03 14:48:02 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "quoicoushell.h"
 
-int	ft_atoi(const char *nptr)
+int	ft_close_all_heredocs(t_lstcmds *cmds, t_cmd *except_cmd)
 {
-	unsigned int	n;
-	int				sign;
-	size_t			i;
+	t_list	*node;
 
-	if (!nptr)
-		return (0);
-	i = 0;
-	while (nptr[i] && ft_isspace(nptr[i]))
-		i++;
-	sign = 1;
-	if (nptr[i] && (nptr[i] == '-' || nptr[i] == '+'))
+	node = cmds->cmds;
+	while (node && node->content)
 	{
-		if (nptr[i] == '-')
-			sign = -1;
-		i++;
+		if (node->content != except_cmd)
+		{
+			ft_close(cmds, ((t_cmd *)(node->content))->fd_hd[0]);
+			ft_close(cmds, ((t_cmd *)(node->content))->fd_hd[1]);
+		}
+		node = node->next;
 	}
-	n = 0;
-	while (nptr[i] && ft_isdigit(nptr[i]))
-	{
-		n = n * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (n * sign);
+	return (0);
 }

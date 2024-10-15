@@ -1,16 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   syntax_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:45:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 22:05:38 by jsommet          ###   ########.fr       */
+/*   Created: 2024/09/15 18:52:00 by jsommet           #+#    #+#             */
+/*   Updated: 2024/09/15 19:34:22 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isspace(int c)
+#include "quoicoushell.h"
+
+int	increment(char *p)
 {
-	return ((c >= 9 && c <= 13) || c == 32);
+	int	q;
+
+	q = next_quote(p);
+	if (q > 0)
+		return (q);
+	return (1);
+}
+
+void	set_expected(int *expected, int a, int b, int c)
+{
+	expected[0] = a;
+	expected[1] = b;
+	expected[2] = c;
+}
+
+int	has_open_quote(char *line)
+{
+	int	nq;
+
+	while (*line)
+	{
+		nq = next_quote(line);
+		if (nq == 0)
+			return (1);
+		if (nq > 0)
+			line += nq;
+		line++;
+	}
+	return (0);
 }

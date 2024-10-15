@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 13:23:12 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/06/22 13:27:03 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 18:06:25 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static size_t	buffcpy(char *dst, t_buffer *buf)
 	return (tot);
 }
 
-size_t	buff_print(t_buffer *buf)
+size_t	buff_print(t_buffer *buf, int fd)
 {
 	char	*str;
 	ssize_t	ret;
@@ -68,7 +68,7 @@ size_t	buff_print(t_buffer *buf)
 		free(str);
 		return (0);
 	}
-	ret = write(1, str, buf->tot_len);
+	ret = write(fd, str, buf->tot_len);
 	while (ret != (ssize_t)buf->tot_len)
 	{
 		if (ret == -1)
@@ -76,7 +76,7 @@ size_t	buff_print(t_buffer *buf)
 			free(str);
 			return (0);
 		}
-		ret += write(1, str, buf->tot_len - ret);
+		ret += write(fd, str, buf->tot_len - ret);
 	}
 	free(str);
 	return ((int)ret);

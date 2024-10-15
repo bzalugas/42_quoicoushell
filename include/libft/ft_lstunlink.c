@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   ft_lstunlink.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:45:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/28 22:05:38 by jsommet          ###   ########.fr       */
+/*   Created: 2024/07/06 04:34:41 by jsommet           #+#    #+#             */
+/*   Updated: 2024/07/26 14:18:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isspace(int c)
+#include "libft.h"
+
+void	ft_lstunlink(t_list **lst, t_list *link)
 {
-	return ((c >= 9 && c <= 13) || c == 32);
+	t_list	*first;
+
+	if (!lst || !*lst)
+		return ;
+	first = *lst;
+	if (first == link)
+	{
+		*lst = (*lst)->next;
+		link->next = NULL;
+		return ;
+	}
+	while (first && first->next && first->next != link)
+		first = first->next;
+	if (first->next && first->next == link)
+	{
+		first->next = link->next;
+	}
+	link->next = NULL;
 }

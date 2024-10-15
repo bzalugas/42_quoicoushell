@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_splitf_mask.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bazaluga <bazaluga@student.42.fr >         +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 10:00:05 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 19:05:17 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/07/30 01:33:32 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-unsigned int	count_words(char const *s, char c)
+unsigned int	count_wordsf_mask(char const *s, int (*f)(int), char *mask)
 {
 	size_t	words;
 	size_t	i;
@@ -21,22 +21,27 @@ unsigned int	count_words(char const *s, char c)
 	i = 0;
 	while (s[i])
 	{
-		if ((i == 0 && s[i] != c) || (i > 0 && s[i] != c && s[i - 1] == c))
+		if ((i == 0 && !f(s[i]))
+			|| (i > 0 && !f(s[i]) && f(s[i - 1]) && mask[i - 1]))
 			words++;
 		i++;
 	}
 	return (words);
 }
 
-static size_t	len_word(char **s, char c)
+static size_t	len_wordf_mask(char **s, int (*f)(int), char **mask)
 {
 	size_t	len;
 
-	while (**s && **s == c)
+	while (**s && f(**s) && **mask)
+	{
+		(*mask)++;
 		(*s)++;
+	}
 	len = 0;
-	while ((*s)[len] && (*s)[len] != c)
+	while ((*s)[len] && (!f((*s)[len]) || !(*mask)[len]))
 		len++;
+	(*mask) += len;
 	return (len);
 }
 
@@ -52,7 +57,7 @@ static void	*big_free(char **arr)
 	return (NULL);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_splitf_mask(char const *s, int (*f)(int), char *mask)
 {
 	size_t	words;
 	size_t	len;
@@ -62,7 +67,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	words = count_words(s, c);
+	words = count_wordsf_mask(s, f, mask);
 	arr = (char **)ft_calloc(words + 1, sizeof(char *));
 	if (!arr)
 		return (NULL);
@@ -70,7 +75,7 @@ char	**ft_split(char const *s, char c)
 	i = 0;
 	while (i < words)
 	{
-		len = len_word(&tmp, c);
+		len = len_wordf_mask(&tmp, f, &mask);
 		arr[i] = (char *)ft_calloc(len + 1, sizeof(char));
 		if (!arr[i])
 			return (big_free(arr));

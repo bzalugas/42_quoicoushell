@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_split.c                                       :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/04 19:28:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/01 11:58:19 by bazaluga         ###   ########.fr       */
+/*   Created: 2023/11/09 09:31:19 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/07/28 21:36:40 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "../quoicoushell.h"
+#include "libft.h"
 
-int	free_split(char **arr)
+char	*ft_strcpy(char *dst, const char *src)
 {
 	size_t	i;
 
-	if (!arr)
-		return (0);
 	i = 0;
-	while (arr[i])
+	while (src[i])
 	{
-		free(arr[i++]);
+		dst[i] = src[i];
+		i++;
 	}
-	free(arr);
-	return (0);
+	return (dst);
 }

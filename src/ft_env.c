@@ -1,40 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:36:25 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 00:01:30 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/07/26 09:41:59 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/07/27 13:22:38 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "quoicoushell.h"
 
-int	ft_atoi(const char *nptr)
+int	ft_env(t_shell *sh)
 {
-	unsigned int	n;
-	int				sign;
-	size_t			i;
+	int	i;
 
-	if (!nptr)
-		return (0);
+	if (!sh->env)
+		return (sh->exit_code = 1, 1);
 	i = 0;
-	while (nptr[i] && ft_isspace(nptr[i]))
-		i++;
-	sign = 1;
-	if (nptr[i] && (nptr[i] == '-' || nptr[i] == '+'))
+	while (sh->env[i])
 	{
-		if (nptr[i] == '-')
-			sign = -1;
+		ft_putendl_fd(sh->env[i], STDOUT_FILENO);
 		i++;
 	}
-	n = 0;
-	while (nptr[i] && ft_isdigit(nptr[i]))
-	{
-		n = n * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (n * sign);
+	sh->exit_code = 0;
+	return (0);
 }

@@ -1,40 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_splitlen.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:36:25 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 00:01:30 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/07/22 15:55:50 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/07/22 15:57:11 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *nptr)
+size_t	ft_splitlen(char **arr)
 {
-	unsigned int	n;
-	int				sign;
-	size_t			i;
+	size_t	i;
 
-	if (!nptr)
+	if (!arr)
 		return (0);
 	i = 0;
-	while (nptr[i] && ft_isspace(nptr[i]))
+	while (arr[i])
 		i++;
-	sign = 1;
-	if (nptr[i] && (nptr[i] == '-' || nptr[i] == '+'))
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		i++;
-	}
-	n = 0;
-	while (nptr[i] && ft_isdigit(nptr[i]))
-	{
-		n = n * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (n * sign);
+	return (i);
 }

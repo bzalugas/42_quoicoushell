@@ -1,40 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atou_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:36:25 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 00:01:30 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/07/28 22:20:30 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/08/01 17:25:03 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *nptr)
+static int	ft_strchr_rank(const char *s, char c)
 {
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if ((unsigned char)s[i] == (unsigned char)c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+unsigned int	ft_atou_base(const char *nptr, const char *base)
+{
+	int				len_base;
 	unsigned int	n;
-	int				sign;
+	int				rank;
 	size_t			i;
 
-	if (!nptr)
+	if (!nptr || !base)
 		return (0);
+	len_base = ft_strlen(base);
 	i = 0;
 	while (nptr[i] && ft_isspace(nptr[i]))
 		i++;
-	sign = 1;
-	if (nptr[i] && (nptr[i] == '-' || nptr[i] == '+'))
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		i++;
-	}
 	n = 0;
-	while (nptr[i] && ft_isdigit(nptr[i]))
+	rank = ft_strchr_rank(base, nptr[i]);
+	while (nptr[i] && rank != -1)
 	{
-		n = n * 10 + (nptr[i] - '0');
+		n = n * len_base + rank;
 		i++;
+		rank = ft_strchr_rank(base, nptr[i]);
 	}
-	return (n * sign);
+	return (n);
 }

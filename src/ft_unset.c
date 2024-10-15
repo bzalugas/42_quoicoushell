@@ -1,40 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:36:25 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/07/30 00:01:30 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/07/26 12:18:30 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/07/28 19:59:05 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "quoicoushell.h"
 
-int	ft_atoi(const char *nptr)
+int	ft_unset(t_cmd *cmd, t_shell *sh)
 {
-	unsigned int	n;
-	int				sign;
-	size_t			i;
+	int	i;
 
-	if (!nptr)
-		return (0);
-	i = 0;
-	while (nptr[i] && ft_isspace(nptr[i]))
-		i++;
-	sign = 1;
-	if (nptr[i] && (nptr[i] == '-' || nptr[i] == '+'))
+	i = 1;
+	while (cmd->argv[i])
 	{
-		if (nptr[i] == '-')
-			sign = -1;
+		del_variable(sh, cmd->argv[i]);
 		i++;
 	}
-	n = 0;
-	while (nptr[i] && ft_isdigit(nptr[i]))
-	{
-		n = n * 10 + (nptr[i] - '0');
-		i++;
-	}
-	return (n * sign);
+	if (i > 1)
+		sh->env_update = true;
+	sh->exit_code = 0;
+	return (0);
 }
