@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/08 15:41:41 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:16:19 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,13 @@
 # define LST_BOTH 2
 # define HISTORY_FILE "$HOME/.quoicoushell_history"
 # define HISTORY_MAX_LINES 1000
-# define PROMPT_COLOUR "\033[93;1m"
-# define PROMPT_END "$\033[0m "
+# define PROMPT_COLOUR "\033[38;2;156;247;159;48;2;34;48;35m" //green
+# define PROMPT_COLOUR2 "\033[38;2;227;156;247;48;2;45;34;48m" //purple
+# define PROMPT_COLOUR3 "\033[38;2;156;199;247;48;2;34;41;48m" //blue
+# define PROMPT_COLOUR4 "\033[38;2;247;156;156;48;2;48;34;34m" //red
+# define PROMPT_COLOUR5 "\033[38;2;247;242;156;48;2;48;48;34m" //yellow
+# define PROMPT_COLOUR6 "\033[38;2;186;156;247;48;2;39;34;48m" //lilac
+# define PROMPT_END "\033[0m "
 # define C_SQ -1
 # define C_DQ -2
 # define C_WSP -3
