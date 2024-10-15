@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/14 18:05:57 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/15 14:57:21 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static bool	dash_n_option(t_cmd *cmd, int *i)
 			return (false);
 		(*i)++;
 	}
-	return (true);
+	return (false);
 }
 
 int	ft_echo(t_shell *sh, t_cmd *cmd)
