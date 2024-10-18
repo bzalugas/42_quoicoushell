@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 17:22:49 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/12 16:29:19 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:25:21 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ size_t			ft_splitlen(char **arr);
 unsigned int	ft_atou_base(const char *nptr, const char *base);
 char			*ft_strreplace(char *str, char *to_replace, char *new_str,
 					unsigned long long occ);
+long long		ft_strtoll(const char *nptr, char **endptr, int base);
 
 /******************************* FT_PRINTF ************************************/
 int				ft_printf(const char *format, ...);
