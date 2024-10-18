@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/10/18 21:48:21 by jsommet          ###   ########.fr        #
+#    Updated: 2024/10/18 22:03:32 by jsommet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -127,7 +127,6 @@ fclean:		clean
 	@echo $(RED)"CLEANING ALL"$(RESET)
 	@rm -f $(NAME)
 	@rm -rf *.dSYM
-	@make -sC $(LIBFTDIR) fclean
 
 re:		fclean
 	@make -s all
