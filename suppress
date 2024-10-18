@@ -5,20 +5,32 @@
     obj:*/libreadline.so*
 }
 {
-    ignore_readline_leaks
+    ignore_ls_leaks
     Memcheck:Leak
     ...
     obj:*/usr/bin/ls*
 }
 {
-    ignore_readline_leaks
+    ignore_grep_leaks
     Memcheck:Leak
     ...
     obj:*/usr/bin/grep*
 }
 {
-    ignore_readline_leaks
+    ignore_cat_leaks
     Memcheck:Leak
     ...
     obj:*/usr/bin/cat*
+}
+{
+	ignore_clear_leaks
+	Memcheck:Leak
+	...
+	obj:*/usr/bin/clear*
+}
+{
+	ignore_git_leaks
+	Memcheck:Leak
+	...
+	obj:*/usr/bin/git*
 }
