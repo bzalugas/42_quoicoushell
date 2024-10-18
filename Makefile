@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/10/08 15:41:30 by bazaluga         ###   ########.fr        #
+#    Updated: 2024/10/18 21:48:21 by jsommet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -121,6 +121,7 @@ test_exec:	$(LIBFT) $(OBJ) | $(OBJDIR)
 clean:
 	@echo $(RED)"CLEANING OBJS"$(RESET)
 	@rm -rf $(OBJDIR)
+	@make -sC $(LIBFTDIR) fclean
 
 fclean:		clean
 	@echo $(RED)"CLEANING ALL"$(RESET)
