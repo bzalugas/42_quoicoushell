@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:14:35 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/16 22:27:55 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/18 14:52:02 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@ bool	is_numeric_argument(char *arg)
 		i++;
 	if (arg[i] == '-' || arg[i] == '+')
 		i++;
+	while (ft_isdigit(arg[i]))
+		i++;
 	while (arg[i])
 	{
-		if (!ft_isdigit(arg[i]))
+		if (!ft_isspace(arg[i]))
 			return (false);
 		i++;
 	}
