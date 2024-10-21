@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/18 18:40:45 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:32:31 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-# include "libft.h"
+# include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
 # ifdef __linux__

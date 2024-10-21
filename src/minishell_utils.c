@@ -6,14 +6,11 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/18 17:30:22 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:32:51 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "quoicoushell.h"
-#include <stdbool.h>
-#include <stdlib.h>
 
 int	exit_shell(t_shell *sh, int exit_code, bool display)
 {
