@@ -6,11 +6,10 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/16 17:49:39 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:54:45 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "quoicoushell.h"
 
 int	g_sig = 0;

@@ -6,11 +6,12 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 18:56:05 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/21 16:24:43 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:32:37 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <errno.h>
 
 static int	ignore_start(const char *nptr, int *sign, int *base, char **endptr)
 {
@@ -97,30 +98,11 @@ long long	ft_strtoll(const char *nptr, char **endptr, int base)
 		if (tmp == -1)
 			return (stop_fun(res, sign));
 		if (sign > 0 && res * base + tmp < res)
-			return (stop_fun(LLONG_MAX, 1));
-		if (sign < 0 && res * base + tmp < res)
-			return (stop_fun(LLONG_MIN, -1));
+			return (errno = ERANGE, stop_fun(LLONG_MAX, 1));
+		if (sign < 0 && res * base + tmp - 1 < res)
+			return (errno = ERANGE, stop_fun(LLONG_MIN, -1));
 		res = res * base + tmp;
 		nptr++;
 	}
 	return (stop_fun(res, sign));
 }
-/* #include <stdio.h> */
-/* int main(int ac, char **av) */
-/* { */
-/* 	(void)ac; */
-/* 	char *nb = av[1]; */
-/* 	int base = atoi(av[2]); */
-/* 	char *end1 = NULL; */
-/* 	char *end2 = NULL; */
-/* 	long long res1; */
-/* 	long long res2; */
-/* 	/\* nb = "-1fldsflj4x7az0"; *\/ */
-/* 	/\* nb = "9223372036854775807"; *\/ */
-/* 	nb = "-9,223372036854775808808.sdf"; */
-/* //need to fix 09AZB 0 */
-/* 	res1 = strtoll(nb, &end1, base); */
-/* 	printf("res1 = %lld, end1 = <%s>\n", res1, end1); */
-/* 	res2 = ft_strtoll(nb, &end2, base); */
-/* 	printf("res2 = %lld, end2 = <%s>\n", res2, end2); */
-/* } */
