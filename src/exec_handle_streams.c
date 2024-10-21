@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_streams.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/03 14:45:44 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/18 23:04:42 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename, bool forked)
 	{
 		if (forked)
 			stop_perror(filename, 0, sh->cmds, sh);
-		perror(filename);
+		perror(filename); // needs "quoicoushell: " in front of error
+		return (-1);
 	}
 	if (!cmd->heredoc)
 		sh->cmds->fd[fdn][0] = tmp_fd;
@@ -101,24 +102,29 @@ static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i, bool forked)
 	{
 		if (forked)
 			stop_perror(redir.file, 0, sh->cmds, sh);
-		perror(redir.file);
+		perror(redir.file); // needs "quoicoushell: " in front of error
+		return (-1);
 	}
 	return (0);
 }
 
+//returns -1 for error
 int	get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked)
 {
 	int	i;
+	int	problem;
 
 	if (!cmd->redirs)
-		return (1);
+		return (-1);
 	i = 0;
 	while (cmd->redirs[i].file)
 	{
 		if (cmd->redirs[i].type == RTIN)
-			get_infile(sh, cmd, cmd->redirs[i].file, forked);
+			problem = get_infile(sh, cmd, cmd->redirs[i].file, forked);
 		else
-			get_outfile(sh, cmd, i, forked);
+			problem = get_outfile(sh, cmd, i, forked);
+		if (problem == -1)
+			return (-1);
 		i++;
 	}
 	return (0);
