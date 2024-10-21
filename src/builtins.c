@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/18 23:00:26 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/21 18:19:41 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
 	if (!cmd->argv[0] || (cmds->n_cmds > 1 && !forked) || !is_builtin(cmd))
 		return (0);
 	if (get_in_out_files(sh, cmd, forked) == -1)
-		return (1);
+		return (sh->exit_code = 1, 1);
 	redirect_streams(cmds, cmd, tmp_fds);
 	res = run_right_builtin(cmd, sh);
 	if (res == 0 || forked)
