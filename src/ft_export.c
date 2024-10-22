@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 19:10:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/22 19:37:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static int	iterate_exports(char **argv, t_shell *sh)
 			set_variable_value(sh, args[0], args[1]);
 		else if (!link)
 			set_variable(sh, args[0], args[1], LST_ENV);
+		if (link)
+			free(args[0]);
 		free(args);
 		i++;
 	}
