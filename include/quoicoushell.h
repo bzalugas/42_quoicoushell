@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/21 16:32:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/22 19:52:28 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ char	**export_all_env(t_shell *sh);
 void	signal_handler_main(int signum);
 void	signal_handler_heredoc(int signum);
 void	signal_handler_other(int signum);
+void	signal_handler_child(int signum);
 
 //**************** PARSING ******************/
 // syntax.c
