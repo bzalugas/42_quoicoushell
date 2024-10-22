@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/18 23:04:42 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/22 17:56:52 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename, bool forked)
 	{
 		if (forked)
 			stop_perror(filename, 0, sh->cmds, sh);
-		perror(filename); // needs "quoicoushell: " in front of error
+		print_perror(filename, NULL);
 		return (-1);
 	}
 	if (!cmd->heredoc)
@@ -102,7 +102,7 @@ static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i, bool forked)
 	{
 		if (forked)
 			stop_perror(redir.file, 0, sh->cmds, sh);
-		perror(redir.file); // needs "quoicoushell: " in front of error
+		print_perror(redir.file, NULL);
 		return (-1);
 	}
 	return (0);

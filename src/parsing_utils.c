@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 12:52:27 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/22 17:42:30 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
 {
+	char	*word;
+
+	word = ft_strdup(cbv->tks[++cbv->tk_i]);
+	remove_quotes(word);
 	(void) sh;
-	cbv->cmd->heredocs[cbv->hd_i] = ft_strdup(cbv->tks[++cbv->tk_i]);
+	cbv->cmd->heredocs[cbv->hd_i] = word;
 	if (!cbv->cmd->heredocs[cbv->hd_i])
 		exit_shell(sh, EXIT_FAILURE, false);
 	cbv->cmd->heredoc = true;
