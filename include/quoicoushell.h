@@ -142,7 +142,7 @@ void	set_exec_child_signals(t_shell *sh);
 
 // minishell_utils.c
 int		exit_shell(t_shell *sh, int exit_code, bool display);
-char	*current_dir_name(t_shell *sh, int depth);
+char	*current_dir_name(t_shell *sh, size_t depth);
 char	*build_prompt(t_shell *sh);
 char	*readline_fd(t_shell *sh);
 int		stop_main_error(t_shell *sh, char *msg, int error);
