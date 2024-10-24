@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/22 19:45:37 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:03:44 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,11 @@ int	main(int ac, char **av, char **envp)
 	get_history(sh);
 	while (1)
 	{
-		if (g_sig == SIGINT)
+		if (g_sig != 0)
+		{
+			//add \n (but in tty_fd...)
 			g_sig = 0;
+		}
 		line = readline_fd(sh);
 		if (!line)
 			exit_shell(sh, EXIT_SUCCESS, true);

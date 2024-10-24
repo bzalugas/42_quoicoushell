@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/15 19:58:06 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:15:03 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 	size_t	i;
 	char	*abs_cmd;
 
+	sigemptyset(&sh->sa.sa_mask);
+	sh->sa.sa_handler = SIG_DFL;
+	sigaction(SIGINT, &sh->sa, NULL);
 	if (!cmd->argv[0])
 		exit_shell(sh, EXIT_SUCCESS, false);
 	if (ft_strchr(cmd->argv[0], '/'))
@@ -128,7 +131,12 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 		waitpid(last, &sh->exit_code, 0);
 	while (errno != ECHILD)
 		wait(NULL);
-	if (last != -1)
+	if (last != -1 && WIFSIGNALED(sh->exit_code))
+	{
+		/* sh->exit_code = 130 * (WSTOPSIG(sh->exit_code) == SIGINT); */
+		sh->exit_code = 130 * (sh->exit_code == SIGINT);
+	}
+	else if (last != -1)
 		sh->exit_code = WEXITSTATUS(sh->exit_code);
 	set_signals_main(sh);
 	return (sh->exit_code);

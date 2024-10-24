@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 23:06:49 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/21 16:32:51 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:04:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*readline_fd(t_shell *sh)
 	int		is_tty;
 	int		tty_fd;
 	int		stdout_fd;
-
+//Do the rl_outstream technique...
 	is_tty = isatty(STDOUT_FILENO);
 	if (!is_tty)
 	{
