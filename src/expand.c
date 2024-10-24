@@ -16,18 +16,15 @@ void	expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		quote_size;
 
+	(void) quote_size;
 	bzero(&xdat->i, sizeof(int) * 2);
 	xdat->new_word = (char *) ft_calloc(xdat->new_size + 1, 1UL);
 	if (!xdat->new_word)
 		return ;
 	while (word[xdat->i])
 	{
-		if (word[xdat->i] == C_SQ)
-		{
-			quote_size = next_quote(&word[xdat->i]);
-			while (--quote_size > 0)
-				xdat->new_word[xdat->j++] = word[xdat->i++];
-		}
+		while (active_quote(word, xdat->i) == C_SQ)
+			xdat->new_word[xdat->j++] = word[xdat->i++];
 		if (retrieve_var_value(sh, &word[xdat->i], xdat) > 0)
 		{
 			if (xdat->tmp_val)
