@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/24 12:15:03 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/25 08:21:01 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,7 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 	while (errno != ECHILD)
 		wait(NULL);
 	if (last != -1 && WIFSIGNALED(sh->exit_code))
-	{
-		/* sh->exit_code = 130 * (WSTOPSIG(sh->exit_code) == SIGINT); */
-		sh->exit_code = 130 * (sh->exit_code == SIGINT);
-	}
+		sh->exit_code = 128 + WTERMSIG(sh->exit_code);
 	else if (last != -1)
 		sh->exit_code = WEXITSTATUS(sh->exit_code);
 	set_signals_main(sh);
