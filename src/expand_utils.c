@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:11:26 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/14 18:29:20 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 21:02:32 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	split_expand_count(t_shell *sh, char *word)
 	word = ft_strdup(word);
 	if (!word)
 		exit_shell(sh, EXIT_FAILURE, false);
+	xdat.va = false;
 	xdat.full_str = word;
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
