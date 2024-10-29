@@ -1,7 +1,0 @@
-* EXEC
-** TODO Change heredoc order
-- Bash runs every heredocs of every commands before running the commands themselves
-** TODO Fix the sigpipe with cat
-Examples where there is a pb:
-- cat < /dev/stdin | cat < /dev/stdin
-- echo | echo << a
