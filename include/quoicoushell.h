@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/29 18:56:44 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:31:06 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ void	command_line(t_shell *sh, char *line);
 void	set_signals_main(t_shell *sh);
 void	set_exec_parent_signals(t_shell *sh);
 void	set_exec_child_signals(t_shell *sh);
+void	set_execve_signals(t_shell *sh);
 
 // minishell_utils.c
 int		exit_shell(t_shell *sh, int exit_code, bool display);
