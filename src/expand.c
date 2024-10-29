@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:10:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 13:16:28 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:49:34 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,11 @@ void	remove_weird_quotes(char *word)
 		word[i++ - offset] = 0;
 }
 
-char	*remove_quotes_and_expand(t_shell *sh, char *word)
+char	*remove_quotes_and_expand(t_shell *sh, char *word, bool va)
 {
 	t_expand_data	xdat;
 
+	xdat.va = va;
 	xdat.full_str = word;
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);
