@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 16:43:30 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:16:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 
 	if (other_cmds(cmd, &i))
 		return (i);
-	i = 0;
-	while (cmd->argv[i])
+	i = -1;
+	while (cmd->argv[++i])
 	{
 		if (ft_strchr(cmd->argv[i], '='))
 		{
@@ -100,10 +100,11 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 			if (args[1])
 				remove_quotes(args[1]);
 			if (!set_variable_value(sh, args[0], args[1]))
-				set_variable(sh, args[0], args[1], LST_LOCAL);
+				set_variable(sh, args[0], args[1], LST_BOTH);
+			else
+				sh->env_update = true;
 			free(args);
 		}
-		i++;
 	}
 	return (sh->exit_code = 0, 0);
 }
