@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 18:02:25 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:41:40 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,29 @@
 
 static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
-	size_t	i;
+	ssize_t	i;
 	char	*abs_cmd;
 	int		err;
 
-	sh->sa.sa_handler = SIG_DFL;
-	sigaction(SIGINT, &sh->sa, NULL);
+	err = 127;
+	set_execve_signals(sh);
 	if (!cmd->argv[0])
 		exit_shell(sh, EXIT_SUCCESS, false);
 	if (ft_strchr(cmd->argv[0], '/'))
-	{
-		execve(cmd->argv[0], cmd->argv, sh->env);
-		err = (126 * (errno == EACCES)) + (127 * (errno == ENOENT));
-		stop_perror(cmd->argv[0], err, cmds, sh);
-	}
-	i = 0;
-	while (sh->paths && sh->paths[i])
+		if (execve(cmd->argv[0], cmd->argv, sh->env))
+			stop_perror(cmd->argv[0], (126 * (errno == EACCES))
+				+ (127 * (errno == ENOENT)), cmds, sh);
+	i = -1;
+	while (sh->paths && sh->paths[++i])
 	{
 		abs_cmd = ft_strjoin(sh->paths[i], cmd->argv[0]);
 		execve(abs_cmd, cmd->argv, sh->env);
+		if (err == 127)
+			err = (126 * (errno == EACCES)) + (127 * (errno == ENOENT));
 		free(abs_cmd);
-		i++;
 	}
-	err = (126 * (errno == EACCES)) + (127 * (errno == ENOENT));
+	if (err == 127)
+		return (stop_error(cmd->argv[0], err, cmds, sh));
 	return (stop_perror(cmd->argv[0], err, cmds, sh));
 }
 
