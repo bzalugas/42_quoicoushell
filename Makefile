@@ -6,7 +6,7 @@
 #    By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 18:41:09 by bazaluga          #+#    #+#              #
-#    Updated: 2024/10/18 22:03:32 by jsommet          ###   ########.fr        #
+#    Updated: 2024/10/29 10:17:43 by bazaluga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRC			:=	builtins.c \
 				exec_heredoc.c \
 				exec_heredoc_utils.c \
 				exec_main.c \
+				exec_utils.c \
 				expand_fhd.c \
 				expand_utils.c \
 				expand_utils2.c \

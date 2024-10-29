@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:24:12 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/21 18:19:41 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:08:41 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static bool	is_builtin(t_cmd *cmd)
 	return (false);
 }
 
-static int	run_right_builtin(t_cmd *cmd, t_shell *sh)
+static int	run_right_builtin(t_cmd *cmd, t_shell *sh, bool forked)
 {
 	int	res;
 
@@ -76,7 +76,7 @@ static int	run_right_builtin(t_cmd *cmd, t_shell *sh)
 	else if (!ft_strcmp(cmd->argv[0], "env"))
 		ft_env(sh);
 	else if (!ft_strcmp(cmd->argv[0], "exit"))
-		ft_exit(cmd, sh);
+		ft_exit(cmd, sh, forked);
 	else
 	{
 		res = ft_local_export(cmd, sh);
@@ -95,12 +95,14 @@ int	run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked)
 
 	if (!cmd->argv[0] || (cmds->n_cmds > 1 && !forked) || !is_builtin(cmd))
 		return (0);
-	if (get_in_out_files(sh, cmd, forked) == -1)
+	if (get_in_out_files(sh, cmd) == -1)
 		return (sh->exit_code = 1, 1);
 	redirect_streams(cmds, cmd, tmp_fds);
-	res = run_right_builtin(cmd, sh);
+	res = run_right_builtin(cmd, sh, forked);
 	if (res == 0 || forked)
 		exit_shell(sh, sh->exit_code, false);
 	get_back_streams(tmp_fds);
+	if (g_sig != 0)
+		sh->exit_code = 128 + g_sig;
 	return (res);
 }

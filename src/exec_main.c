@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/25 08:21:01 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:02:25 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,18 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 {
 	size_t	i;
 	char	*abs_cmd;
+	int		err;
 
-	sigemptyset(&sh->sa.sa_mask);
 	sh->sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sh->sa, NULL);
 	if (!cmd->argv[0])
 		exit_shell(sh, EXIT_SUCCESS, false);
 	if (ft_strchr(cmd->argv[0], '/'))
-		if (execve(cmd->argv[0], cmd->argv, sh->env))
-			stop_perror(cmd->argv[0], 0, cmds, sh);
+	{
+		execve(cmd->argv[0], cmd->argv, sh->env);
+		err = (126 * (errno == EACCES)) + (127 * (errno == ENOENT));
+		stop_perror(cmd->argv[0], err, cmds, sh);
+	}
 	i = 0;
 	while (sh->paths && sh->paths[i])
 	{
@@ -33,7 +36,8 @@ static int	run_non_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 		free(abs_cmd);
 		i++;
 	}
-	return (stop_error(cmd->argv[0], 127, cmds, sh));
+	err = (126 * (errno == EACCES)) + (127 * (errno == ENOENT));
+	return (stop_perror(cmd->argv[0], err, cmds, sh));
 }
 
 static int	run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
@@ -76,7 +80,8 @@ static int	prepare_run_cmd(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh)
 			ft_close(cmds, cmds->fd[cmd->idx_in][0]);
 			cmds->fd[cmd->idx_in][0] = cmd->fd_hd[0];
 		}
-		get_in_out_files(sh, cmd, true);
+		if (get_in_out_files(sh, cmd) == -1)
+			exit_shell(sh, EXIT_FAILURE, false);
 		return (run_cmd(cmds, cmd, sh));
 	}
 	ft_close(cmds, cmds->fd[cmd->idx_in][0]);
@@ -97,10 +102,10 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 	node_cmd = cmds->cmds;
 	while (node_cmd && node_cmd->content)
 	{
-		g_sig = 0;
-		cmd = node_cmd->content;
 		if (g_sig == SIGINT)
 			return (last);
+		g_sig = 0;
+		cmd = node_cmd->content;
 		if (cmd->n_cmd < cmds->n_cmds - 1)
 			if (pipe(cmds->fd[(cmd->n_cmd + 1) % 2]) == -1)
 				stop_main_error(sh, "pipe failed", errno);
@@ -113,7 +118,10 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 {
 	pid_t	last;
+	int		status[2];
 
+	status[0] = -1;
+	status[1] = -1;
 	if (cmds->n_cmds == 1 && (!((t_cmd *)(cmds->cmds->content))->argv[0])
 		&& !(((t_cmd *)(cmds->cmds->content))->heredoc)
 		&& !(((t_cmd *)(cmds->cmds->content))->redirs[0].file))
@@ -128,13 +136,10 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 	}
 	last = iterate_cmds(cmds, sh);
 	if (last != -1)
-		waitpid(last, &sh->exit_code, 0);
-	while (errno != ECHILD)
-		wait(NULL);
-	if (last != -1 && WIFSIGNALED(sh->exit_code))
-		sh->exit_code = 128 + WTERMSIG(sh->exit_code);
-	else if (last != -1)
-		sh->exit_code = WEXITSTATUS(sh->exit_code);
+		waitpid(last, &status[0], 0);
+	while (errno != ECHILD && !WIFSIGNALED(status[1]))
+		wait(&status[1]);
+	handle_exit_status(sh, status, last);
 	set_signals_main(sh);
 	return (sh->exit_code);
 }
