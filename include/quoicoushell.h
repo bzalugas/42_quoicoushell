@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/29 19:31:06 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 22:15:58 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,7 @@ void	split_cpy(char **dest, char **src, size_t src_len);
 void	set_cmd_word(t_shell *sh, t_cbv *cbv);
 
 // tokenize.c
-bool	can_be_var_assign(char *word);
+bool	can_be_var_assign(char *word, char **argv);
 bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word);
 
 // token_split.c
