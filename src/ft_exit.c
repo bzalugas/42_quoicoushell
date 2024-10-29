@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:14:35 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/21 17:37:29 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:08:27 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ bool	is_numeric_argument(char *arg)
 	return (true);
 }
 
-int	ft_exit(t_cmd *cmd, t_shell *sh)
+int	ft_exit(t_cmd *cmd, t_shell *sh, bool forked)
 {
 	long long	exit_code;
 	char		*end;
 
 	if (!cmd->argv[1])
-		exit_shell(sh, sh->exit_code, true);
+		exit_shell(sh, sh->exit_code, !forked);
 	exit_code = ft_strtoll(cmd->argv[1], &end, 10);
 	if (end == NULL || errno == ERANGE || !is_numeric_argument(cmd->argv[1]))
 	{
@@ -53,6 +53,6 @@ int	ft_exit(t_cmd *cmd, t_shell *sh)
 			"exit\nminishell: exit: too many arguments\n");
 		return (1);
 	}
-	exit_shell(sh, exit_code % 256, true);
+	exit_shell(sh, exit_code % 256, !forked);
 	return (0);
 }

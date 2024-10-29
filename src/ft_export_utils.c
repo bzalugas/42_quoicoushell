@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 19:41:42 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 18:46:10 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/25 08:09:17 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	valid_var_name(char *name)
 	{
 		if (i == 0 && (name[i] >= '0' && name[i] <= '9'))
 			return (false);
-		else if (!ft_isalnum(name[i]))
+		else if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (false);
 		i++;
 	}

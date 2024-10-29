@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:10:06 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/15 19:33:45 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:09:36 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,6 @@ int	print_error(char *msg1, char *msg2)
 
 int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 {
-	if (error != 0)
-		errno = error;
-	else
-		error = EXIT_FAILURE;
 	print_perror(msg, NULL);
 	ft_close_all(cmds);
 	ft_lstclear(&sh->local_vars, (&free_variable));
@@ -59,7 +55,7 @@ int	stop_perror(char *msg, int error, t_lstcmds *cmds, t_shell *sh)
 	free_cmds(cmds);
 	ft_lstclear(&sh->hist, &free);
 	free(sh->hist_file);
-	exit(EXIT_FAILURE);
+	exit(error);
 }
 
 int	stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh)

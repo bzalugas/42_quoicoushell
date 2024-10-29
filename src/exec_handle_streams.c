@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/22 19:55:40 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:06:08 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_close(t_lstcmds *cmds, int fd)
 	return (close(fd));
 }
 
-static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename, bool forked)
+static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename)
 {
 	int	fdn;
 	int	tmp_fd;
@@ -74,8 +74,6 @@ static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename, bool forked)
 	tmp_fd = open(filename, O_RDONLY);
 	if (tmp_fd == -1)
 	{
-		if (forked)
-			stop_perror(filename, 0, sh->cmds, sh);
 		print_perror(filename, NULL);
 		return (-1);
 	}
@@ -84,7 +82,7 @@ static int	get_infile(t_shell *sh, t_cmd *cmd, char *filename, bool forked)
 	return (0);
 }
 
-static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i, bool forked)
+static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i)
 {
 	int		fdn;
 	t_redir	redir;
@@ -100,16 +98,13 @@ static int	get_outfile(t_shell *sh, t_cmd *cmd, int redir_i, bool forked)
 				0644);
 	if (sh->cmds->fd[fdn][1] == -1)
 	{
-		if (forked)
-			stop_perror(redir.file, 0, sh->cmds, sh);
 		print_perror(redir.file, NULL);
 		return (-1);
 	}
 	return (0);
 }
 
-//returns -1 for error
-int	get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked)
+int	get_in_out_files(t_shell *sh, t_cmd *cmd)
 {
 	int	i;
 	int	problem;
@@ -120,9 +115,9 @@ int	get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked)
 	while (cmd->redirs[i].file)
 	{
 		if (cmd->redirs[i].type == RTIN)
-			problem = get_infile(sh, cmd, cmd->redirs[i].file, forked);
+			problem = get_infile(sh, cmd, cmd->redirs[i].file);
 		else
-			problem = get_outfile(sh, cmd, i, forked);
+			problem = get_outfile(sh, cmd, i);
 		if (problem == -1)
 			return (-1);
 		i++;

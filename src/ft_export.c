@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/09/17 19:10:18 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:16:09 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static int	iterate_exports(char **argv, t_shell *sh)
 			set_variable_value(sh, args[0], args[1]);
 		else if (!link)
 			set_variable(sh, args[0], args[1], LST_ENV);
+		if (link)
+			free(args[0]);
 		free(args);
 		i++;
 	}
@@ -85,8 +87,8 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 
 	if (other_cmds(cmd, &i))
 		return (i);
-	i = 0;
-	while (cmd->argv[i])
+	i = -1;
+	while (cmd->argv[++i])
 	{
 		if (ft_strchr(cmd->argv[i], '='))
 		{
@@ -94,14 +96,15 @@ int	ft_local_export(t_cmd *cmd, t_shell *sh)
 			if (!args)
 				exit_shell(sh, 1, true);
 			if (!valid_var_name(args[0]))
-				return (free_split(args), var_error(cmd->argv[i], 1));
+				return (free_split(args), var_error(cmd->argv[i], i));
 			if (args[1])
 				remove_quotes(args[1]);
 			if (!set_variable_value(sh, args[0], args[1]))
-				set_variable(sh, args[0], args[1], LST_LOCAL);
+				set_variable(sh, args[0], args[1], LST_BOTH);
+			else
+				sh->env_update = true;
 			free(args);
 		}
-		i++;
 	}
 	return (sh->exit_code = 0, 0);
 }

@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/28 22:03:54 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 17:13:25 by bazaluga         ###   ########.fr       */
+/*   Created: 2024/10/29 10:15:15 by bazaluga          #+#    #+#             */
+/*   Updated: 2024/10/29 17:58:06 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "quoicoushell.h"
 
-int	ft_pwd(t_shell *sh)
+void	handle_exit_status(t_shell *sh, int status[2], pid_t last_pid)
 {
-	free(sh->cwd);
-	sh->cwd = getcwd(NULL, 0);
-	if (!sh->cwd)
-		print_perror("pwd: error retrieving current directory", "getcwd");
-	sh->exit_code = !ft_putendl_fd(sh->cwd, STDOUT_FILENO);
-	if (sh->exit_code)
-		return (perror("quoicoushell: pwd: write error"), sh->exit_code);
-	return (sh->exit_code);
+	if (last_pid != -1 && WIFSIGNALED(status[0]))
+	{
+		g_sig = WTERMSIG(status[0]);
+		if (WCOREDUMP(status[0]))
+			ft_dprintf(STDERR_FILENO, " (core dumped)");
+	}
+	else if (last_pid != -1)
+		sh->exit_code = WEXITSTATUS(status[0]);
+	if (WIFSIGNALED(status[0]) || (WIFSIGNALED(status[1]) && !sh->cmds->has_hd))
+		ft_putchar_fd('\n', STDOUT_FILENO);
 }

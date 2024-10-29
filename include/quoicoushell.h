@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/29 18:50:38 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:56:44 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_lstcmds
 	t_list	*cmds;
 	int		fd[2][2];
 	int		n_cmds;
+	bool	has_hd;
 }	t_lstcmds;
 
 typedef struct s_cmd
@@ -174,9 +175,9 @@ char	**export_env(t_shell *sh);
 char	**export_all_env(t_shell *sh);
 
 // sighandlers.c
-void	signal_handler_main(int signum);
-void	signal_handler_heredoc(int signum);
-void	signal_handler_other(int signum);
+void	signal_handler_simple(int signum);
+void	signal_handler_child(int signum);
+int		readline_check_signal(void);
 
 //**************** PARSING ******************/
 // syntax.c
@@ -230,7 +231,7 @@ void	remove_quotes(char *word);
 // exec_handle_streams.c
 int		ft_close_all(t_lstcmds *cmds);
 int		ft_close(t_lstcmds *cmds, int fd);
-int		get_in_out_files(t_shell *sh, t_cmd *cmd, bool forked);
+int		get_in_out_files(t_shell *sh, t_cmd *cmd);
 // exec_handle_streams2.c
 int		ft_close_all_heredocs(t_lstcmds *cmds, t_cmd *except_cmd);
 
@@ -249,6 +250,9 @@ int		stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
 // exec_main.c
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
 
+//exec_utils.c
+void	handle_exit_status(t_shell *sh, int status[2], int last_pid);
+
 // free_cmds.c
 void	free_cmd(void *content);
 void	free_cmds(t_lstcmds *cmds);
@@ -259,17 +263,31 @@ char	**get_paths(char **env);
 /********************************** BUILTINS **********************************/
 int		run_builtin(t_lstcmds *cmds, t_cmd *cmd, t_shell *sh, bool forked);
 
-// export
+// ft_export.c
 int		ft_export(t_cmd *cmd, t_shell *sh);
 int		ft_local_export(t_cmd *cmd, t_shell *sh);
+
+// ft_export_utils.c
 bool	valid_var_name(char *name);
 int		var_error(char *arg, char local);
-int		ft_env(t_shell *sh);
-int		ft_unset(t_cmd *cmd, t_shell *sh);
-int		ft_cd(t_cmd *cmd, t_shell *sh);
-int		ft_pwd(t_shell *sh);
-int		ft_exit(t_cmd *cmd, t_shell *sh);
-int		ft_echo(t_shell *sh, t_cmd *cmd);
 int		cut_local_exports(t_cmd *cmd, int start_cmd);
+
+// ft_env.c
+int		ft_env(t_shell *sh);
+
+// ft_unset.c
+int		ft_unset(t_cmd *cmd, t_shell *sh);
+
+// ft_cd.c
+int		ft_cd(t_cmd *cmd, t_shell *sh);
+
+// ft_pwd.c
+int		ft_pwd(t_shell *sh);
+
+// ft_exit.c
+int		ft_exit(t_cmd *cmd, t_shell *sh, bool forked);
+
+// ft_echo.c
+int		ft_echo(t_shell *sh, t_cmd *cmd);
 
 #endif

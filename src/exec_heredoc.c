@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 12:55:09 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:16:12 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 
 	while (1)
 	{
+		rl_event_hook = &readline_check_signal;
 		line = readline("> ");
 		if (g_sig == SIGINT)
 			return (clean_heredocs(cmds, cmd, CLEAN_FORK));
@@ -75,17 +76,13 @@ static int	run_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 	int	status;
 
 	status = 0;
-	sh->sa.sa_handler = &signal_handler_other;
+	sh->sa.sa_handler = &signal_handler_simple;
 	sigaction(SIGINT, &sh->sa, &sh->sa_tmp);
 	pid = fork();
 	if (pid == -1)
 		exit(errno);
 	if (pid == 0)
-	{
-		sh->sa.sa_handler = &signal_handler_heredoc;
-		sigaction(SIGINT, &sh->sa, NULL);
 		exit_shell(sh, get_heredoc(sh, cmds, cmd, i), false);
-	}
 	waitpid(pid, &status, 0);
 	sigaction(SIGINT, &sh->sa_tmp, NULL);
 	if (g_sig == SIGINT)
