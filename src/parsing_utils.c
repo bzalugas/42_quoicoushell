@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 12:52:27 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:49:33 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 
 void	set_heredoc(t_shell *sh, t_cbv *cbv)
 {
+	char	*word;
+
+	word = ft_strdup(cbv->tks[++cbv->tk_i]);
+	remove_quotes(word);
 	(void) sh;
-	cbv->cmd->heredocs[cbv->hd_i] = ft_strdup(cbv->tks[++cbv->tk_i]);
+	cbv->cmd->heredocs[cbv->hd_i] = word;
 	if (!cbv->cmd->heredocs[cbv->hd_i])
 		exit_shell(sh, EXIT_FAILURE, false);
 	cbv->cmd->heredoc = true;
@@ -65,13 +69,13 @@ void	set_redir(t_shell *sh, t_cbv *cbv)
 	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
 		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
 	cbv->cmd->redirs[cbv->rd_i].file
-		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
+		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i], false);
 	cbv->rd_i++;
 }
 
 void	set_var_assign(t_shell *sh, t_cbv *cbv)
 {
 	cbv->cmd->argv[cbv->arg_i]
-		= remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+		= remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i], true);
 	cbv->arg_i++;
 }

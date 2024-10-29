@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 12:47:30 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 13:16:41 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:49:36 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,22 @@ char	active_quote(char *s, int index)
 	return (0);
 }
 
+bool	tilde_pref(char c)
+{
+	return (ft_isspace(c) || c == '=' || c == ':');
+}
+
 bool	is_valid_tilde(char *p, t_expand_data *xdat)
 {
 	int		i;
 
 	i = (int)(p - xdat->full_str);
-	return (p && (i == 0 || ft_isspace(xdat->full_str[i - 1])) && p[0] == '~'
-		&& (!p[1] || p[1] == '/' || ft_isspace(p[1]))
-		&& !active_quote(xdat->full_str, i));
+	if (xdat->va)
+		return (p && (i == 0 || tilde_pref(xdat->full_str[i - 1]))
+			&& p[0] == '~' && (!p[1] || p[1] == '/' || ft_isspace(p[1]))
+			&& !active_quote(xdat->full_str, i));
+	else
+		return (p && (i == 0 || ft_isspace(xdat->full_str[i - 1]))
+			&& p[0] == '~' && (!p[1] || p[1] == '/' || ft_isspace(p[1]))
+			&& !active_quote(xdat->full_str, i));
 }

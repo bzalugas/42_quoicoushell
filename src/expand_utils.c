@@ -72,8 +72,8 @@ int	get_new_size(t_shell *sh, char *word, t_expand_data *xdat)
 	new_size = ft_strlen(word);
 	while (word[i])
 	{
-		if (word[i] == '\'')
-			i += next_quote(&word[i]);
+		while (active_quote(word, i) == '\'')
+			i ++;
 		if (retrieve_var_value(sh, &word[i], xdat) > 0)
 		{
 			new_size -= xdat->name_size;

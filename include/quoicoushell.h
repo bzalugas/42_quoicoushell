@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/21 16:32:31 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:50:38 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ typedef struct s_expand_data
 	char	*new_word;
 	int		i;
 	int		j;
+	bool	va;
 }	t_expand_data;
 
 // main.c
@@ -142,7 +143,7 @@ void	set_exec_child_signals(t_shell *sh);
 
 // minishell_utils.c
 int		exit_shell(t_shell *sh, int exit_code, bool display);
-char	*current_dir_name(t_shell *sh, int depth);
+char	*current_dir_name(t_shell *sh, size_t depth);
 char	*build_prompt(t_shell *sh);
 char	*readline_fd(t_shell *sh);
 int		stop_main_error(t_shell *sh, char *msg, int error);
@@ -190,7 +191,7 @@ void	expand(t_shell *sh, char *word, t_expand_data *xdat);
 void	replace_quotes(char *word);
 void	replace_wsp(char *word);
 void	remove_weird_quotes(char *word);
-char	*remove_quotes_and_expand(t_shell *sh, char *word);
+char	*remove_quotes_and_expand(t_shell *sh, char *word, bool va);
 // expand_utils.c
 char	*retrieve_var_name(char *p, t_expand_data *xdat);
 int		retrieve_var_value(t_shell *sh, char *p, t_expand_data *xdat);
@@ -239,7 +240,6 @@ int		get_all_heredocs(t_shell *sh, t_lstcmds *cmds);
 // exec_heredoc_utils.
 int		clean_heredocs(t_lstcmds *cmds, t_cmd *cmd, int clean_case);
 int		eof_ending_heredoc(t_lstcmds *cmds, t_cmd *cmd, char *delim);
-
 // exec_end_child.c
 int		print_perror(char *msg1, char *msg2);
 int		print_error(char *msg1, char *msg2);
