@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/22 17:42:30 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:49:33 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,13 @@ void	set_redir(t_shell *sh, t_cbv *cbv)
 	else if (!ft_strcmp(cbv->tks[cbv->tk_i], ">>"))
 		cbv->cmd->redirs[cbv->rd_i].type = RTOUT_A;
 	cbv->cmd->redirs[cbv->rd_i].file
-		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i]);
+		= remove_quotes_and_expand(sh, cbv->tks[++cbv->tk_i], false);
 	cbv->rd_i++;
 }
 
 void	set_var_assign(t_shell *sh, t_cbv *cbv)
 {
 	cbv->cmd->argv[cbv->arg_i]
-		= remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i]);
+		= remove_quotes_and_expand(sh, cbv->tks[cbv->tk_i], true);
 	cbv->arg_i++;
 }

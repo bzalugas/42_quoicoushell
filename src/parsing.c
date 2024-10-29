@@ -47,10 +47,10 @@ t_cmd	*init_cmd(t_shell *sh, char **tokens)
 		return (free(cmd), NULL);
 	cmd->heredocs = (char **) ft_calloc(c[1] + 1, sizeof(char *));
 	if (!cmd->heredocs)
-		return (free(cmd), free(cmd->argv), NULL);
+		return (free(cmd->argv), free(cmd), NULL);
 	cmd->redirs = (t_redir *) ft_calloc(c[2] + 1, sizeof(t_redir));
 	if (!cmd->redirs)
-		return (free(cmd), free(cmd->argv), free(cmd->heredocs), NULL);
+		return (free(cmd->argv), free(cmd->heredocs), free(cmd), NULL);
 	cmd->fd_hd[0] = -1;
 	cmd->fd_hd[1] = -1;
 	return (cmd);

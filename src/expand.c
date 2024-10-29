@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 19:10:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/04 13:16:28 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:49:34 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,15 @@ void	expand(t_shell *sh, char *word, t_expand_data *xdat)
 {
 	int		quote_size;
 
+	(void) quote_size;
 	bzero(&xdat->i, sizeof(int) * 2);
 	xdat->new_word = (char *) ft_calloc(xdat->new_size + 1, 1UL);
 	if (!xdat->new_word)
 		return ;
 	while (word[xdat->i])
 	{
-		if (word[xdat->i] == C_SQ)
-		{
-			quote_size = next_quote(&word[xdat->i]);
-			while (--quote_size > 0)
-				xdat->new_word[xdat->j++] = word[xdat->i++];
-		}
+		while (active_quote(word, xdat->i) == C_SQ)
+			xdat->new_word[xdat->j++] = word[xdat->i++];
 		if (retrieve_var_value(sh, &word[xdat->i], xdat) > 0)
 		{
 			if (xdat->tmp_val)
@@ -114,10 +111,11 @@ void	remove_weird_quotes(char *word)
 		word[i++ - offset] = 0;
 }
 
-char	*remove_quotes_and_expand(t_shell *sh, char *word)
+char	*remove_quotes_and_expand(t_shell *sh, char *word, bool va)
 {
 	t_expand_data	xdat;
 
+	xdat.va = va;
 	xdat.full_str = word;
 	xdat.new_size = get_new_size(sh, word, &xdat);
 	replace_quotes(word);

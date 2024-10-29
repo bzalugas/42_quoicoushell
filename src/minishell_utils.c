@@ -28,7 +28,7 @@ int	exit_shell(t_shell *sh, int exit_code, bool display)
 	return (exit_code);
 }
 
-char	*current_dir_name(t_shell *sh, int depth)
+char	*current_dir_name(t_shell *sh, size_t depth)
 {
 	int		i;
 	char	*dir;
@@ -39,14 +39,14 @@ char	*current_dir_name(t_shell *sh, int depth)
 	pwd_split = ft_split(sh->cwd, '/');
 	if (!pwd_split)
 		exit_shell(sh, EXIT_FAILURE, false);
-	if (!pwd_split[0])
-		return (NULL);
+	dir = NULL;
+	if (ft_splitlen(pwd_split) <= depth)
+		dir = ft_strdup("/");
 	i = 0;
 	while (pwd_split[i])
 		i++;
 	i -= depth;
 	i = (i > 0) * i;
-	dir = NULL;
 	while (pwd_split[i])
 	{
 		dir = ft_strjoin_free(dir, ft_strjoin(pwd_split[i++], "/"), 1, 1);
