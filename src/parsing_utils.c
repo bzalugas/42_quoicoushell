@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 06:56:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/29 18:49:33 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/29 21:55:28 by jsommet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	set_heredoc(t_shell *sh, t_cbv *cbv)
 	cbv->hd_i++;
 }
 
-bool	can_be_var_assign(char *word)
+bool	can_be_var_assign(char *word, char **argv)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ bool	can_be_var_assign(char *word)
 			return (false);
 		i++;
 	}
-	return (false);
+	return (ft_strcmp(argv[0], "export"));
 }
 
 bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word)
@@ -49,11 +49,13 @@ bool	is_var_assign(t_shell *sh, t_cbv *cbv, char *word)
 	int	i;
 
 	(void) sh;
-	if (!can_be_var_assign(word))
+	if (!can_be_var_assign(word, cbv->cmd->argv))
 		return (false);
 	i = -1;
+	if (!ft_strcmp(cbv->cmd->argv[0], "export"))
+		i++;
 	while (cbv->cmd->argv[++i])
-		if (!can_be_var_assign(cbv->cmd->argv[i]))
+		if (!can_be_var_assign(cbv->cmd->argv[i], cbv->cmd->argv))
 			return (false);
 	return (true);
 }
