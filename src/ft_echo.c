@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 23:08:46 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 18:10:16 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:45:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	dash_n_option(t_cmd *cmd, int *i)
 			while (cmd->argv[*i][j])
 			{
 				if (cmd->argv[*i][j] != 'n')
-					return (false);
+					return ((*i > 1));
 				j++;
 			}
 		}
@@ -36,7 +36,7 @@ static bool	dash_n_option(t_cmd *cmd, int *i)
 			return (false);
 		(*i)++;
 	}
-	return (false);
+	return ((*i > 1));
 }
 
 int	ft_echo(t_shell *sh, t_cmd *cmd)

@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 00:17:32 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/29 18:12:48 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:45:54 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	signal_handler_child(int signum)
 int	readline_check_signal(void)
 {
 	if (g_sig != 0)
-		return (rl_done = 1, 1);
+	{
+		rl_replace_line("", 0);
+		rl_done = 1;
+		return (1);
+	}
 	return (0);
 }

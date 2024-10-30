@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:45:26 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 20:56:32 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:46:52 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ void	command_line(t_shell *sh, char *line)
 	if (!line)
 		return ;
 	if (!check_syntax(line) && (ft_putstr_fd("Syntax Error\n", 2) || 1))
+	{
+		sh->exit_code = 2;
 		return ;
+	}
 	cmds = (t_lstcmds){0, .fd[0][0] = -1, .fd[0][1] = -1, .fd[1][0] = -1,
 		.fd[1][1] = -1, 0, false};
 	get_cmds(sh, line, &cmds);
