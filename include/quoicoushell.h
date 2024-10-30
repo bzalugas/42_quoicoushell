@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/29 22:15:58 by jsommet          ###   ########.fr       */
+/*   Updated: 2024/10/30 17:53:22 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,8 @@ int		stop_error(char *msg, int error, t_lstcmds *cmds, t_shell *sh);
 int		run_all_cmds(t_lstcmds *cmds, t_shell *sh);
 
 //exec_utils.c
-void	handle_exit_status(t_shell *sh, int status[2], int last_pid);
+void	handle_exit_status(t_shell *sh, pid_t lastpid, int status, bool sig);
+bool	wait_all(pid_t last_pid, int *last_status);
 
 // free_cmds.c
 void	free_cmd(void *content);

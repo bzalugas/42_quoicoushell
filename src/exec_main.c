@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 12:38:03 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 19:41:40 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/30 17:53:36 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,10 @@ static int	iterate_cmds(t_lstcmds *cmds, t_shell *sh)
 int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 {
 	pid_t	last;
-	int		status[2];
+	int		last_status;
+	bool	signaled;
 
-	status[0] = -1;
-	status[1] = -1;
+	last_status = -1;
 	if (cmds->n_cmds == 1 && (!((t_cmd *)(cmds->cmds->content))->argv[0])
 		&& !(((t_cmd *)(cmds->cmds->content))->heredoc)
 		&& !(((t_cmd *)(cmds->cmds->content))->redirs[0].file))
@@ -135,11 +135,8 @@ int	run_all_cmds(t_lstcmds *cmds, t_shell *sh)
 		sh->paths = get_paths(sh->env);
 	}
 	last = iterate_cmds(cmds, sh);
-	if (last != -1)
-		waitpid(last, &status[0], 0);
-	while (errno != ECHILD && !WIFSIGNALED(status[1]))
-		wait(&status[1]);
-	handle_exit_status(sh, status, last);
+	signaled = wait_all(last, &last_status);
+	handle_exit_status(sh, last, last_status, signaled);
 	set_signals_main(sh);
 	return (sh->exit_code);
 }
