@@ -39,11 +39,27 @@ int	next_quote(char *p)
 	return (0);
 }
 
-void	remove_quotes(char *word)
+void	rq_offset(char *c, int *offset, char *word, int i)
+{
+	int		q;
+
+	q = next_quote(&word[i]);
+	if ((*c) && (*c) == word[i])
+	{
+		(*offset)++;
+		(*c) = 0;
+	}
+	else if (!(*c) && q > 0)
+	{
+		(*offset)++;
+		(*c) = word[i];
+	}
+}
+
+bool	remove_quotes(char *word)
 {
 	int		offset;
 	int		i;
-	int		q;
 	char	c;
 
 	offset = 0;
@@ -52,18 +68,9 @@ void	remove_quotes(char *word)
 	while (word[++i])
 	{
 		word[i - offset] = word[i];
-		q = next_quote(&word[i]);
-		if (c && c == word[i])
-		{
-			offset++;
-			c = 0;
-		}
-		else if (!c && q > 0)
-		{
-			offset++;
-			c = word[i];
-		}
+		rq_offset(&c, &offset, word, i);
 	}
 	while (word[i - offset])
 		word[i++ - offset] = 0;
+	return (offset != 0);
 }

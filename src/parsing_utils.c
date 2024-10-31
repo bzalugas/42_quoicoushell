@@ -17,8 +17,7 @@ void	set_heredoc(t_shell *sh, t_cbv *cbv)
 	char	*word;
 
 	word = ft_strdup(cbv->tks[++cbv->tk_i]);
-	remove_quotes(word);
-	(void) sh;
+	cbv->cmd->hd_expand[cbv->hd_i] = !remove_quotes(word);
 	cbv->cmd->heredocs[cbv->hd_i] = word;
 	if (!cbv->cmd->heredocs[cbv->hd_i])
 		exit_shell(sh, EXIT_FAILURE, false);

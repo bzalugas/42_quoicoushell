@@ -89,6 +89,7 @@ typedef struct s_cmd
 	t_redir	*redirs;
 	bool	heredoc;
 	char	**heredocs;
+	bool	*hd_expand;
 	char	*hd_file;
 	int		fd_hd[2];
 }	t_cmd;
@@ -225,7 +226,7 @@ int		ft_isquot(char c);
 int		ft_isoper(char c);
 int		next_quote(char *p);
 // token_split_utils.c
-void	remove_quotes(char *word);
+bool	remove_quotes(char *word);
 
 /******************* EXEC *********************/
 
