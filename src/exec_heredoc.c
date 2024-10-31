@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:33:01 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 18:16:12 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:50:18 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ static char	*random_filename(t_shell *sh, t_lstcmds *cmds)
 static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 {
 	char	*line;
-	char	*line_expanded;
 
 	while (1)
 	{
@@ -60,11 +59,7 @@ static int	get_heredoc(t_shell *sh, t_lstcmds *cmds, t_cmd *cmd, int i)
 			return (clean_heredocs(cmds, cmd, CLEAN_FORK));
 		}
 		else
-		{
-			line_expanded = expand_fhd(sh, line);
-			ft_dprintf(cmd->fd_hd[1], "%s\n", line_expanded);
-			free(line_expanded);
-		}
+			write_heredoc_file(sh, cmd, i, line);
 		free(line);
 	}
 	return (0);

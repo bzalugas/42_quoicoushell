@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 22:48:07 by jsommet           #+#    #+#             */
-/*   Updated: 2024/10/30 17:53:22 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:49:49 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ int		ft_close_all_heredocs(t_lstcmds *cmds, t_cmd *except_cmd);
 
 // exec_heredoc.c
 int		get_all_heredocs(t_shell *sh, t_lstcmds *cmds);
+void	write_heredoc_file(t_shell *sh, t_cmd *cmd, int i, char *line);
 
 // exec_heredoc_utils.
 int		clean_heredocs(t_lstcmds *cmds, t_cmd *cmd, int clean_case);

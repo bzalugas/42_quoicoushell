@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:05:54 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/10 12:38:26 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:48:14 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,16 @@ int	eof_ending_heredoc(t_lstcmds *cmds, t_cmd *cmd, char *delim)
 		"quoicoushell: warning: here-document delimited by end-of-file\
  (wanted `%s')\n", delim);
 	return (clean_heredocs(cmds, cmd, CLEAN_FORK));
+}
+
+void	write_heredoc_file(t_shell *sh, t_cmd *cmd, int i, char *line)
+{
+	if (cmd->hd_expand[i])
+	{
+		line = expand_fhd(sh, line);
+		ft_dprintf(cmd->fd_hd[1], "%s\n", line);
+		free(line);
+	}
+	else
+		ft_dprintf(cmd->fd_hd[1], "%s\n", line);
 }
