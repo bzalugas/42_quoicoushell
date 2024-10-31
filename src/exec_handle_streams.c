@@ -6,7 +6,7 @@
 /*   By: jsommet <jsommet@student.42.fr >           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:31:57 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 18:06:08 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/10/31 19:07:03 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@ int	ft_close_all(t_lstcmds *cmds)
 	while (++i < 2)
 	{
 		if (cmds->fd[i][0] != -1)
-			close(cmds->fd[i][0]);
+			ft_close(cmds, cmds->fd[i][0]);
 		if (cmds->fd[i][1] != -1)
-			close(cmds->fd[i][1]);
+			ft_close(cmds, cmds->fd[i][1]);
 	}
 	node = cmds->cmds;
 	while (node && node->content)
 	{
 		if (((t_cmd *)(node->content))->fd_hd[0] != -1)
-			close(((t_cmd *)(node->content))->fd_hd[0]);
+			ft_close(cmds, ((t_cmd *)(node->content))->fd_hd[0]);
 		if (((t_cmd *)(node->content))->fd_hd[1] != -1)
-			close(((t_cmd *)(node->content))->fd_hd[1]);
+			ft_close(cmds, ((t_cmd *)(node->content))->fd_hd[1]);
 		node = node->next;
 	}
 	return (0);
@@ -119,7 +119,7 @@ int	get_in_out_files(t_shell *sh, t_cmd *cmd)
 		else
 			problem = get_outfile(sh, cmd, i);
 		if (problem == -1)
-			return (-1);
+			return (ft_close_all(sh->cmds), -1);
 		i++;
 	}
 	return (0);
