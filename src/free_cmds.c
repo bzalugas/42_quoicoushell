@@ -26,6 +26,7 @@ void	free_cmd(void *content)
 		tmp++;
 	}
 	free(cmd->redirs);
+	free(cmd->hd_expand);
 	free_split(cmd->heredocs);
 	free(cmd->hd_file);
 	if (cmd->fd_hd[0] != -1)
