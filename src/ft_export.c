@@ -6,7 +6,7 @@
 /*   By: bazaluga <bazaluga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:13:44 by bazaluga          #+#    #+#             */
-/*   Updated: 2024/10/29 21:34:28 by bazaluga         ###   ########.fr       */
+/*   Updated: 2024/11/01 20:57:54 by bazaluga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static int	ft_alone_export(t_shell *sh)
 		ft_putendl_fd(env[i], STDOUT_FILENO);
 		i++;
 	}
+	free_split(env);
 	sh->exit_code = 0;
 	return (0);
 }
